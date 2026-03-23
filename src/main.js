@@ -2,6 +2,7 @@ import './index.css';
 
 // Page modules
 import { renderUpload } from './pages/upload.js';
+import { renderDashboard } from './pages/dashboard.js';
 import { renderSummary } from './pages/summary.js';
 import { renderClauseBreakdown } from './pages/clause-breakdown.js';
 import { renderRiskReport } from './pages/risk-report.js';
@@ -18,6 +19,7 @@ import { renderExport } from './pages/export.js';
 import { renderSettings } from './pages/settings.js';
 
 const routes = {
+    'dashboard': { title: 'Dashboard', render: renderDashboard, breadcrumb: ['Dashboard'] },
     'upload': { title: 'Upload & analyze', render: renderUpload, breadcrumb: ['Upload & analyze'] },
     'summary': { title: 'Summary', render: renderSummary, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Summary'] },
     'clause-breakdown': { title: 'Clause breakdown', render: renderClauseBreakdown, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Clause breakdown'] },
@@ -36,7 +38,7 @@ const routes = {
 };
 
 function getPage() {
-    const hash = window.location.hash.slice(2) || 'upload';
+    const hash = window.location.hash.slice(2) || 'dashboard';
     return hash;
 }
 
