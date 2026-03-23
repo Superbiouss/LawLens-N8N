@@ -1,0 +1,285 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.breadcrumb span.cur{color:var(--color-text-primary);font-weight:500}
+.bar-actions{display:flex;gap:6px}
+.bar-actions button{font-size:12px;padding:4px 12px}
+.body{display:grid;grid-template-columns:1fr 256px;gap:0;min-height:500px}
+.main-col{padding:20px;border-right:0.5px solid var(--color-border-tertiary)}
+.side-col{padding:16px}
+
+.doc-header{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-left:3px solid var(--color-border-danger);border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0;padding:14px 16px;margin-bottom:16px}
+.doc-header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.doc-title{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0}
+.doc-meta{font-size:12px;color:var(--color-text-tertiary);margin:2px 0 0}
+.risk-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--color-background-danger);color:var(--color-text-danger);border:0.5px solid var(--color-border-danger);white-space:nowrap}
+.risk-badge.med{background:var(--color-background-warning);color:var(--color-text-warning);border-color:var(--color-border-warning)}
+.risk-badge.low{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success)}
+.doc-summary{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin:0}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.stat-n{font-size:20px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.stat-l{font-size:11px;color:var(--color-text-tertiary);margin-top:3px}
+
+.sec-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:12px}
+
+.party-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.party-row:last-child{border-bottom:none}
+.party-role{font-size:12px;color:var(--color-text-tertiary)}
+.party-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+
+.timeline{position:relative;padding-left:20px}
+.tl-item{position:relative;padding:0 0 14px 14px;border-left:1.5px solid var(--color-border-tertiary)}
+.tl-item:last-child{border-left-color:transparent;padding-bottom:0}
+.tl-dot{position:absolute;left:-5px;top:3px;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--color-border-secondary);background:var(--color-background-primary)}
+.tl-dot.warn{border-color:var(--color-border-warning);background:var(--color-background-warning)}
+.tl-dot.ok{border-color:var(--color-border-success);background:var(--color-background-success)}
+.tl-label{font-size:12px;color:var(--color-text-tertiary)}
+.tl-val{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+
+.flag-item{display:flex;gap:8px;align-items:flex-start;background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:9px 12px;margin-bottom:7px;cursor:pointer;transition:opacity .15s}
+.flag-item:hover{opacity:.85}
+.flag-icon{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+.flag-text{font-size:12px;color:var(--color-text-danger);line-height:1.5;flex:1}
+.flag-arrow{font-size:12px;color:var(--color-text-danger);opacity:.5;flex-shrink:0}
+
+.missing-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.missing-item:last-child{border-bottom:none}
+.missing-dash{width:14px;height:1.5px;background:var(--color-border-secondary);flex-shrink:0}
+.missing-text{font-size:12px;color:var(--color-text-secondary)}
+
+.obl-item{padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;align-items:flex-start}
+.obl-item:last-child{border-bottom:none}
+.obl-tag{font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;background:var(--color-background-info);color:var(--color-text-info);border:0.5px solid var(--color-border-info);white-space:nowrap;flex-shrink:0;margin-top:1px}
+.obl-text{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+
+.nav-tabs{display:flex;gap:2px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:3px;margin-bottom:12px}
+.ntab{font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;color:var(--color-text-secondary);user-select:none;transition:all .15s}
+.ntab.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border:0.5px solid var(--color-border-tertiary)}
+.ntab:hover:not(.active){color:var(--color-text-primary)}
+
+.ask-bar{display:flex;gap:8px;padding:12px 20px;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary)}
+.ask-bar input{flex:1;font-size:12px}
+.ask-bar button{font-size:12px;padding:0 14px}
+.ask-chips{display:flex;gap:6px;padding:8px 20px 0;flex-wrap:wrap;background:var(--color-background-primary)}
+.ask-chip{font-size:11px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);cursor:pointer;background:var(--color-background-primary);transition:all .15s}
+.ask-chip:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+
+.page-link{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;border:0.5px solid transparent}
+.page-link:hover{background:var(--color-background-secondary);border-color:var(--color-border-tertiary)}
+.pl-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.pl-desc{font-size:11px;color:var(--color-text-tertiary)}
+.pl-arr{font-size:13px;color:var(--color-text-tertiary)}
+
+.score-ring{width:72px;height:72px;margin:0 auto 10px;position:relative}
+.score-ring svg{width:72px;height:72px}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-n{font-size:18px;font-weight:500;color:var(--color-text-danger)}
+.score-l{font-size:9px;color:var(--color-text-tertiary)}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="breadcrumb">
+        <span>Vault</span>
+        <span>›</span>
+        <span>Acme Corp NDA v3.pdf</span>
+        <span>›</span>
+        <span class="cur">Summary</span>
+      </div>
+    </div>
+    <div class="bar-actions">
+      <button onclick="sendPrompt('What should the Export & Share page look like in a legal document summarizer?')">Export ↗</button>
+      <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Annotate ↗</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs" style="padding:8px 20px 0;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);gap:0;border-radius:0;margin-bottom:0">
+    <div class="ntab active">Summary</div>
+    <div class="ntab" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Clause breakdown</div>
+    <div class="ntab" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report</div>
+    <div class="ntab" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">Key dates</div>
+    <div class="ntab" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask the doc</div>
+  </div>
+
+  <div class="body">
+    <div class="main-col">
+      <div class="doc-header">
+        <div class="doc-header-top">
+          <div>
+            <p class="doc-title">Acme Corp — Non-Disclosure Agreement v3</p>
+            <p class="doc-meta">NDA · 6 pages · Analyzed 2 min ago</p>
+          </div>
+          <span class="risk-badge">High risk</span>
+        </div>
+        <p class="doc-summary">This is a one-sided mutual NDA that heavily favours Acme Corp. It imposes an unlimited confidentiality term on the Receiving Party, includes a $500,000 per-incident liquidated damages clause, and allows Acme to assign the agreement without consent. Several standard protections for the Receiving Party are absent.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><div class="stat-n">2</div><div class="stat-l">Parties</div></div>
+        <div class="stat"><div class="stat-n">11</div><div class="stat-l">Clauses</div></div>
+        <div class="stat"><div class="stat-n">3</div><div class="stat-l">Red flags</div></div>
+        <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Duration</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <p class="sec-label">Parties</p>
+          <div class="card" style="padding:8px 12px">
+            <div class="party-row">
+              <span class="party-role">Disclosing party</span>
+              <span class="party-name">Acme Corp</span>
+            </div>
+            <div class="party-row">
+              <span class="party-role">Receiving party</span>
+              <span class="party-name">John Doe</span>
+            </div>
+            <div class="party-row">
+              <span class="party-role">Governing law</span>
+              <span class="party-name">Delaware, USA</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="sec-label">Key dates</p>
+          <div class="card" style="padding:8px 14px">
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-dot ok"></div>
+                <div class="tl-label">Effective date</div>
+                <div class="tl-val">1 Jan 2025</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot warn"></div>
+                <div class="tl-label">Expiry</div>
+                <div class="tl-val" style="color:var(--color-text-warning)">Unlimited — no end date</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"></div>
+                <div class="tl-label">Notice period</div>
+                <div class="tl-val">Not specified</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sec-label">Red flags</p>
+      <div class="flag-item" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">
+        <svg class="flag-icon" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5"><path d="M7 1v8M7 11v1.5"/></svg>
+        <span class="flag-text">Unlimited confidentiality term — no sunset clause. You're bound permanently with no way out.</span>
+        <span class="flag-arrow">›</span>
+      </div>
+      <div class="flag-item" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">
+        <svg class="flag-icon" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5"><path d="M7 1v8M7 11v1.5"/></svg>
+        <span class="flag-text">$500,000 liquidated damages per breach — regardless of actual harm. Disproportionate and aggressive.</span>
+        <span class="flag-arrow">›</span>
+      </div>
+      <div class="flag-item" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">
+        <svg class="flag-icon" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5"><path d="M7 1v8M7 11v1.5"/></svg>
+        <span class="flag-text">Acme Corp can assign this agreement to any successor without your consent.</span>
+        <span class="flag-arrow">›</span>
+      </div>
+
+      <p class="sec-label" style="margin-top:4px">Obligations</p>
+      <div class="card" style="padding:8px 12px">
+        <div class="obl-item">
+          <span class="obl-tag">John Doe</span>
+          <span class="obl-text">Must keep all disclosed information strictly confidential indefinitely.</span>
+        </div>
+        <div class="obl-item">
+          <span class="obl-tag">John Doe</span>
+          <span class="obl-text">May only use confidential information to evaluate a potential partnership — no other purpose.</span>
+        </div>
+        <div class="obl-item">
+          <span class="obl-tag">Acme Corp</span>
+          <span class="obl-text">May assign this agreement to any entity without notice or consent.</span>
+        </div>
+      </div>
+
+      <p class="sec-label">Missing standard clauses</p>
+      <div class="card" style="padding:8px 12px">
+        <div class="missing-item"><div class="missing-dash"></div><span class="missing-text">Return or destruction of confidential materials on termination</span></div>
+        <div class="missing-item"><div class="missing-dash"></div><span class="missing-text">Residual knowledge carve-out (what employees can retain in memory)</span></div>
+        <div class="missing-item"><div class="missing-dash"></div><span class="missing-text">Limitation of liability cap for the Disclosing Party</span></div>
+        <div class="missing-item"><div class="missing-dash"></div><span class="missing-text">Dispute resolution / mediation step before litigation</span></div>
+      </div>
+    </div>
+
+    <div class="side-col">
+      <p class="sec-label">Risk score</p>
+      <div class="card" style="text-align:center;padding:16px 12px;margin-bottom:12px">
+        <div class="score-ring">
+          <svg viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="28" fill="none" stroke="var(--color-border-tertiary)" stroke-width="6"/>
+            <circle cx="36" cy="36" r="28" fill="none" stroke="#E24B4A" stroke-width="6" stroke-dasharray="126 176" stroke-dashoffset="44" stroke-linecap="round"/>
+          </svg>
+          <div class="score-center"><span class="score-n">7.2</span><span class="score-l">/ 10</span></div>
+        </div>
+        <p style="font-size:13px;font-weight:500;color:var(--color-text-danger);margin:0 0 2px">High risk</p>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin:0">3 critical issues found</p>
+      </div>
+
+      <p class="sec-label">Explore further</p>
+      <div class="card" style="padding:6px 8px;margin-bottom:12px">
+        <div class="page-link" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">
+          <div><div class="pl-name">Clause breakdown</div><div class="pl-desc">Every clause explained</div></div>
+          <span class="pl-arr">›</span>
+        </div>
+        <div class="page-link" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">
+          <div><div class="pl-name">Risk report</div><div class="pl-desc">Full red flag analysis</div></div>
+          <span class="pl-arr">›</span>
+        </div>
+        <div class="page-link" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">
+          <div><div class="pl-name">Key dates</div><div class="pl-desc">Timeline &amp; reminders</div></div>
+          <span class="pl-arr">›</span>
+        </div>
+        <div class="page-link" onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">
+          <div><div class="pl-name">Compare versions</div><div class="pl-desc">Diff against another draft</div></div>
+          <span class="pl-arr">›</span>
+        </div>
+      </div>
+
+      <p class="sec-label">Readability</p>
+      <div class="card" style="padding:10px 12px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+          <span style="color:var(--color-text-secondary)">Grade level</span>
+          <span style="font-weight:500;color:var(--color-text-primary)">Grade 14</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+          <span style="color:var(--color-text-secondary)">Est. read time</span>
+          <span style="font-weight:500;color:var(--color-text-primary)">8 min</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--color-text-secondary)">Word count</span>
+          <span style="font-weight:500;color:var(--color-text-primary)">1,840</span>
+        </div>
+      </div>
+
+      <p class="sec-label">Share &amp; export</p>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button style="width:100%;font-size:12px;padding:7px" onclick="sendPrompt('What should the Export & Share page look like in a legal document summarizer?')">Download summary PDF ↗</button>
+        <button style="width:100%;font-size:12px;padding:7px">Copy share link</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ask-chips">
+    <span class="ask-chip" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Can I exit this NDA early?</span>
+    <span class="ask-chip" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">What happens if I breach it?</span>
+    <span class="ask-chip" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Is the damages clause enforceable?</span>
+  </div>
+  <div class="ask-bar">
+    <input type="text" placeholder="Ask anything about this document..." />
+    <button onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask ↗</button>
+  </div>
+</div>

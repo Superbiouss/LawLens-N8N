@@ -1,0 +1,552 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+
+.layout{display:grid;grid-template-columns:200px 1fr;min-height:640px}
+.left-nav{border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px 0}
+.nav-section{padding:0 12px 12px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:12px}
+.nav-section:last-child{border-bottom:none;margin-bottom:0}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;border-left:2px solid transparent;margin-bottom:1px}
+.nav-item:hover{background:var(--color-background-secondary)}
+.nav-item.active{background:var(--color-background-secondary);border-left-color:var(--color-text-primary)}
+.ni-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ni-icon svg{width:12px;height:12px;stroke:var(--color-text-secondary)}
+.nav-item.active .ni-icon svg{stroke:var(--color-text-primary)}
+.ni-label{font-size:12px;color:var(--color-text-secondary)}
+.nav-item.active .ni-label{color:var(--color-text-primary);font-weight:500}
+.ni-badge{font-size:9px;font-weight:500;padding:1px 5px;border-radius:999px;background:var(--color-background-danger);color:var(--color-text-danger);margin-left:auto}
+
+.main{padding:20px 28px;overflow:hidden}
+.page-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin:0 0 3px}
+.page-sub{font-size:12px;color:var(--color-text-tertiary);margin:0 0 20px}
+
+.settings-section{margin-bottom:24px}
+.ss-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ss-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.ss-action{font-size:11px;color:var(--color-text-info);cursor:pointer}
+
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);gap:16px}
+.setting-row:last-child{border-bottom:none}
+.sr-left{flex:1}
+.sr-label{font-size:13px;color:var(--color-text-primary);font-weight:500;margin-bottom:2px}
+.sr-desc{font-size:11px;color:var(--color-text-tertiary);line-height:1.5}
+.toggle{width:34px;height:19px;border-radius:10px;background:var(--color-border-secondary);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--color-text-success)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle.on::after{transform:translateX(15px)}
+.sr-select{font-size:12px;padding:5px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary)}
+.sr-input{font-size:12px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);width:200px}
+.sr-btn{font-size:11px;padding:4px 12px}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s;user-select:none}
+.tag:hover{border-color:var(--color-border-secondary)}
+.tag.active{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+
+.int-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.int-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;transition:border-color .15s}
+.int-card:hover{border-color:var(--color-border-secondary)}
+.int-card.connected{border-color:var(--color-border-success)}
+.int-icon-wrap{width:36px;height:36px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700}
+.int-body{flex:1}
+.int-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.int-desc{font-size:11px;color:var(--color-text-tertiary);line-height:1.4;margin-bottom:8px}
+.int-status{display:flex;align-items:center;gap:6px}
+.int-dot{width:6px;height:6px;border-radius:50%}
+.int-dot.on{background:var(--color-text-success)}
+.int-dot.off{background:var(--color-border-secondary)}
+.int-status-label{font-size:11px}
+.int-status-label.on{color:var(--color-text-success)}
+.int-status-label.off{color:var(--color-text-tertiary)}
+.int-actions{display:flex;gap:5px;margin-top:7px}
+.int-actions button{font-size:11px;padding:3px 10px}
+
+.api-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);line-height:1.6;word-break:break-all}
+.api-row{display:flex;gap:8px;margin-bottom:6px}
+.api-input{flex:1;font-size:12px;font-family:var(--font-mono);padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);height:32px}
+
+.billing-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
+.bc-icon{width:40px;height:40px;border-radius:var(--border-radius-md);background:var(--color-background-info);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bc-icon svg{width:20px;height:20px;stroke:var(--color-text-info)}
+.bc-body{flex:1}
+.bc-plan{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.bc-desc{font-size:11px;color:var(--color-text-tertiary);margin-top:1px}
+.bc-action{font-size:11px;padding:5px 14px}
+
+.usage-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.usage-row:last-child{border-bottom:none}
+.ur-label{font-size:12px;color:var(--color-text-secondary);width:140px;flex-shrink:0}
+.ur-track{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.ur-fill{height:100%;border-radius:3px;background:var(--color-text-info)}
+.ur-fill.warn{background:var(--color-text-warning)}
+.ur-val{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:70px;text-align:right}
+
+.danger-zone{background:var(--color-background-primary);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-lg);overflow:hidden}
+.dz-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);gap:16px}
+.dz-row:last-child{border-bottom:none}
+.dz-label{font-size:13px;font-weight:500;color:var(--color-text-danger)}
+.dz-desc{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.dz-btn{font-size:11px;padding:4px 12px;border-color:var(--color-border-danger);color:var(--color-text-danger)}
+
+.profile-row{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.profile-av{width:52px;height:52px;border-radius:50%;background:#EEEDFE;color:#3C3489;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;flex-shrink:0}
+.profile-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.profile-email{font-size:12px;color:var(--color-text-tertiary)}
+.profile-btn{font-size:11px;padding:4px 12px;margin-top:5px}
+
+@keyframes savedFlash{0%{opacity:0;transform:translateY(4px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
+.saved-toast{display:none;font-size:11px;color:var(--color-text-success);background:var(--color-background-success);border:0.5px solid var(--color-border-success);border-radius:var(--border-radius-md);padding:4px 10px;animation:savedFlash 2s ease forwards}
+.saved-toast.show{display:inline-flex;align-items:center;gap:5px}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc"><span>Vault</span><span>›</span><span class="cur">Settings</span></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <span class="saved-toast" id="save-toast">✓ Changes saved</span>
+      <button style="font-size:12px;padding:4px 14px" onclick="saveSettings()">Save changes</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <div class="left-nav">
+      <div class="nav-section">
+        <div class="sl">Account</div>
+        <div class="nav-item active" onclick="showSection(this,'profile')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="4" r="2.5"/><path d="M1 11c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg></div>
+          <span class="ni-label">Profile</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'billing')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="10" height="7" rx="1"/><path d="M1 6h10M4 9h1"/></svg></div>
+          <span class="ni-label">Billing &amp; plan</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'notifications')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M6 1.5A3.5 3.5 0 002.5 5v2.5L1.5 9h9l-1-1.5V5A3.5 3.5 0 006 1.5zM4.5 9a1.5 1.5 0 003 0"/></svg></div>
+          <span class="ni-label">Notifications</span>
+          <span class="ni-badge">3</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="sl">Analysis</div>
+        <div class="nav-item" onclick="showSection(this,'analysis')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M2 10V6M5 10V4M8 10V2M11 10V7"/></svg></div>
+          <span class="ni-label">Analysis defaults</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'jurisdiction')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><path d="M6 1.5C6 1.5 4 4 4 6s2 4.5 2 4.5M6 1.5C6 1.5 8 4 8 6s-2 4.5-2 4.5M1.5 6h9"/></svg></div>
+          <span class="ni-label">Jurisdiction</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'privacy')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M6 1L2 3v3.5C2 8.9 3.8 10.8 6 11c2.2-.2 4-2.1 4-4.5V3L6 1z"/></svg></div>
+          <span class="ni-label">Privacy &amp; data</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="sl">Workspace</div>
+        <div class="nav-item" onclick="showSection(this,'integrations')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="4" height="4" rx="1"/><rect x="7" y="1" width="4" height="4" rx="1"/><rect x="1" y="7" width="4" height="4" rx="1"/><rect x="7" y="7" width="4" height="4" rx="1"/></svg></div>
+          <span class="ni-label">Integrations</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'api')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M3 4L1 6l2 2M9 4l2 2-2 2M7 2l-2 8"/></svg></div>
+          <span class="ni-label">API &amp; webhooks</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'team')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="4" r="2"/><circle cx="8.5" cy="4" r="2"/><path d="M0 11c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4"/></svg></div>
+          <span class="ni-label">Team</span>
+        </div>
+        <div class="nav-item" onclick="showSection(this,'danger')">
+          <div class="ni-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M6 1v6M6 9v1M2 10L6 1l4 9H2z"/></svg></div>
+          <span class="ni-label" style="color:var(--color-text-danger)">Danger zone</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+
+      <div id="sec-profile">
+        <p class="page-title">Profile</p>
+        <p class="page-sub">Your personal account details and preferences.</p>
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">John Doe</div>
+            <div class="profile-email">john@company.in</div>
+            <button class="profile-btn">Change photo ↗</button>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="card">
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Full name</div></div>
+              <input class="sr-input" type="text" value="John Doe" />
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Email address</div></div>
+              <input class="sr-input" type="email" value="john@company.in" />
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Password</div><div class="sr-desc">Last changed 60 days ago</div></div>
+              <button class="sr-btn">Change password ↗</button>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Two-factor authentication</div><div class="sr-desc">Add an extra layer of security to your account</div></div>
+              <button class="sr-btn">Enable 2FA ↗</button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Preferences</span></div>
+          <div class="card">
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Language</div></div>
+              <select class="sr-select"><option>English</option><option>Hindi</option><option>Tamil</option></select>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Date format</div></div>
+              <select class="sr-select"><option>DD/MM/YYYY</option><option>MM/DD/YYYY</option><option>YYYY-MM-DD</option></select>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Theme</div></div>
+              <select class="sr-select"><option>System default</option><option>Light</option><option>Dark</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-billing" style="display:none">
+        <p class="page-title">Billing &amp; plan</p>
+        <p class="page-sub">Manage your subscription, usage, and payment details.</p>
+        <div class="billing-card">
+          <div class="bc-icon"><svg viewBox="0 0 20 20" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2.4 5 5.6.8-4 3.9.9 5.5L10 14.5l-4.9 2.7.9-5.5L2 7.8l5.6-.8L10 2z"/></svg></div>
+          <div class="bc-body">
+            <div class="bc-plan">Pro Plan · ₹2,499 / month</div>
+            <div class="bc-desc">6 team members · 100 analyses/month · 10 GB storage · API access · Priority support</div>
+          </div>
+          <button class="bc-action">Upgrade ↗</button>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Usage this month</span><span class="ss-action">Resets 1 May</span></div>
+          <div class="card" style="padding:8px 16px">
+            <div class="usage-row"><span class="ur-label">Analyses</span><div class="ur-track"><div class="ur-fill" style="width:73%"></div></div><span class="ur-val">73 / 100</span></div>
+            <div class="usage-row"><span class="ur-label">Storage</span><div class="ur-track"><div class="ur-fill" style="width:24%"></div></div><span class="ur-val">2.4 / 10 GB</span></div>
+            <div class="usage-row"><span class="ur-label">API calls</span><div class="ur-track"><div class="ur-fill warn" style="width:88%"></div></div><span class="ur-val" style="color:var(--color-text-warning)">8,820 / 10k</span></div>
+            <div class="usage-row"><span class="ur-label">Team members</span><div class="ur-track"><div class="ur-fill" style="width:100%"></div></div><span class="ur-val">6 / 6</span></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Payment method</span><span class="ss-action">Update ↗</span></div>
+          <div class="card">
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Visa ending 4242</div><div class="sr-desc">Expires 09/2027 · Next charge ₹2,499 on 1 May</div></div>
+              <button class="sr-btn">Replace card ↗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-notifications" style="display:none">
+        <p class="page-title">Notifications</p>
+        <p class="page-sub">Choose what LexAI notifies you about and how.</p>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Deadline &amp; date alerts</span></div>
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Contract expiry reminders</div><div class="sr-desc">Email when a document is about to expire</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Auto-renewal warnings</div><div class="sr-desc">Alert 30 days before an auto-renewal date</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Notice period deadlines</div><div class="sr-desc">Reminder when a notice window is closing</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Reminder lead time</div></div><select class="sr-select"><option>30 days before</option><option>14 days before</option><option>7 days before</option></select></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Team &amp; collaboration</span></div>
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Task assigned to me</div><div class="sr-desc">When a team member assigns you a review task</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Comment on my annotation</div><div class="sr-desc">When someone replies to a note you left</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Document shared with me</div><div class="sr-desc">When a colleague shares an analysis</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Review sign-off complete</div><div class="sr-desc">When all reviewers approve a document</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Delivery channels</span></div>
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Email notifications</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Slack notifications</div><div class="sr-desc">Connect Slack in Integrations to enable</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Weekly digest email</div><div class="sr-desc">Summary of all activity, deadlines, and team updates every Monday</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-analysis" style="display:none">
+        <p class="page-title">Analysis defaults</p>
+        <p class="page-sub">Set what happens when you upload a new document.</p>
+        <div class="settings-section">
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Default analysis depth</div><div class="sr-desc">Quick scan or full clause-by-clause breakdown</div></div><select class="sr-select"><option>Full analysis</option><option>Quick scan</option></select></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Auto-detect document type</div><div class="sr-desc">Automatically identify NDA, lease, employment, etc.</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Default document type</div><div class="sr-desc">Used when auto-detect is off or uncertain</div></div><select class="sr-select"><option>NDA</option><option>Employment</option><option>Lease</option><option>MSA / SaaS</option></select></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Auto-run compliance checklist</div><div class="sr-desc">Run the jurisdiction checklist after every analysis</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Include negotiation suggestions</div><div class="sr-desc">Generate plain-English redline language for flagged clauses</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Show AI confidence indicators</div><div class="sr-desc">Display how certain the AI is about each flag and finding</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Risk scoring</span></div>
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Risk model</div><div class="sr-desc">How the overall risk score is calculated</div></div><select class="sr-select"><option>Balanced (default)</option><option>Conservative</option><option>Aggressive</option></select></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">High-risk threshold</div><div class="sr-desc">Score above which a document is flagged High risk</div></div><select class="sr-select"><option>6.0 / 10</option><option>7.0 / 10</option><option>8.0 / 10</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-jurisdiction" style="display:none">
+        <p class="page-title">Jurisdiction</p>
+        <p class="page-sub">Set your primary jurisdiction so compliance checks are always relevant to you.</p>
+        <div class="settings-section">
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Primary jurisdiction</div><div class="sr-desc">Used as the default for compliance checklists</div></div><select class="sr-select"><option>🇮🇳 India</option><option>🇺🇸 United States (Delaware)</option><option>🇬🇧 England &amp; Wales</option></select></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Secondary jurisdictions</div><div class="sr-desc">Also check compliance against these on every analysis</div></div>
+              <div class="tag-row">
+                <div class="tag active" onclick="this.classList.toggle('active')">🇺🇸 US</div>
+                <div class="tag" onclick="this.classList.toggle('active')">🇬🇧 UK</div>
+                <div class="tag" onclick="this.classList.toggle('active')">🇸🇬 Singapore</div>
+                <div class="tag" onclick="this.classList.toggle('active')">🇦🇪 UAE</div>
+                <div class="tag" onclick="this.classList.toggle('active')">🇪🇺 EU</div>
+              </div>
+            </div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Show jurisdiction comparison</div><div class="sr-desc">Display side-by-side compliance across all selected jurisdictions</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Regulation tracking</span></div>
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">DPDP Act 2023 (India)</div><div class="sr-desc">Flag documents that don't meet India's data protection law</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">GDPR (EU)</div><div class="sr-desc">Check for GDPR data processing obligations</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Alert me when regulations update</div><div class="sr-desc">Notify when a tracked law changes and documents may need re-checking</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-privacy" style="display:none">
+        <p class="page-title">Privacy &amp; data</p>
+        <p class="page-sub">Control how your documents and data are handled.</p>
+        <div class="settings-section">
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Store documents after analysis</div><div class="sr-desc">Save analyses to your vault. If off, documents are deleted after the session ends.</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Use documents to improve AI</div><div class="sr-desc">Allow anonymised analysis data to help improve LexAI's accuracy</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Data residency</div><div class="sr-desc">Where your documents are stored and processed</div></div><select class="sr-select"><option>India (Mumbai)</option><option>EU (Frankfurt)</option><option>US (Virginia)</option></select></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Automatic vault deletion</div><div class="sr-desc">Permanently delete documents from vault after a period</div></div><select class="sr-select"><option>Never</option><option>After 1 year</option><option>After 2 years</option></select></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Export your data</span></div>
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Download all analyses</div><div class="sr-desc">Export every analysis result as a ZIP of JSON files</div></div><button class="sr-btn">Request export ↗</button></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Download audit log</div><div class="sr-desc">Full record of all team actions across your workspace</div></div><button class="sr-btn">Download ↗</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-integrations" style="display:none">
+        <p class="page-title">Integrations</p>
+        <p class="page-sub">Connect LexAI to the tools your team already uses.</p>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Connected</span></div>
+          <div class="int-grid">
+            <div class="int-card connected">
+              <div class="int-icon-wrap" style="color:#000;font-size:13px">N</div>
+              <div class="int-body">
+                <div class="int-name">Notion</div>
+                <div class="int-desc">Push summaries and risk reports to a Notion database automatically after each analysis.</div>
+                <div class="int-status"><div class="int-dot on"></div><span class="int-status-label on">Connected · john-workspace</span></div>
+                <div class="int-actions"><button>Configure</button><button style="color:var(--color-text-danger);border-color:var(--color-border-danger)">Disconnect</button></div>
+              </div>
+            </div>
+            <div class="int-card connected">
+              <div class="int-icon-wrap" style="color:#4A154B;font-size:13px">S</div>
+              <div class="int-body">
+                <div class="int-name">Slack</div>
+                <div class="int-desc">Post risk alerts, deadline warnings, and team activity to a Slack channel.</div>
+                <div class="int-status"><div class="int-dot on"></div><span class="int-status-label on">Connected · #legal-alerts</span></div>
+                <div class="int-actions"><button>Configure</button><button style="color:var(--color-text-danger);border-color:var(--color-border-danger)">Disconnect</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Available</span></div>
+          <div class="int-grid">
+            <div class="int-card">
+              <div class="int-icon-wrap" style="color:#0F9D58;font-size:11px">GD</div>
+              <div class="int-body">
+                <div class="int-name">Google Drive</div>
+                <div class="int-desc">Upload documents directly from Drive and save exports back to a folder.</div>
+                <div class="int-status"><div class="int-dot off"></div><span class="int-status-label off">Not connected</span></div>
+                <div class="int-actions"><button>Connect ↗</button></div>
+              </div>
+            </div>
+            <div class="int-card">
+              <div class="int-icon-wrap" style="color:#D4371E;font-size:11px">DS</div>
+              <div class="int-body">
+                <div class="int-name">DocuSign</div>
+                <div class="int-desc">Send analyzed documents for e-signature directly from the Export page.</div>
+                <div class="int-status"><div class="int-dot off"></div><span class="int-status-label off">Not connected</span></div>
+                <div class="int-actions"><button>Connect ↗</button></div>
+              </div>
+            </div>
+            <div class="int-card">
+              <div class="int-icon-wrap" style="color:#0052CC;font-size:11px">J</div>
+              <div class="int-body">
+                <div class="int-name">Jira / Linear</div>
+                <div class="int-desc">Create issues automatically from red flags and review tasks.</div>
+                <div class="int-status"><div class="int-dot off"></div><span class="int-status-label off">Not connected</span></div>
+                <div class="int-actions"><button>Connect ↗</button></div>
+              </div>
+            </div>
+            <div class="int-card">
+              <div class="int-icon-wrap" style="color:#333;font-size:11px">GC</div>
+              <div class="int-body">
+                <div class="int-name">Google Calendar</div>
+                <div class="int-desc">Sync all key dates and deadlines to your calendar automatically.</div>
+                <div class="int-status"><div class="int-dot off"></div><span class="int-status-label off">Not connected</span></div>
+                <div class="int-actions"><button>Connect ↗</button></div>
+              </div>
+            </div>
+            <div class="int-card">
+              <div class="int-icon-wrap" style="color:#1264A3;font-size:11px">MS</div>
+              <div class="int-body">
+                <div class="int-name">Microsoft 365</div>
+                <div class="int-desc">Upload DOCX files from OneDrive and open annotated exports in Word Online.</div>
+                <div class="int-status"><div class="int-dot off"></div><span class="int-status-label off">Not connected</span></div>
+                <div class="int-actions"><button>Connect ↗</button></div>
+              </div>
+            </div>
+            <div class="int-card">
+              <div class="int-icon-wrap" style="color:#5B5BD6;font-size:11px">ZP</div>
+              <div class="int-body">
+                <div class="int-name">Zapier</div>
+                <div class="int-desc">Build custom automation workflows triggered by LexAI analysis events.</div>
+                <div class="int-status"><div class="int-dot off"></div><span class="int-status-label off">Not connected</span></div>
+                <div class="int-actions"><button>Connect ↗</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-api" style="display:none">
+        <p class="page-title">API &amp; webhooks</p>
+        <p class="page-sub">Integrate LexAI analysis into your own products and workflows.</p>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">API key</span><span class="ss-action">View docs ↗</span></div>
+          <div class="card">
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Secret API key</div><div class="sr-desc">Keep this private. Rotates every 90 days.</div></div>
+              <div style="display:flex;gap:6px">
+                <input class="api-input" type="password" value="lxai_sk_prod_a8f2k9z..." readonly />
+                <button class="sr-btn" onclick="copyKey(this)">Copy</button>
+                <button class="sr-btn">Regenerate ↗</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Rate limit</div><div class="sr-desc">Current plan allows 10,000 API calls/month</div></div>
+              <span style="font-size:12px;color:var(--color-text-warning);font-weight:500">8,820 / 10,000 used</span>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Webhook endpoint</span></div>
+          <div class="card">
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Endpoint URL</div><div class="sr-desc">LexAI will POST events here when analyses complete or deadlines fire</div></div>
+              <input class="sr-input" type="text" placeholder="https://yourapp.com/webhook" />
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Events to send</div></div>
+              <div class="tag-row">
+                <div class="tag active" onclick="this.classList.toggle('active')">analysis.complete</div>
+                <div class="tag active" onclick="this.classList.toggle('active')">deadline.approaching</div>
+                <div class="tag" onclick="this.classList.toggle('active')">flag.critical</div>
+                <div class="tag" onclick="this.classList.toggle('active')">review.approved</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="ss-head"><span class="ss-title">Quick example</span></div>
+          <div class="api-block">POST /v1/analyze<br>Authorization: Bearer lxai_sk_prod_...<br><br>&#123; "document_url": "https://...", "jurisdiction": "IN", "depth": "full" &#125;</div>
+        </div>
+      </div>
+
+      <div id="sec-team" style="display:none">
+        <p class="page-title">Team settings</p>
+        <p class="page-sub">Manage workspace-level defaults for your whole team.</p>
+        <div class="settings-section">
+          <div class="card">
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Workspace name</div></div><input class="sr-input" type="text" value="John's Legal Team" /></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Default document visibility</div><div class="sr-desc">Who can see newly uploaded documents by default</div></div><select class="sr-select"><option>Owner only</option><option>Admins only</option><option>All team members</option></select></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Require sign-off before sharing</div><div class="sr-desc">Documents must complete a review workflow before being exported or shared externally</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Allow viewers to export summaries</div><div class="sr-desc">Viewer-role members can download the plain-English summary PDF</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="setting-row"><div class="sr-left"><div class="sr-label">Enforce 2FA for all members</div><div class="sr-desc">Require two-factor authentication across the whole workspace</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sec-danger" style="display:none">
+        <p class="page-title" style="color:var(--color-text-danger)">Danger zone</p>
+        <p class="page-sub">These actions are permanent and cannot be undone.</p>
+        <div class="danger-zone">
+          <div class="dz-row">
+            <div><div class="dz-label">Clear all annotations</div><div class="dz-desc">Permanently delete every note and highlight across all documents</div></div>
+            <button class="dz-btn">Clear annotations</button>
+          </div>
+          <div class="dz-row">
+            <div><div class="dz-label">Delete all documents from vault</div><div class="dz-desc">Remove all uploaded documents and their analyses. Cannot be recovered.</div></div>
+            <button class="dz-btn">Delete vault</button>
+          </div>
+          <div class="dz-row">
+            <div><div class="dz-label">Delete workspace</div><div class="dz-desc">Remove the entire team workspace, all members, documents, and analyses</div></div>
+            <button class="dz-btn">Delete workspace</button>
+          </div>
+          <div class="dz-row">
+            <div><div class="dz-label">Delete account</div><div class="dz-desc">Permanently close your account and erase all data. This cannot be undone.</div></div>
+            <button class="dz-btn">Delete account</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showSection(navEl, id){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  navEl.classList.add('active');
+  ['profile','billing','notifications','analysis','jurisdiction','privacy','integrations','api','team','danger'].forEach(s=>{
+    var el=document.getElementById('sec-'+s);
+    if(el)el.style.display=s===id?'block':'none';
+  });
+}
+function saveSettings(){
+  var t=document.getElementById('save-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function copyKey(btn){
+  btn.textContent='Copied!';
+  setTimeout(()=>btn.textContent='Copy',1800);
+}
+</script>

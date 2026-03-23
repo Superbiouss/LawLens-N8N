@@ -1,0 +1,648 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+
+.pg-tabs{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;padding:0 20px}
+.ptab{font-size:12px;padding:9px 14px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
+.ptab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.ptab:hover:not(.active){color:var(--color-text-secondary)}
+
+.layout{display:grid;grid-template-columns:1fr 272px;min-height:620px}
+.main{padding:20px 24px;border-right:0.5px solid var(--color-border-tertiary)}
+.side{padding:16px;background:var(--color-background-primary)}
+
+.stat-band{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.sstat{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px}
+.ss-n{font-size:22px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ss-l{font-size:11px;color:var(--color-text-tertiary);margin-top:3px}
+.ss-n.info{color:var(--color-text-info)}
+.ss-n.warn{color:var(--color-text-warning)}
+.ss-n.ok{color:var(--color-text-success)}
+.ss-n.danger{color:var(--color-text-danger)}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sh-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.sh-action{font-size:11px;color:var(--color-text-info);cursor:pointer}
+
+.member-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.mt-head{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);text-align:left;padding:0 10px 7px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.mt-row{border-bottom:0.5px solid var(--color-border-tertiary);transition:background .12s;cursor:pointer}
+.mt-row:hover{background:var(--color-background-secondary)}
+.mt-row:last-child{border-bottom:none}
+.mt-cell{padding:10px}
+.member-info{display:flex;align-items:center;gap:10px}
+.avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.av-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.av-email{font-size:10px;color:var(--color-text-tertiary)}
+.role-badge{font-size:10px;font-weight:500;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.role-badge.owner{background:#EEEDFE;color:#3C3489}
+.role-badge.admin{background:var(--color-background-info);color:var(--color-text-info)}
+.role-badge.reviewer{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.role-badge.viewer{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
+.role-badge.pending{background:var(--color-background-warning);color:var(--color-text-warning)}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
+.status-dot.active{background:var(--color-text-success)}
+.status-dot.idle{background:var(--color-text-warning)}
+.status-dot.offline{background:var(--color-border-secondary)}
+.status-dot.pending{background:var(--color-text-warning)}
+.mt-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.mt-row:hover .mt-actions{opacity:1}
+.mt-action-btn{font-size:10px;padding:3px 8px;border-radius:4px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);transition:all .15s;white-space:nowrap}
+.mt-action-btn:hover{border-color:var(--color-border-secondary);color:var(--color-text-primary)}
+
+.invite-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:20px}
+.invite-row{display:flex;gap:8px;margin-bottom:10px}
+.invite-input{flex:1;font-size:12px;height:34px}
+.invite-role-sel{font-size:12px;padding:0 8px;height:34px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary)}
+.invite-btn{font-size:12px;padding:0 14px;height:34px;white-space:nowrap}
+
+.role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+.role-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px}
+.rc-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rc-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.rc-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:8px}
+.rc-perms{display:flex;flex-direction:column;gap:3px}
+.rc-perm{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-text-secondary)}
+.perm-icon{width:12px;height:12px;flex-shrink:0}
+.perm-icon.yes{color:var(--color-text-success)}
+.perm-icon.no{color:var(--color-text-tertiary);opacity:.5}
+
+.doc-access-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.doc-access-row:last-child{border-bottom:none}
+.da-doc{flex:1}
+.da-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.da-type{font-size:10px;color:var(--color-text-tertiary)}
+.da-avatars{display:flex;gap:-4px}
+.da-av{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--color-background-primary);margin-left:-4px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500;flex-shrink:0}
+.da-av:first-child{margin-left:0}
+.da-more{width:20px;height:20px;border-radius:50%;background:var(--color-background-secondary);border:1.5px solid var(--color-background-primary);margin-left:-4px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--color-text-tertiary);flex-shrink:0}
+.da-access{font-size:10px;padding:2px 7px;border-radius:999px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+
+.activity-feed{display:flex;flex-direction:column;gap:0}
+.af-item{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.af-item:last-child{border-bottom:none}
+.af-av{flex-shrink:0;margin-top:1px}
+.af-body{flex:1}
+.af-text{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.af-text strong{font-weight:500;color:var(--color-text-primary)}
+.af-doc{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--color-text-info);cursor:pointer;border-bottom:0.5px solid transparent;transition:border-color .15s}
+.af-doc:hover{border-bottom-color:var(--color-text-info)}
+.af-time{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.af-badge{font-size:10px;font-weight:500;padding:1px 6px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.af-badge.flag{background:var(--color-background-danger);color:var(--color-text-danger)}
+.af-badge.done{background:var(--color-background-success);color:var(--color-text-success)}
+.af-badge.note{background:var(--color-background-info);color:var(--color-text-info)}
+.af-badge.share{background:#EEEDFE;color:#3C3489}
+
+.task-item{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start;cursor:pointer;transition:background .12s}
+.task-item:last-child{border-bottom:none}
+.task-item:hover{background:var(--color-background-secondary);margin:0 -12px;padding:9px 12px;border-radius:var(--border-radius-md)}
+.task-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-check.done{background:var(--color-text-success);border-color:var(--color-text-success)}
+.task-check.done svg{display:block}
+.task-check svg{width:8px;height:8px;stroke:#fff;display:none}
+.task-body{flex:1}
+.task-title{font-size:12px;color:var(--color-text-primary)}
+.task-title.done-text{text-decoration:line-through;color:var(--color-text-tertiary)}
+.task-meta{display:flex;align-items:center;gap:6px;margin-top:3px}
+.task-doc{font-size:10px;color:var(--color-text-tertiary)}
+.task-due{font-size:10px;color:var(--color-text-warning);font-weight:500}
+.task-due.overdue{color:var(--color-text-danger)}
+.task-assignee{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:500;flex-shrink:0}
+
+.review-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:8px}
+.rv-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.rv-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.rv-status{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px}
+.rv-status.in-review{background:var(--color-background-warning);color:var(--color-text-warning)}
+.rv-status.approved{background:var(--color-background-success);color:var(--color-text-success)}
+.rv-status.needs-work{background:var(--color-background-danger);color:var(--color-text-danger)}
+.rv-doc{font-size:11px;color:var(--color-text-tertiary);margin-bottom:7px}
+.rv-progress{display:flex;gap:4px;margin-bottom:7px}
+.rv-step{flex:1;height:4px;border-radius:2px}
+.rv-step.done{background:var(--color-text-success)}
+.rv-step.active{background:var(--color-text-warning)}
+.rv-step.pending{background:var(--color-border-tertiary)}
+.rv-avatars{display:flex;align-items:center;gap:6px}
+.rv-av-wrap{display:flex;align-items:center;gap:4px}
+.rv-av{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:500}
+.rv-av-label{font-size:10px;color:var(--color-text-tertiary)}
+
+.notif-item{display:flex;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover .notif-text{color:var(--color-text-primary)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:var(--color-text-info);flex-shrink:0;margin-top:4px}
+.notif-dot.read{background:transparent;border:0.5px solid var(--color-border-secondary)}
+.notif-text{font-size:11px;color:var(--color-text-secondary);line-height:1.5;flex:1;transition:color .15s}
+.notif-time{font-size:10px;color:var(--color-text-tertiary);white-space:nowrap}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc"><span>Vault</span><span>›</span><span class="cur">Team workspace</span></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button style="font-size:12px;padding:4px 14px" onclick="sendPrompt('What should the Export & Share page look like in a legal document summarizer?')">Invite member ↗</button>
+      <button style="font-size:12px;padding:4px 12px">Workspace settings ↗</button>
+    </div>
+  </div>
+
+  <div class="pg-tabs">
+    <div class="ptab active" onclick="switchTab(this,'members')">Members</div>
+    <div class="ptab" onclick="switchTab(this,'activity')">Activity</div>
+    <div class="ptab" onclick="switchTab(this,'tasks')">Tasks &amp; sign-off</div>
+    <div class="ptab" onclick="switchTab(this,'reviews')">Review workflows</div>
+    <div class="ptab" onclick="switchTab(this,'settings')">Permissions</div>
+  </div>
+
+  <div id="tab-members" class="layout">
+    <div class="main">
+      <div class="stat-band">
+        <div class="sstat"><div class="ss-n info">6</div><div class="ss-l">Team members</div></div>
+        <div class="sstat"><div class="ss-n ok">3</div><div class="ss-l">Active now</div></div>
+        <div class="sstat"><div class="ss-n warn">2</div><div class="ss-l">Pending review tasks</div></div>
+        <div class="sstat"><div class="ss-n danger">1</div><div class="ss-l">Pending invite</div></div>
+      </div>
+
+      <div class="section-head"><span class="sh-title">Team members</span><span class="sh-action" onclick="sendPrompt('What should the Export & Share page look like in a legal document summarizer?')">+ Invite ↗</span></div>
+
+      <div class="invite-card">
+        <div class="sl">Invite a new member</div>
+        <div class="invite-row">
+          <input type="email" class="invite-input" placeholder="Email address…" />
+          <select class="invite-role-sel">
+            <option>Reviewer</option>
+            <option>Admin</option>
+            <option>Viewer</option>
+          </select>
+          <button class="invite-btn" onclick="sendInvite()">Send invite ↗</button>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-tertiary)">Reviewer: can annotate and comment. Admin: full access. Viewer: read-only summary access.</div>
+      </div>
+
+      <table class="member-table">
+        <thead>
+          <tr>
+            <th class="mt-head" style="width:40%">Member</th>
+            <th class="mt-head">Role</th>
+            <th class="mt-head">Status</th>
+            <th class="mt-head">Documents</th>
+            <th class="mt-head">Last active</th>
+            <th class="mt-head"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="mt-row" onclick="">
+            <td class="mt-cell">
+              <div class="member-info">
+                <div class="avatar" style="background:#EEEDFE;color:#3C3489">JD</div>
+                <div><div class="av-name">John Doe (you)</div><div class="av-email">john@company.in</div></div>
+              </div>
+            </td>
+            <td class="mt-cell"><span class="role-badge owner">Owner</span></td>
+            <td class="mt-cell"><span class="status-dot active"></span><span style="font-size:11px;color:var(--color-text-secondary)">Active</span></td>
+            <td class="mt-cell"><span style="font-size:12px;color:var(--color-text-primary)">14</span></td>
+            <td class="mt-cell"><span style="font-size:11px;color:var(--color-text-tertiary)">Now</span></td>
+            <td class="mt-cell"><div class="mt-actions"></div></td>
+          </tr>
+          <tr class="mt-row">
+            <td class="mt-cell">
+              <div class="member-info">
+                <div class="avatar" style="background:#E1F5EE;color:#085041">PS</div>
+                <div><div class="av-name">Priya Sharma</div><div class="av-email">priya@company.in</div></div>
+              </div>
+            </td>
+            <td class="mt-cell"><span class="role-badge admin">Admin</span></td>
+            <td class="mt-cell"><span class="status-dot active"></span><span style="font-size:11px;color:var(--color-text-secondary)">Active</span></td>
+            <td class="mt-cell"><span style="font-size:12px;color:var(--color-text-primary)">9</span></td>
+            <td class="mt-cell"><span style="font-size:11px;color:var(--color-text-tertiary)">4 min ago</span></td>
+            <td class="mt-cell">
+              <div class="mt-actions">
+                <div class="mt-action-btn">Change role</div>
+                <div class="mt-action-btn">Remove</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="mt-row">
+            <td class="mt-cell">
+              <div class="member-info">
+                <div class="avatar" style="background:#FAEEDA;color:#633806">RM</div>
+                <div><div class="av-name">Rajan Mehta</div><div class="av-email">rajan@legalpartners.in</div></div>
+              </div>
+            </td>
+            <td class="mt-cell"><span class="role-badge reviewer">Reviewer</span></td>
+            <td class="mt-cell"><span class="status-dot active"></span><span style="font-size:11px;color:var(--color-text-secondary)">Active</span></td>
+            <td class="mt-cell"><span style="font-size:12px;color:var(--color-text-primary)">3</span></td>
+            <td class="mt-cell"><span style="font-size:11px;color:var(--color-text-tertiary)">12 min ago</span></td>
+            <td class="mt-cell">
+              <div class="mt-actions">
+                <div class="mt-action-btn">Change role</div>
+                <div class="mt-action-btn">Remove</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="mt-row">
+            <td class="mt-cell">
+              <div class="member-info">
+                <div class="avatar" style="background:#FAECE7;color:#712B13">AK</div>
+                <div><div class="av-name">Ananya Kapoor</div><div class="av-email">ananya@company.in</div></div>
+              </div>
+            </td>
+            <td class="mt-cell"><span class="role-badge reviewer">Reviewer</span></td>
+            <td class="mt-cell"><span class="status-dot idle"></span><span style="font-size:11px;color:var(--color-text-secondary)">Away</span></td>
+            <td class="mt-cell"><span style="font-size:12px;color:var(--color-text-primary)">6</span></td>
+            <td class="mt-cell"><span style="font-size:11px;color:var(--color-text-tertiary)">2 hours ago</span></td>
+            <td class="mt-cell">
+              <div class="mt-actions">
+                <div class="mt-action-btn">Change role</div>
+                <div class="mt-action-btn">Remove</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="mt-row">
+            <td class="mt-cell">
+              <div class="member-info">
+                <div class="avatar" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">SV</div>
+                <div><div class="av-name">Shreya Verma</div><div class="av-email">shreya@company.in</div></div>
+              </div>
+            </td>
+            <td class="mt-cell"><span class="role-badge viewer">Viewer</span></td>
+            <td class="mt-cell"><span class="status-dot offline"></span><span style="font-size:11px;color:var(--color-text-secondary)">Offline</span></td>
+            <td class="mt-cell"><span style="font-size:12px;color:var(--color-text-primary)">4</span></td>
+            <td class="mt-cell"><span style="font-size:11px;color:var(--color-text-tertiary)">Yesterday</span></td>
+            <td class="mt-cell">
+              <div class="mt-actions">
+                <div class="mt-action-btn">Change role</div>
+                <div class="mt-action-btn">Remove</div>
+              </div>
+            </td>
+          </tr>
+          <tr class="mt-row">
+            <td class="mt-cell">
+              <div class="member-info">
+                <div class="avatar" style="background:var(--color-background-warning);color:var(--color-text-warning)">?</div>
+                <div><div class="av-name">counsel@externalfirm.in</div><div class="av-email">External counsel</div></div>
+              </div>
+            </td>
+            <td class="mt-cell"><span class="role-badge pending">Pending</span></td>
+            <td class="mt-cell"><span class="status-dot pending"></span><span style="font-size:11px;color:var(--color-text-warning)">Invite sent</span></td>
+            <td class="mt-cell"><span style="font-size:12px;color:var(--color-text-tertiary)">—</span></td>
+            <td class="mt-cell"><span style="font-size:11px;color:var(--color-text-tertiary)">Never</span></td>
+            <td class="mt-cell">
+              <div class="mt-actions">
+                <div class="mt-action-btn">Resend</div>
+                <div class="mt-action-btn">Cancel</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-head"><span class="sh-title">Document access</span><span class="sh-action">Manage all →</span></div>
+      <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:8px 14px">
+        <div class="doc-access-row">
+          <div class="da-doc"><div class="da-name">Acme Corp NDA v3.pdf</div><div class="da-type">NDA · High risk</div></div>
+          <div class="da-avatars">
+            <div class="da-av" style="background:#EEEDFE;color:#3C3489">JD</div>
+            <div class="da-av" style="background:#E1F5EE;color:#085041">PS</div>
+            <div class="da-av" style="background:#FAEEDA;color:#633806">RM</div>
+            <div class="da-more">+2</div>
+          </div>
+          <span class="da-access">5 members</span>
+        </div>
+        <div class="doc-access-row">
+          <div class="da-doc"><div class="da-name">Freelance MSA — Jan 2025</div><div class="da-type">MSA · Medium risk</div></div>
+          <div class="da-avatars">
+            <div class="da-av" style="background:#EEEDFE;color:#3C3489">JD</div>
+            <div class="da-av" style="background:#E1F5EE;color:#085041">PS</div>
+          </div>
+          <span class="da-access">2 members</span>
+        </div>
+        <div class="doc-access-row">
+          <div class="da-doc"><div class="da-name">Office Lease Mumbai 2025</div><div class="da-type">Lease · Low risk</div></div>
+          <div class="da-avatars">
+            <div class="da-av" style="background:#EEEDFE;color:#3C3489">JD</div>
+            <div class="da-av" style="background:#FAECE7;color:#712B13">AK</div>
+            <div class="da-av" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">SV</div>
+          </div>
+          <span class="da-access">3 members</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="side">
+      <p class="sl">Notifications</p>
+      <div style="margin-bottom:16px">
+        <div class="notif-item">
+          <div class="notif-dot"></div>
+          <div class="notif-text"><strong>Priya Sharma</strong> approved the Acme NDA jurisdiction clause</div>
+          <div class="notif-time">5m</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot"></div>
+          <div class="notif-text"><strong>Rajan Mehta</strong> added a note to Clause 3 — Penalties</div>
+          <div class="notif-time">18m</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot"></div>
+          <div class="notif-text"><strong>Ananya Kapoor</strong> flagged the Office Lease break clause for review</div>
+          <div class="notif-time">2h</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot read"></div>
+          <div class="notif-text"><strong>Priya Sharma</strong> uploaded a new version of the Acme NDA</div>
+          <div class="notif-time">Yesterday</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot read"></div>
+          <div class="notif-text">External counsel invite is still pending — 3 days</div>
+          <div class="notif-time">3d</div>
+        </div>
+      </div>
+
+      <p class="sl">Open tasks</p>
+      <div style="margin-bottom:16px">
+        <div class="task-item" onclick="switchTab(document.querySelector('.ptab:nth-child(3)'),'tasks')">
+          <div class="task-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+          <div class="task-body">
+            <div class="task-title">Review Acme NDA jurisdiction clause</div>
+            <div class="task-meta">
+              <span class="task-doc">Acme Corp NDA v3</span>
+              <span class="task-due overdue">Overdue</span>
+            </div>
+          </div>
+          <div class="task-assignee" style="background:#E1F5EE;color:#085041">PS</div>
+        </div>
+        <div class="task-item" onclick="switchTab(document.querySelector('.ptab:nth-child(3)'),'tasks')">
+          <div class="task-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+          <div class="task-body">
+            <div class="task-title">Confirm stamp duty requirement for Mumbai lease</div>
+            <div class="task-meta">
+              <span class="task-doc">Office Lease Mumbai</span>
+              <span class="task-due">Due 28 Apr</span>
+            </div>
+          </div>
+          <div class="task-assignee" style="background:#FAECE7;color:#712B13">AK</div>
+        </div>
+        <div class="task-item" onclick="switchTab(document.querySelector('.ptab:nth-child(3)'),'tasks')">
+          <div class="task-check done"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+          <div class="task-body">
+            <div class="task-title done-text">Draft counter-proposal for Clause 1</div>
+            <div class="task-meta"><span class="task-doc">Acme Corp NDA v3</span></div>
+          </div>
+          <div class="task-assignee" style="background:#FAEEDA;color:#633806">RM</div>
+        </div>
+      </div>
+
+      <p class="sl">Active reviews</p>
+      <div class="review-card">
+        <div class="rv-head">
+          <div class="rv-title">Acme NDA — sign-off</div>
+          <span class="rv-status in-review">In review</span>
+        </div>
+        <div class="rv-doc">Acme Corp NDA v3.pdf · 3 of 4 reviewers done</div>
+        <div class="rv-progress">
+          <div class="rv-step done"></div>
+          <div class="rv-step done"></div>
+          <div class="rv-step done"></div>
+          <div class="rv-step active"></div>
+        </div>
+        <div class="rv-avatars">
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#EEEDFE;color:#3C3489">JD</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#E1F5EE;color:#085041">PS</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#FAEEDA;color:#633806">RM</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#FAECE7;color:#712B13">AK</div><span class="rv-av-label" style="color:var(--color-text-warning)">…</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+        <button style="width:100%;font-size:11px;padding:6px" onclick="sendPrompt('What should the Export & Share page look like in a legal document summarizer?')">Share workspace ↗</button>
+        <button style="width:100%;font-size:11px;padding:6px">Audit log ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-activity" style="display:none" class="layout">
+    <div class="main">
+      <div class="section-head"><span class="sh-title">Team activity</span><span style="font-size:11px;color:var(--color-text-tertiary)">Last 7 days</span></div>
+      <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:8px 14px">
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#E1F5EE;color:#085041">PS</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>Priya Sharma</strong> approved the jurisdiction clause in <span class="af-doc" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Acme NDA v3</span></div>
+            <div class="af-time">5 minutes ago</div>
+          </div>
+          <span class="af-badge done">Approved</span>
+        </div>
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#FAEEDA;color:#633806">RM</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>Rajan Mehta</strong> added a note to Clause 3 in <span class="af-doc" onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Acme NDA v3</span>: "Delaware courts unlikely to enforce — advise removing"</div>
+            <div class="af-time">18 minutes ago</div>
+          </div>
+          <span class="af-badge note">Note</span>
+        </div>
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#EEEDFE;color:#3C3489">JD</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>You</strong> ran the compliance checklist against <span class="af-doc" onclick="sendPrompt('What should the Compliance Checklist page look like in a legal document summarizer?')">Acme NDA v3</span> for India jurisdiction — 5 failures</div>
+            <div class="af-time">1 hour ago</div>
+          </div>
+          <span class="af-badge flag">5 fails</span>
+        </div>
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#FAECE7;color:#712B13">AK</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>Ananya Kapoor</strong> flagged the break clause in <span class="af-doc" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Office Lease Mumbai</span> for Priya's review</div>
+            <div class="af-time">2 hours ago</div>
+          </div>
+          <span class="af-badge flag">Flagged</span>
+        </div>
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#EEEDFE;color:#3C3489">JD</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>You</strong> shared the risk report for <span class="af-doc">Acme NDA v3</span> with Rajan Mehta and Priya Sharma</div>
+            <div class="af-time">Yesterday at 3:14 pm</div>
+          </div>
+          <span class="af-badge share">Shared</span>
+        </div>
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#E1F5EE;color:#085041">PS</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>Priya Sharma</strong> uploaded <span class="af-doc">Acme NDA v3.pdf</span> and triggered a new analysis</div>
+            <div class="af-time">Yesterday at 11:42 am</div>
+          </div>
+          <span class="af-badge note">Uploaded</span>
+        </div>
+        <div class="af-item">
+          <div class="af-av"><div class="avatar" style="width:26px;height:26px;font-size:10px;background:#FAEEDA;color:#633806">RM</div></div>
+          <div class="af-body">
+            <div class="af-text"><strong>Rajan Mehta</strong> completed redline counter-proposal for Clause 1 and marked the task done</div>
+            <div class="af-time">2 days ago</div>
+          </div>
+          <span class="af-badge done">Task done</span>
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <p class="sl">Activity by member</p>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><div style="display:flex;align-items:center;gap:7px"><div class="avatar" style="width:20px;height:20px;font-size:9px;background:#EEEDFE;color:#3C3489">JD</div><span style="font-size:11px;color:var(--color-text-primary)">John Doe</span></div><span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">12 actions</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><div style="display:flex;align-items:center;gap:7px"><div class="avatar" style="width:20px;height:20px;font-size:9px;background:#E1F5EE;color:#085041">PS</div><span style="font-size:11px;color:var(--color-text-primary)">Priya Sharma</span></div><span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">9 actions</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><div style="display:flex;align-items:center;gap:7px"><div class="avatar" style="width:20px;height:20px;font-size:9px;background:#FAEEDA;color:#633806">RM</div><span style="font-size:11px;color:var(--color-text-primary)">Rajan Mehta</span></div><span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">6 actions</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0"><div style="display:flex;align-items:center;gap:7px"><div class="avatar" style="width:20px;height:20px;font-size:9px;background:#FAECE7;color:#712B13">AK</div><span style="font-size:11px;color:var(--color-text-primary)">Ananya Kapoor</span></div><span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">3 actions</span></div>
+      </div>
+      <button style="width:100%;font-size:11px;padding:6px">Download audit log ↗</button>
+    </div>
+  </div>
+
+  <div id="tab-tasks" style="display:none" class="layout">
+    <div class="main">
+      <div class="section-head"><span class="sh-title">Tasks &amp; sign-off items</span><span class="sh-action">+ New task ↗</span></div>
+      <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:6px 14px;margin-bottom:16px">
+        <div class="task-item"><div class="task-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><div class="task-body"><div class="task-title">Review and approve Acme NDA jurisdiction clause</div><div class="task-meta"><span class="task-doc">Acme Corp NDA v3 · Clause 5</span><span class="task-due overdue">Overdue since 20 Apr</span></div></div><div class="task-assignee" style="background:#E1F5EE;color:#085041">PS</div></div>
+        <div class="task-item"><div class="task-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><div class="task-body"><div class="task-title">Confirm Maharashtra stamp duty requirement before signing</div><div class="task-meta"><span class="task-doc">Office Lease Mumbai · Compliance</span><span class="task-due">Due 28 Apr</span></div></div><div class="task-assignee" style="background:#FAECE7;color:#712B13">AK</div></div>
+        <div class="task-item"><div class="task-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><div class="task-body"><div class="task-title">Get external counsel to review DPDP Act data clause</div><div class="task-meta"><span class="task-doc">Acme Corp NDA v3 · Compliance</span><span class="task-due">Due 5 May</span></div></div><div class="task-assignee" style="background:var(--color-background-warning);color:var(--color-text-warning)">?</div></div>
+        <div class="task-item"><div class="task-check done"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><div class="task-body"><div class="task-title done-text">Draft redline counter-proposal for Clause 1 — Confidentiality</div><div class="task-meta"><span class="task-doc">Acme Corp NDA v3</span></div></div><div class="task-assignee" style="background:#FAEEDA;color:#633806">RM</div></div>
+        <div class="task-item"><div class="task-check done"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><div class="task-body"><div class="task-title done-text">Run India compliance checklist on Acme NDA</div><div class="task-meta"><span class="task-doc">Acme Corp NDA v3</span></div></div><div class="task-assignee" style="background:#EEEDFE;color:#3C3489">JD</div></div>
+      </div>
+    </div>
+    <div class="side">
+      <p class="sl">Task summary</p>
+      <div class="stat-band" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+        <div class="sstat"><div class="ss-n danger">1</div><div class="ss-l">Overdue</div></div>
+        <div class="sstat"><div class="ss-n warn">2</div><div class="ss-l">Upcoming</div></div>
+        <div class="sstat"><div class="ss-n ok">2</div><div class="ss-l">Completed</div></div>
+        <div class="sstat"><div class="ss-n neutral">5</div><div class="ss-l">Total</div></div>
+      </div>
+      <button style="width:100%;font-size:11px;padding:6px">+ Create task ↗</button>
+    </div>
+  </div>
+
+  <div id="tab-reviews" style="display:none" class="layout">
+    <div class="main">
+      <div class="section-head"><span class="sh-title">Review workflows</span><span class="sh-action">+ New workflow ↗</span></div>
+      <div class="review-card">
+        <div class="rv-head"><div class="rv-title">Acme Corp NDA v3 — Full sign-off</div><span class="rv-status in-review">In review</span></div>
+        <div class="rv-doc">Acme Corp NDA v3.pdf · Started 20 Apr 2025 · 3 of 4 reviewers approved</div>
+        <div class="rv-progress"><div class="rv-step done"></div><div class="rv-step done"></div><div class="rv-step done"></div><div class="rv-step active"></div></div>
+        <div class="rv-avatars">
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#EEEDFE;color:#3C3489">JD</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#E1F5EE;color:#085041">PS</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#FAEEDA;color:#633806">RM</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#FAECE7;color:#712B13">AK</div><span class="rv-av-label" style="color:var(--color-text-warning)">Pending</span></div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="rv-head"><div class="rv-title">Office Lease Mumbai — Legal review</div><span class="rv-status needs-work">Needs work</span></div>
+        <div class="rv-doc">Office Lease Mumbai 2025.pdf · Stamp duty query unresolved</div>
+        <div class="rv-progress"><div class="rv-step done"></div><div class="rv-step active"></div><div class="rv-step pending"></div></div>
+        <div class="rv-avatars">
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#EEEDFE;color:#3C3489">JD</div><span class="rv-av-label" style="color:var(--color-text-success)">✓</span></div>
+          <div class="rv-av-wrap"><div class="rv-av" style="background:#FAECE7;color:#712B13">AK</div><span class="rv-av-label" style="color:var(--color-text-danger)">✗</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <p class="sl">Workflow status</p>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="color:var(--color-text-tertiary)">In review</span><span style="font-weight:500;color:var(--color-text-primary)">1</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="color:var(--color-text-tertiary)">Needs work</span><span style="font-weight:500;color:var(--color-text-danger)">1</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0"><span style="color:var(--color-text-tertiary)">Approved</span><span style="font-weight:500;color:var(--color-text-success)">0</span></div>
+      </div>
+      <button style="width:100%;font-size:11px;padding:6px;margin-bottom:6px" onclick="sendPrompt('What should the Export & Share page look like in a legal document summarizer?')">Export review status ↗</button>
+    </div>
+  </div>
+
+  <div id="tab-settings" style="display:none" class="layout">
+    <div class="main">
+      <div class="section-head"><span class="sh-title">Role permissions</span></div>
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="rc-head"><span class="role-badge owner">Owner</span></div>
+          <div class="rc-desc">Full access to all documents, settings, billing, and member management. Cannot be removed.</div>
+          <div class="rc-perms">
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Invite &amp; remove members</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Upload &amp; analyze documents</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Annotate &amp; comment</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Export &amp; share</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Manage billing &amp; settings</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="rc-head"><span class="role-badge admin">Admin</span></div>
+          <div class="rc-desc">Can manage documents and members but cannot change billing or workspace settings.</div>
+          <div class="rc-perms">
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Invite &amp; remove members</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Upload &amp; analyze documents</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Annotate &amp; comment</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Export &amp; share</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Manage billing &amp; settings</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="rc-head"><span class="role-badge reviewer">Reviewer</span></div>
+          <div class="rc-desc">Can read, annotate, and comment on documents shared with them. Cannot upload or invite.</div>
+          <div class="rc-perms">
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Invite &amp; remove members</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Upload &amp; analyze documents</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Annotate &amp; comment</div>
+            <div class="rc-perm"><span class="perm-icon yes">✓</span>Export shared summaries</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Manage billing &amp; settings</div>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="rc-head"><span class="role-badge viewer">Viewer</span></div>
+          <div class="rc-desc">Read-only access to summaries and risk reports of documents explicitly shared with them.</div>
+          <div class="rc-perms">
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Invite &amp; remove members</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Upload &amp; analyze documents</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Annotate &amp; comment</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Export &amp; share</div>
+            <div class="rc-perm"><span class="perm-icon no">✗</span>Manage billing &amp; settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <p class="sl">Workspace settings</p>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px"><span style="color:var(--color-text-secondary)">Workspace name</span><span style="font-weight:500;color:var(--color-text-primary)">John's Team</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px"><span style="color:var(--color-text-secondary)">Plan</span><span style="font-weight:500;color:var(--color-text-info)">Pro · 6 seats</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px"><span style="color:var(--color-text-secondary)">Storage</span><span style="font-weight:500;color:var(--color-text-primary)">2.4 GB / 10 GB</span></div>
+      </div>
+      <button style="width:100%;font-size:11px;padding:6px">Manage billing ↗</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tabEl, id){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  if(tabEl) tabEl.classList.add('active');
+  ['members','activity','tasks','reviews','settings'].forEach(t=>{
+    var el=document.getElementById('tab-'+t);
+    if(el) el.style.display=t===id?'grid':'none';
+  });
+}
+document.querySelectorAll('.ptab').forEach((t,i)=>{
+  t.addEventListener('click',function(){
+    var ids=['members','activity','tasks','reviews','settings'];
+    switchTab(t,ids[i]);
+  });
+});
+function sendInvite(){
+  var btn=event.target;
+  btn.textContent='Sent ✓';
+  setTimeout(()=>btn.textContent='Send invite ↗',2000);
+}
+</script>

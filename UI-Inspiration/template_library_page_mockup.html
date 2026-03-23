@@ -1,0 +1,491 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+
+.layout{display:grid;grid-template-columns:220px 1fr 280px;min-height:620px}
+.left-rail{border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px 0}
+.rs{padding:0 12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
+.rs:last-child{border-bottom:none;margin-bottom:0}
+
+.cat-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;border-left:2px solid transparent;margin-bottom:2px}
+.cat-item:hover{background:var(--color-background-secondary)}
+.cat-item.active{background:var(--color-background-secondary);border-left-color:var(--color-text-primary)}
+.ci-left{display:flex;align-items:center;gap:8px}
+.ci-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-icon svg{width:12px;height:12px}
+.ci-name{font-size:12px;color:var(--color-text-primary)}
+.cat-item.active .ci-name{font-weight:500}
+.ci-count{font-size:10px;color:var(--color-text-tertiary);background:var(--color-background-secondary);border-radius:999px;padding:1px 6px}
+
+.juris-row{display:flex;flex-wrap:wrap;gap:5px}
+.jpill{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.jpill:hover{border-color:var(--color-border-secondary)}
+.jpill.active{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+
+.use-filter{display:flex;flex-direction:column;gap:3px}
+.uf-item{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s}
+.uf-item:hover{background:var(--color-background-secondary)}
+.uf-check{width:14px;height:14px;border-radius:3px;border:1px solid var(--color-border-secondary);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.uf-check.on{background:var(--color-text-primary);border-color:var(--color-text-primary)}
+.uf-check.on svg{display:block}
+.uf-check svg{width:8px;height:8px;stroke:#fff;display:none}
+.uf-label{font-size:12px;color:var(--color-text-secondary)}
+
+.main{padding:16px 20px;background:var(--color-background-tertiary)}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:160px}
+.search-wrap input{width:100%;font-size:12px;padding-left:28px}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%)}
+.si svg{width:12px;height:12px;stroke:var(--color-text-tertiary)}
+.sort-sel{font-size:12px;padding:0 8px;height:36px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary)}
+.view-toggle{display:flex;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:2px}
+.vt{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;transition:all .15s}
+.vt.active{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary)}
+.vt svg{width:13px;height:13px;stroke:var(--color-text-secondary)}
+.vt.active svg{stroke:var(--color-text-primary)}
+
+.featured-banner{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:16px}
+.fb-badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:999px;background:var(--color-background-warning);color:var(--color-text-warning);border:0.5px solid var(--color-border-warning);white-space:nowrap;flex-shrink:0}
+.fb-text{flex:1}
+.fb-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px}
+.fb-desc{font-size:12px;color:var(--color-text-secondary);margin:0}
+.fb-btn{font-size:11px;padding:5px 12px;white-space:nowrap;flex-shrink:0}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sh-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.sh-link{font-size:11px;color:var(--color-text-info);cursor:pointer}
+
+.tmpl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.tmpl-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.tmpl-card:hover{border-color:var(--color-border-secondary)}
+.tmpl-card.active{border:1.5px solid var(--color-border-info)}
+.tc-stripe{height:3px}
+.tc-stripe.nda{background:#7F77DD}
+.tc-stripe.employ{background:#1D9E75}
+.tc-stripe.lease{background:#D85A30}
+.tc-stripe.saas{background:#378ADD}
+.tc-stripe.service{background:#D4537E}
+.tc-stripe.ip{background:#BA7517}
+.tc-stripe.custom{background:var(--color-border-secondary)}
+.tc-body{padding:12px 14px}
+.tc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.tc-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.tc-badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-left:6px}
+.tc-badge.official{background:var(--color-background-info);color:var(--color-text-info)}
+.tc-badge.popular{background:var(--color-background-warning);color:var(--color-text-warning)}
+.tc-badge.custom{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.tc-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:10px}
+.tc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tc-juris{font-size:10px;color:var(--color-text-tertiary)}
+.tc-checks{display:flex;align-items:center;gap:4px}
+.tc-check-dot{width:5px;height:5px;border-radius:50%}
+.tc-checks-label{font-size:10px;color:var(--color-text-tertiary)}
+.tc-uses{font-size:10px;color:var(--color-text-tertiary);margin-left:auto}
+.tc-footer{display:flex;gap:6px;padding:8px 14px;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.tc-footer button{flex:1;font-size:11px;padding:5px}
+
+.custom-card{border:1.5px dashed var(--color-border-secondary);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 14px;text-align:center;min-height:130px}
+.custom-card:hover{border-color:var(--color-border-primary);background:var(--color-background-primary)}
+.custom-card-icon{width:32px;height:32px;border-radius:50%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.custom-card-icon svg{width:16px;height:16px;stroke:var(--color-text-secondary)}
+.custom-card-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.custom-card-sub{font-size:11px;color:var(--color-text-tertiary)}
+
+.right-panel{border-left:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px;display:flex;flex-direction:column}
+.preview-header{margin-bottom:12px}
+.ph-stripe{height:3px;border-radius:999px;background:#7F77DD;margin-bottom:10px}
+.ph-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0 0 3px}
+.ph-meta{font-size:11px;color:var(--color-text-tertiary);margin:0 0 8px}
+.ph-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.ph-tag{font-size:10px;padding:2px 8px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.ph-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:12px}
+
+.checklist-section{margin-bottom:12px}
+.cl-item{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.cl-item:last-child{border-bottom:none}
+.cl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.cl-dot.checked{background:var(--color-text-success)}
+.cl-dot.unchecked{background:var(--color-border-secondary)}
+.cl-text{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+
+.variant-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.variant-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:all .15s;background:var(--color-background-primary)}
+.variant-item:hover{border-color:var(--color-border-secondary)}
+.variant-item.selected{border-color:var(--color-border-info);background:var(--color-background-info)}
+.vi-flag{font-size:13px}
+.vi-label{font-size:12px;color:var(--color-text-primary);flex:1}
+.variant-item.selected .vi-label{color:var(--color-text-info);font-weight:500}
+.vi-checks{font-size:10px;color:var(--color-text-tertiary)}
+
+.use-btn{width:100%;padding:9px;font-size:13px;font-weight:500;border-radius:var(--border-radius-md);cursor:pointer;border:none;background:var(--color-text-primary);color:var(--color-background-primary);transition:opacity .15s;margin-bottom:6px}
+.use-btn:hover{opacity:.85}
+.preview-btn{width:100%;padding:7px;font-size:12px}
+
+.stat-row{display:flex;gap:8px;margin-bottom:12px}
+.st{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;flex:1;text-align:center}
+.st-n{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.st-l{font-size:10px;color:var(--color-text-tertiary);margin-top:1px}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc">
+        <span>Vault</span><span>›</span>
+        <span class="cur">Template library</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button style="font-size:12px;padding:4px 14px" onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">+ Upload custom template ↗</button>
+      <button style="font-size:12px;padding:4px 12px" onclick="sendPrompt('What should the Document Vault look like in a legal document summarizer?')">Back to vault ↗</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <div class="left-rail">
+      <div class="rs">
+        <div class="sl">Categories</div>
+        <div class="cat-item active" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:var(--color-background-info)"><svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-info)" stroke-width="1.5"><path d="M2 2h8v8H2z"/></svg></div>
+            <span class="ci-name">All templates</span>
+          </div>
+          <span class="ci-count">34</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:#EEEDFE"><svg viewBox="0 0 12 12" fill="none" stroke="#534AB7" stroke-width="1.5"><path d="M6 1v10M2 5l4-4 4 4"/></svg></div>
+            <span class="ci-name">NDAs</span>
+          </div>
+          <span class="ci-count">7</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:#E1F5EE"><svg viewBox="0 0 12 12" fill="none" stroke="#0F6E56" stroke-width="1.5"><circle cx="6" cy="4" r="2.5"/><path d="M1 11c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg></div>
+            <span class="ci-name">Employment</span>
+          </div>
+          <span class="ci-count">6</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:#FAECE7"><svg viewBox="0 0 12 12" fill="none" stroke="#993C1D" stroke-width="1.5"><path d="M2 2h8v8H2zM5 2v8"/></svg></div>
+            <span class="ci-name">Leases</span>
+          </div>
+          <span class="ci-count">5</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:#E6F1FB"><svg viewBox="0 0 12 12" fill="none" stroke="#185FA5" stroke-width="1.5"><path d="M2 3h8M2 6h6M2 9h4"/></svg></div>
+            <span class="ci-name">SaaS / MSA</span>
+          </div>
+          <span class="ci-count">6</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:#FBEAF0"><svg viewBox="0 0 12 12" fill="none" stroke="#993556" stroke-width="1.5"><path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 9l-3 1.5.5-3.5L1 4.5 4.5 4z"/></svg></div>
+            <span class="ci-name">Service agreements</span>
+          </div>
+          <span class="ci-count">5</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:#FAEEDA"><svg viewBox="0 0 12 12" fill="none" stroke="#854F0B" stroke-width="1.5"><path d="M6 1v10M4 3l2-2 2 2M4 9l2 2 2-2"/></svg></div>
+            <span class="ci-name">IP &amp; licensing</span>
+          </div>
+          <span class="ci-count">3</span>
+        </div>
+        <div class="cat-item" onclick="setCat(this)">
+          <div class="ci-left">
+            <div class="ci-icon" style="background:var(--color-background-secondary)"><svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5"><path d="M6 1v5M6 9v1.5M3 3l1.5 1.5M9 3l-1.5 1.5"/></svg></div>
+            <span class="ci-name">My custom templates</span>
+          </div>
+          <span class="ci-count">2</span>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Jurisdiction</div>
+        <div class="juris-row">
+          <div class="jpill active" onclick="setJuris(this)">All</div>
+          <div class="jpill" onclick="setJuris(this)">🇮🇳 India</div>
+          <div class="jpill" onclick="setJuris(this)">🇺🇸 US</div>
+          <div class="jpill" onclick="setJuris(this)">🇬🇧 UK</div>
+          <div class="jpill" onclick="setJuris(this)">🌍 Multi</div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Use case</div>
+        <div class="use-filter">
+          <div class="uf-item" onclick="toggleCheck(this)"><div class="uf-check on"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><span class="uf-label">As analysis baseline</span></div>
+          <div class="uf-item" onclick="toggleCheck(this)"><div class="uf-check on"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><span class="uf-label">Compliance checklist</span></div>
+          <div class="uf-item" onclick="toggleCheck(this)"><div class="uf-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><span class="uf-label">Starting draft</span></div>
+          <div class="uf-item" onclick="toggleCheck(this)"><div class="uf-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div><span class="uf-label">Redline benchmark</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <div class="si"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="5" r="3.5"/><path d="M8 8l2.5 2.5"/></svg></div>
+          <input type="text" placeholder="Search templates by name, clause, or jurisdiction…" />
+        </div>
+        <select class="sort-sel">
+          <option>Most used</option>
+          <option>Newest</option>
+          <option>A–Z</option>
+          <option>Highest coverage</option>
+        </select>
+        <div class="view-toggle">
+          <div class="vt active"><svg viewBox="0 0 13 13" fill="none" stroke-width="1.5"><rect x="1" y="1" width="4" height="4" rx="1"/><rect x="8" y="1" width="4" height="4" rx="1"/><rect x="1" y="8" width="4" height="4" rx="1"/><rect x="8" y="8" width="4" height="4" rx="1"/></svg></div>
+          <div class="vt"><svg viewBox="0 0 13 13" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M1 3h11M1 6.5h11M1 10h11"/></svg></div>
+        </div>
+      </div>
+
+      <div class="featured-banner">
+        <span class="fb-badge">New · DPDP 2023</span>
+        <div class="fb-text">
+          <p class="fb-title">India Data Protection NDA — updated for DPDP Act 2023</p>
+          <p class="fb-desc">Includes mandatory data fiduciary obligations, consent clauses, and breach notification requirements under India's new data law.</p>
+        </div>
+        <button class="fb-btn" onclick="selectCard(document.querySelector('.tmpl-card'))">Preview ↗</button>
+      </div>
+
+      <div class="section-head"><span class="sh-title">NDAs</span><span class="sh-link">View all 7 →</span></div>
+      <div class="tmpl-grid">
+        <div class="tmpl-card active" onclick="selectCard(this)">
+          <div class="tc-stripe nda"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">Mutual NDA — General purpose</div>
+              <span class="tc-badge popular">Popular</span>
+            </div>
+            <div class="tc-desc">Standard two-way NDA with balanced obligations. Includes 3-year term, return-of-materials clause, and mutual liability cap.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🌍 Multi-jurisdiction</span>
+              <div class="tc-checks"><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div></div>
+              <span class="tc-checks-label">4/5 coverage</span>
+              <span class="tc-uses">Used 1.2k×</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button onclick="sendPrompt('What should the Compliance Checklist page look like in a legal document summarizer?')">Run checklist ↗</button>
+          </div>
+        </div>
+
+        <div class="tmpl-card" onclick="selectCard(this)">
+          <div class="tc-stripe nda"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">One-way NDA — Disclosing party favoured</div>
+              <span class="tc-badge official">Official</span>
+            </div>
+            <div class="tc-desc">Conservative template where the Receiving Party carries full obligations. Use to benchmark aggressive NDAs you receive.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🇺🇸 Delaware, US</span>
+              <div class="tc-checks"><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div></div>
+              <span class="tc-checks-label">3/5 coverage</span>
+              <span class="tc-uses">Used 890×</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Compare ↗</button>
+          </div>
+        </div>
+
+        <div class="tmpl-card" onclick="selectCard(this)">
+          <div class="tc-stripe nda"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">India NDA — DPDP Act 2023 compliant</div>
+              <span class="tc-badge popular">New</span>
+            </div>
+            <div class="tc-desc">Built for Indian jurisdiction. Includes data fiduciary obligations, breach notification, 2-year confidentiality term, and Indian Contract Act–aligned damages.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🇮🇳 India</span>
+              <div class="tc-checks"><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div></div>
+              <span class="tc-checks-label">5/5 coverage</span>
+              <span class="tc-uses">Used 340×</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button onclick="sendPrompt('What should the Compliance Checklist page look like in a legal document summarizer?')">Run checklist ↗</button>
+          </div>
+        </div>
+
+        <div class="tmpl-card" onclick="selectCard(this)">
+          <div class="tc-stripe nda"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">Tech startup NDA — Founder-friendly</div>
+            </div>
+            <div class="tc-desc">Lean NDA for early-stage conversations. Minimal formality, short term (1 year), carve-outs for prior knowledge and public domain info.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🌍 Multi-jurisdiction</span>
+              <div class="tc-checks"><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div></div>
+              <span class="tc-checks-label">2/5 coverage</span>
+              <span class="tc-uses">Used 620×</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Compare ↗</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head"><span class="sh-title">Employment contracts</span><span class="sh-link">View all 6 →</span></div>
+      <div class="tmpl-grid">
+        <div class="tmpl-card" onclick="selectCard(this)">
+          <div class="tc-stripe employ"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">Full-time employment — India (Shops Act)</div>
+              <span class="tc-badge official">Official</span>
+            </div>
+            <div class="tc-desc">Compliant with Indian Shops and Establishments Act. Includes gratuity, PF obligations, notice periods, and IP assignment clauses.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🇮🇳 India</span>
+              <div class="tc-checks"><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div></div>
+              <span class="tc-checks-label">5/5 coverage</span>
+              <span class="tc-uses">Used 980×</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button onclick="sendPrompt('What should the Compliance Checklist page look like in a legal document summarizer?')">Run checklist ↗</button>
+          </div>
+        </div>
+
+        <div class="tmpl-card" onclick="selectCard(this)">
+          <div class="tc-stripe employ"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">Freelance / contractor agreement</div>
+              <span class="tc-badge popular">Popular</span>
+            </div>
+            <div class="tc-desc">Independent contractor template with IP ownership, payment milestones, non-solicitation, and termination clauses. Avoids misclassification risk.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🌍 Multi-jurisdiction</span>
+              <div class="tc-checks"><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-text-success)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div><div class="tc-check-dot" style="background:var(--color-border-secondary)"></div></div>
+              <span class="tc-checks-label">3/5 coverage</span>
+              <span class="tc-uses">Used 1.4k×</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Compare ↗</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head"><span class="sh-title">Custom templates</span><span class="sh-link">Manage →</span></div>
+      <div class="tmpl-grid">
+        <div class="tmpl-card" onclick="selectCard(this)">
+          <div class="tc-stripe custom"></div>
+          <div class="tc-body">
+            <div class="tc-head">
+              <div class="tc-name">Our standard vendor NDA</div>
+              <span class="tc-badge custom">Custom</span>
+            </div>
+            <div class="tc-desc">Internal template approved by legal team. Use as the baseline when reviewing incoming NDAs from vendors. Last updated Mar 2025.</div>
+            <div class="tc-meta">
+              <span class="tc-juris">🇮🇳 India · 🇺🇸 US</span>
+              <span class="tc-uses" style="margin-left:auto">Team template</span>
+            </div>
+          </div>
+          <div class="tc-footer">
+            <button onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as baseline ↗</button>
+            <button>Edit template ↗</button>
+          </div>
+        </div>
+
+        <div class="tmpl-card custom-card" onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">
+          <div class="custom-card-icon"><svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg></div>
+          <div class="custom-card-title">Create custom template</div>
+          <div class="custom-card-sub">Upload a document you trust and turn it into your team's baseline for future analysis.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="preview-header">
+        <div class="ph-stripe" style="background:#7F77DD"></div>
+        <p class="ph-title">Mutual NDA — General purpose</p>
+        <p class="ph-meta">NDA · Multi-jurisdiction · v2.1 · Updated Jan 2025</p>
+        <div class="ph-tags">
+          <span class="ph-tag">Mutual</span>
+          <span class="ph-tag">3-year term</span>
+          <span class="ph-tag">Balanced</span>
+          <span class="ph-tag">Multi-jurisdiction</span>
+        </div>
+        <p class="ph-desc">A balanced mutual NDA designed for B2B conversations. Both parties have equal obligations. Widely accepted by corporate counsel in India, US, and UK without modification.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="st"><div class="st-n">11</div><div class="st-l">Clauses</div></div>
+        <div class="st"><div class="st-n">3 yr</div><div class="st-l">Term</div></div>
+        <div class="st"><div class="st-n">4/5</div><div class="st-l">Coverage</div></div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="sl">What this template checks for</div>
+        <div class="cl-item"><div class="cl-dot checked"></div><span class="cl-text">Confidentiality term with sunset clause</span></div>
+        <div class="cl-item"><div class="cl-dot checked"></div><span class="cl-text">Mutual obligations — both parties equal</span></div>
+        <div class="cl-item"><div class="cl-dot checked"></div><span class="cl-text">Return or destruction of materials</span></div>
+        <div class="cl-item"><div class="cl-dot checked"></div><span class="cl-text">Permitted disclosure carve-outs</span></div>
+        <div class="cl-item"><div class="cl-dot unchecked"></div><span class="cl-text" style="color:var(--color-text-tertiary)">DPDP / GDPR data clauses (not included — use India or EU variant)</span></div>
+      </div>
+
+      <div class="variant-row">
+        <div class="sl">Jurisdiction variants</div>
+        <div class="variant-item selected" onclick="setVariant(this)">
+          <span class="vi-flag">🌍</span>
+          <span class="vi-label">Multi-jurisdiction (default)</span>
+          <span class="vi-checks">4/5</span>
+        </div>
+        <div class="variant-item" onclick="setVariant(this)">
+          <span class="vi-flag">🇮🇳</span>
+          <span class="vi-label">India — DPDP Act 2023</span>
+          <span class="vi-checks">5/5</span>
+        </div>
+        <div class="variant-item" onclick="setVariant(this)">
+          <span class="vi-flag">🇺🇸</span>
+          <span class="vi-label">US — Delaware governed</span>
+          <span class="vi-checks">4/5</span>
+        </div>
+        <div class="variant-item" onclick="setVariant(this)">
+          <span class="vi-flag">🇬🇧</span>
+          <span class="vi-label">UK — English &amp; Welsh law</span>
+          <span class="vi-checks">4/5</span>
+        </div>
+      </div>
+
+      <button class="use-btn" onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">Use as analysis baseline ↗</button>
+      <button class="preview-btn" onclick="sendPrompt('What should the Compliance Checklist page look like in a legal document summarizer?')">Run compliance checklist with this template ↗</button>
+      <button class="preview-btn" style="margin-top:6px" onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Compare my document against this template ↗</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function setCat(el){document.querySelectorAll('.cat-item').forEach(c=>c.classList.remove('active'));el.classList.add('active')}
+function setJuris(el){document.querySelectorAll('.jpill').forEach(p=>p.classList.remove('active'));el.classList.add('active')}
+function toggleCheck(el){el.querySelector('.uf-check').classList.toggle('on');var svg=el.querySelector('svg');if(svg)svg.style.display=el.querySelector('.uf-check').classList.contains('on')?'block':'none'}
+function selectCard(el){document.querySelectorAll('.tmpl-card').forEach(c=>c.classList.remove('active'));el.classList.add('active')}
+function setVariant(el){document.querySelectorAll('.variant-item').forEach(v=>v.classList.remove('selected'));el.classList.add('selected')}
+</script>

@@ -1,0 +1,454 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+
+.layout{display:grid;grid-template-columns:200px 1fr 272px;min-height:620px}
+
+.left-rail{border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px 0}
+.rs{padding:0 12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
+.rs:last-child{border-bottom:none;margin-bottom:0}
+
+.alpha-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.alpha-btn{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;border-radius:4px;cursor:pointer;color:var(--color-text-secondary);border:0.5px solid transparent;transition:all .15s;user-select:none}
+.alpha-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.alpha-btn.active{background:var(--color-background-secondary);border-color:var(--color-border-secondary);color:var(--color-text-primary)}
+.alpha-btn.has-terms{color:var(--color-text-primary)}
+.alpha-btn.no-terms{color:var(--color-text-tertiary);opacity:.4;cursor:default}
+.alpha-btn.no-terms:hover{background:transparent;color:var(--color-text-tertiary)}
+
+.cat-pill{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;margin-bottom:2px;border-left:2px solid transparent}
+.cat-pill:hover{background:var(--color-background-secondary)}
+.cat-pill.active{background:var(--color-background-secondary);border-left-color:var(--color-text-primary)}
+.cp-name{font-size:12px;color:var(--color-text-primary)}
+.cat-pill.active .cp-name{font-weight:500}
+.cp-count{font-size:10px;color:var(--color-text-tertiary);background:var(--color-background-secondary);border-radius:999px;padding:1px 6px}
+
+.filter-row{display:flex;flex-wrap:wrap;gap:4px}
+.fpill{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s;user-select:none}
+.fpill:hover{border-color:var(--color-border-secondary)}
+.fpill.active{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+
+.main{padding:16px 20px;background:var(--color-background-tertiary)}
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap input{width:100%;font-size:13px;padding-left:32px;height:38px}
+.si{position:absolute;left:11px;top:50%;transform:translateY(-50%)}
+.si svg{width:14px;height:14px;stroke:var(--color-text-tertiary)}
+.search-hint{font-size:11px;color:var(--color-text-tertiary);margin-top:6px}
+
+.in-your-docs-banner{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.iyd-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info);flex-shrink:0}
+.iyd-text{font-size:12px;color:var(--color-text-secondary);flex:1}
+.iyd-count{font-size:11px;font-weight:500;color:var(--color-text-info)}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sh-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.sh-count{font-size:11px;color:var(--color-text-tertiary)}
+
+.term-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.term-card:hover{border-color:var(--color-border-secondary)}
+.term-card.active{border:1.5px solid var(--color-border-info)}
+.term-card.in-doc{border-left:3px solid var(--color-border-info)}
+.tc-head{display:flex;align-items:center;gap:10px;padding:11px 14px}
+.tc-word{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.tc-cat-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.tc-cat-tag.liability{background:#EEEDFE;color:#3C3489}
+.tc-cat-tag.damages{background:#FCEBEB;color:#791F1F}
+.tc-cat-tag.contract{background:#E6F1FB;color:#0C447C}
+.tc-cat-tag.ip{background:#FAEEDA;color:#633806}
+.tc-cat-tag.procedure{background:#E1F5EE;color:#085041}
+.tc-cat-tag.remedy{background:#FBEAF0;color:#72243E}
+.tc-cat-tag.data{background:#F1EFE8;color:#444441}
+.in-doc-badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;background:var(--color-background-info);color:var(--color-text-info);border:0.5px solid var(--color-border-info);white-space:nowrap;flex-shrink:0}
+.complexity-bar{display:flex;gap:2px;align-items:center;flex-shrink:0}
+.cb-seg{width:6px;height:6px;border-radius:1px}
+.tc-plain{font-size:12px;color:var(--color-text-secondary);line-height:1.6;padding:0 14px 12px}
+.tc-expand{border-top:0.5px solid var(--color-border-tertiary);padding:12px 14px}
+.te-section{margin-bottom:10px}
+.tes-label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:4px}
+.tes-text{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.in-doc-quote{background:var(--color-background-info);border-left:2px solid var(--color-border-info);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:7px 10px;font-size:11px;font-family:var(--font-mono);color:var(--color-text-info);line-height:1.6;margin-top:6px;cursor:pointer;transition:opacity .15s}
+.in-doc-quote:hover{opacity:.85}
+.in-doc-quote-label{font-size:10px;font-weight:500;color:var(--color-text-info);margin-bottom:3px;display:flex;align-items:center;justify-content:space-between}
+.related-terms{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.rt{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.rt:hover{border-color:var(--color-border-info);color:var(--color-text-info)}
+.watchout{display:flex;gap:6px;align-items:flex-start;background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:7px 10px;margin-top:6px}
+.watchout svg{width:11px;height:11px;stroke:var(--color-text-warning);flex-shrink:0;margin-top:2px}
+.watchout-text{font-size:11px;color:var(--color-text-warning);line-height:1.5}
+.te-actions{display:flex;gap:6px;margin-top:8px}
+.te-actions button{font-size:11px;padding:4px 10px}
+
+.alpha-jump{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.aj{font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px;color:var(--color-text-tertiary);cursor:pointer;transition:all .15s;border:0.5px solid transparent}
+.aj:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-tertiary)}
+.aj.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-secondary)}
+
+.right-panel{border-left:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px}
+.term-detail{flex:1}
+.td-word{font-size:18px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px;line-height:1.2}
+.td-pronunciation{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono);margin-bottom:8px}
+.td-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.td-tag{font-size:10px;padding:2px 8px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.td-plain{font-size:13px;color:var(--color-text-primary);line-height:1.7;margin-bottom:10px;font-family:var(--font-serif)}
+.td-section{margin-bottom:12px}
+.td-section-label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:5px}
+.td-section-text{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.example-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;margin-top:5px;font-size:11px;color:var(--color-text-secondary);line-height:1.6;font-style:italic}
+.complexity-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.cr-label{font-size:11px;color:var(--color-text-tertiary)}
+.cr-bar{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.cr-fill{height:100%;border-radius:3px}
+.cr-val{font-size:11px;font-weight:500;color:var(--color-text-secondary);min-width:60px;text-align:right}
+
+.in-your-docs-section{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px}
+.iyd-item{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.iyd-item:last-child{border-bottom:none}
+.iyd-item:hover .iyd-doc{color:var(--color-text-info)}
+.iyd-bullet{width:5px;height:5px;border-radius:50%;background:var(--color-text-info);flex-shrink:0;margin-top:5px}
+.iyd-doc{font-size:11px;color:var(--color-text-primary);font-weight:500;transition:color .15s}
+.iyd-clause{font-size:10px;color:var(--color-text-tertiary)}
+
+.ask-row{margin-top:6px}
+.ask-row button{width:100%;font-size:11px;padding:6px;margin-bottom:5px}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc"><span class="cur">Legal glossary</span></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button style="font-size:12px;padding:4px 12px" onclick="sendPrompt('What should the Document Vault look like in a legal document summarizer?')">Back to vault ↗</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="left-rail">
+      <div class="rs">
+        <div class="sl">Browse A–Z</div>
+        <div class="alpha-grid">
+          <div class="alpha-btn has-terms active" onclick="setAlpha(this)">A</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">B</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">C</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">D</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">E</div>
+          <div class="alpha-btn no-terms">F</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">G</div>
+          <div class="alpha-btn no-terms">H</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">I</div>
+          <div class="alpha-btn no-terms">J</div>
+          <div class="alpha-btn no-terms">K</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">L</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">M</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">N</div>
+          <div class="alpha-btn no-terms">O</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">P</div>
+          <div class="alpha-btn no-terms">Q</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">R</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">S</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">T</div>
+          <div class="alpha-btn no-terms">U</div>
+          <div class="alpha-btn no-terms">V</div>
+          <div class="alpha-btn has-terms" onclick="setAlpha(this)">W</div>
+          <div class="alpha-btn no-terms">X</div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Category</div>
+        <div class="cat-pill active" onclick="setCat(this)">
+          <span class="cp-name">All categories</span>
+          <span class="cp-count">142</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">Liability &amp; damages</span>
+          <span class="cp-count">24</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">Contract mechanics</span>
+          <span class="cp-count">31</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">IP &amp; confidentiality</span>
+          <span class="cp-count">19</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">Procedure &amp; courts</span>
+          <span class="cp-count">18</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">Remedies</span>
+          <span class="cp-count">12</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">Data &amp; privacy</span>
+          <span class="cp-count">14</span>
+        </div>
+        <div class="cat-pill" onclick="setCat(this)">
+          <span class="cp-name">Employment</span>
+          <span class="cp-count">24</span>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Show</div>
+        <div class="filter-row">
+          <div class="fpill active" onclick="setF(this)">All terms</div>
+          <div class="fpill" onclick="setF(this)">In my docs</div>
+          <div class="fpill" onclick="setF(this)">Flagged terms</div>
+          <div class="fpill" onclick="setF(this)">Bookmarked</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="search-wrap">
+        <div class="si"><svg viewBox="0 0 14 14" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><path d="M10 10l3 3"/></svg></div>
+        <input type="text" placeholder="Search terms — e.g. 'liquidated damages', 'indemnify', 'force majeure'…" id="gloss-search" oninput="handleSearch(this.value)" />
+      </div>
+      <div class="search-hint">142 terms · 23 appear in your documents · Showing terms starting with A</div>
+
+      <div class="in-your-docs-banner">
+        <div class="iyd-dot"></div>
+        <div class="iyd-text">Terms highlighted in blue appear in documents you've analyzed. Click to see exactly where.</div>
+        <span class="iyd-count">23 matched</span>
+      </div>
+
+      <div class="section-head"><span class="sh-title">In your documents</span><span class="sh-count">5 terms · A</span></div>
+
+      <div class="term-card in-doc active" onclick="selectTerm(this,'liquidated-damages')">
+        <div class="tc-head">
+          <div class="tc-word">Liquidated damages</div>
+          <div class="complexity-bar" title="Complexity: High">
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+          </div>
+          <span class="tc-cat-tag damages">Damages</span>
+          <span class="in-doc-badge">In your docs</span>
+        </div>
+        <div class="tc-plain">A pre-agreed sum of money that one party must pay the other if they breach a specific part of the contract — regardless of the actual loss suffered.</div>
+      </div>
+
+      <div class="term-card in-doc" onclick="selectTerm(this,'assignment')">
+        <div class="tc-head">
+          <div class="tc-word">Assignment</div>
+          <div class="complexity-bar" title="Complexity: Medium">
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+          </div>
+          <span class="tc-cat-tag contract">Contract</span>
+          <span class="in-doc-badge">In your docs</span>
+        </div>
+        <div class="tc-plain">Transferring your rights or obligations under a contract to another party. Some contracts allow this freely; others require the other side's consent.</div>
+      </div>
+
+      <div class="term-card in-doc" onclick="selectTerm(this,'injunctive')">
+        <div class="tc-head">
+          <div class="tc-word">Injunctive relief</div>
+          <div class="complexity-bar" title="Complexity: High">
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+          </div>
+          <span class="tc-cat-tag remedy">Remedy</span>
+          <span class="in-doc-badge">In your docs</span>
+        </div>
+        <div class="tc-plain">A court order that forces someone to do something — or stop doing something — immediately. Often sought in NDA breaches because money alone can't undo leaked secrets.</div>
+      </div>
+
+      <div class="section-head" style="margin-top:6px"><span class="sh-title">All terms — A</span><span class="sh-count">12 terms</span></div>
+
+      <div class="term-card" onclick="selectTerm(this,'arbitration')">
+        <div class="tc-head">
+          <div class="tc-word">Arbitration</div>
+          <div class="complexity-bar">
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+          </div>
+          <span class="tc-cat-tag procedure">Procedure</span>
+        </div>
+        <div class="tc-plain">A private dispute resolution process where a neutral third party (the arbitrator) hears both sides and makes a binding decision — outside of a public court.</div>
+      </div>
+
+      <div class="term-card" onclick="selectTerm(this,'indemnify')">
+        <div class="tc-head">
+          <div class="tc-word">Indemnify</div>
+          <div class="complexity-bar">
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+            <div class="cb-seg" style="background:var(--color-text-danger)"></div>
+          </div>
+          <span class="tc-cat-tag liability">Liability</span>
+        </div>
+        <div class="tc-plain">To promise to compensate another party for any losses, damages, or costs they suffer as a result of your actions or breach — even costs you didn't directly cause.</div>
+      </div>
+
+      <div class="term-card" onclick="selectTerm(this,'force-majeure')">
+        <div class="tc-head">
+          <div class="tc-word">Force majeure</div>
+          <div class="complexity-bar">
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+          </div>
+          <span class="tc-cat-tag contract">Contract</span>
+        </div>
+        <div class="tc-plain">A "superior force" clause that excuses a party from performing their obligations when an extraordinary event beyond their control makes it impossible — like a natural disaster or war.</div>
+      </div>
+
+      <div class="term-card" onclick="selectTerm(this,'consideration')">
+        <div class="tc-head">
+          <div class="tc-word">Consideration</div>
+          <div class="complexity-bar">
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+          </div>
+          <span class="tc-cat-tag contract">Contract</span>
+        </div>
+        <div class="tc-plain">Something of value exchanged between parties that makes a contract legally binding. Without consideration, a promise is not enforceable — it's just a gift.</div>
+      </div>
+
+      <div class="term-card" onclick="selectTerm(this,'severability')">
+        <div class="tc-head">
+          <div class="tc-word">Severability</div>
+          <div class="complexity-bar">
+            <div class="cb-seg" style="background:var(--color-text-warning)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+            <div class="cb-seg" style="background:var(--color-border-secondary)"></div>
+          </div>
+          <span class="tc-cat-tag contract">Contract</span>
+        </div>
+        <div class="tc-plain">A clause that says if one part of the contract is found unenforceable, the rest of the contract still stands. Prevents one bad clause from voiding the whole agreement.</div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div id="term-detail">
+        <div class="sl" style="margin-bottom:10px">Selected term</div>
+        <p class="td-word">Liquidated damages</p>
+        <p class="td-pronunciation">liq·ui·dat·ed dam·ag·es</p>
+        <div class="td-tags">
+          <span class="td-tag">Damages</span>
+          <span class="td-tag">Liability</span>
+          <span class="td-tag">Contract enforcement</span>
+        </div>
+        <p class="td-plain">"A fixed sum agreed in advance that one party pays if they break a specific obligation — the amount is set regardless of what the actual loss turns out to be."</p>
+
+        <div class="complexity-row">
+          <span class="cr-label">Complexity</span>
+          <div class="cr-bar"><div class="cr-fill" style="width:90%;background:var(--color-text-danger)"></div></div>
+          <span class="cr-val" style="color:var(--color-text-danger)">High</span>
+        </div>
+
+        <div class="td-section">
+          <div class="td-section-label">Legal context</div>
+          <div class="td-section-text">Liquidated damages clauses are common in commercial contracts as a way to agree upfront on compensation for specific breaches — avoiding costly litigation over how much harm was actually suffered. They're valid if the amount was a genuine pre-estimate of likely loss at the time of signing. Courts will strike them down as unenforceable "penalty clauses" if they're clearly punitive rather than compensatory.</div>
+        </div>
+
+        <div class="td-section">
+          <div class="td-section-label">Jurisdiction notes</div>
+          <div class="td-section-text">In <strong style="font-weight:500">India</strong>: Section 74 of the Indian Contract Act limits courts to awarding actual proven loss, regardless of the contract amount. In <strong style="font-weight:500">the US (Delaware)</strong>: enforceable if it was a reasonable pre-estimate of harm. The phrase "regardless of actual harm" weakens enforceability in both.</div>
+        </div>
+
+        <div class="td-section">
+          <div class="td-section-label">Example in a contract</div>
+          <div class="example-block">"Any breach shall result in liquidated damages of $500,000 per incident, regardless of actual harm suffered by the Disclosing Party."</div>
+          <div class="watchout">
+            <svg viewBox="0 0 11 11" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M5.5 1v5M5.5 8v.5"/></svg>
+            <span class="watchout-text">The phrase "regardless of actual harm" is a red flag — it transforms a compensatory clause into a punitive penalty, which courts in India and many US jurisdictions may refuse to enforce.</span>
+          </div>
+        </div>
+
+        <div class="in-your-docs-section">
+          <div class="sl" style="margin-bottom:6px">Found in your documents</div>
+          <div class="iyd-item" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">
+            <div class="iyd-bullet"></div>
+            <div>
+              <div class="iyd-doc">Acme Corp NDA v3.pdf</div>
+              <div class="iyd-clause">Clause 3 — Penalties · High risk</div>
+            </div>
+          </div>
+          <div class="iyd-item" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">
+            <div class="iyd-bullet" style="background:var(--color-text-warning)"></div>
+            <div>
+              <div class="iyd-doc">Freelance MSA — Jan 2025.pdf</div>
+              <div class="iyd-clause">Clause 9 — Late payments · Medium risk</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="td-section">
+          <div class="td-section-label">Related terms</div>
+          <div class="related-terms">
+            <span class="rt" onclick="sendPrompt('Explain the legal term: Penalty clause')">Penalty clause</span>
+            <span class="rt" onclick="sendPrompt('Explain the legal term: Indemnity')">Indemnity</span>
+            <span class="rt" onclick="sendPrompt('Explain the legal term: Consequential damages')">Consequential damages</span>
+            <span class="rt" onclick="sendPrompt('Explain the legal term: Limitation of liability')">Limitation of liability</span>
+          </div>
+        </div>
+
+        <div class="ask-row">
+          <button onclick="sendPrompt('Is the liquidated damages clause in the Acme NDA enforceable in India?')">Ask about this in my NDA ↗</button>
+          <button onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask a custom question ↗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setAlpha(el){
+  if(el.classList.contains('no-terms'))return;
+  document.querySelectorAll('.alpha-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setCat(el){document.querySelectorAll('.cat-pill').forEach(c=>c.classList.remove('active'));el.classList.add('active')}
+function setF(el){document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active')}
+function selectTerm(el,id){
+  document.querySelectorAll('.term-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  var terms={
+    'assignment':{word:'Assignment',pron:'as·sign·ment',tags:['Contract','Transfer'],plain:'"The act of handing over your rights or obligations under a contract to a third party — effectively stepping out and letting someone else step in."',complexity:55,complexityColor:'var(--color-text-warning)',complexityLabel:'Medium',context:'Assignment clauses determine whether you can transfer your side of a contract to another entity — for example, if your company is acquired or you want a partner to take over a project. One-sided assignment clauses that allow only one party to assign are a common red flag.',jnotes:'Most jurisdictions allow assignment unless the contract prohibits it. Acme Corp\'s NDA allows Acme to assign without consent but prevents you from doing so — a critical imbalance.',example:'"Acme Corp may assign this Agreement to any successor entity without the Receiving Party\'s consent."',watchout:'Unilateral assignment means you could end up contractually bound to an unknown third party — including a competitor — without ever agreeing to it.',docs:[{name:'Acme Corp NDA v3.pdf',clause:'Clause 4 — Assignment · High risk',color:'var(--color-text-danger)'}],related:['Novation','Successor entity','Consent requirement']},
+    'injunctive':{word:'Injunctive relief',pron:'in·junc·tive re·lief',tags:['Remedy','Court order'],plain:'"A court order that immediately compels someone to stop doing something — or start doing something — while a dispute is being resolved."',complexity:85,complexityColor:'var(--color-text-danger)',complexityLabel:'High',context:'Injunctive relief is often included in NDA remedies because monetary compensation alone can\'t undo a confidentiality breach — once a trade secret is disclosed, the damage is done. A court injunction can stop further disclosure in its tracks.',jnotes:'Available in India under the Specific Relief Act 1963. In the US, courts grant temporary restraining orders (TROs) quickly in NDA breach cases. Seeking it in a foreign jurisdiction adds significant cost.',example:'"The parties agree that any breach shall entitle the Disclosing Party to seek injunctive or other equitable relief without the requirement to post a bond."',watchout:'No-bond injunction clauses are aggressive — they allow the other party to freeze your business operations while a dispute is pending, at no cost to them.',docs:[{name:'Acme Corp NDA v3.pdf',clause:'Clause 9 — Remedies · Neutral',color:'var(--color-border-secondary)'}],related:['Equitable relief','Restraining order','Specific performance']},
+    'arbitration':{word:'Arbitration',pron:'ar·bi·tra·tion',tags:['Procedure','Dispute resolution'],plain:'"A private court-like process where a neutral expert hears a dispute and makes a binding decision — faster and more confidential than going to a real court."',complexity:55,complexityColor:'var(--color-text-warning)',complexityLabel:'Medium',context:'Arbitration clauses are common in commercial contracts as they keep disputes private, are often faster than litigation, and can be conducted in a neutral location. ICC, AAA, and SIAC are common arbitral institutions.',jnotes:'India recognises arbitration under the Arbitration and Conciliation Act 1996. International arbitration awards are enforceable in India under the New York Convention. ICC arbitration (New Delhi seat) is often proposed as a neutral alternative to one-sided jurisdiction clauses.',example:'"All disputes shall be resolved by binding arbitration under ICC Rules, with the seat of arbitration in Singapore."',watchout:null,docs:[],related:['Jurisdiction clause','ICC','Mediation','Governing law']},
+    'indemnify':{word:'Indemnify',pron:'in·dem·ni·fy',tags:['Liability','Obligation'],plain:'"To agree to cover another party\'s losses — even ones you didn\'t directly cause — if something goes wrong under the contract."',complexity:85,complexityColor:'var(--color-text-danger)',complexityLabel:'High',context:'Indemnification clauses can be broad or narrow. A broad clause may make you responsible for any loss the other party suffers, even from third-party claims. Always check whether indemnity runs both ways — one-sided indemnity is a serious red flag.',jnotes:'Widely recognised across all major jurisdictions. Under Indian law, indemnity obligations are governed by Section 124 of the Indian Contract Act. Courts will enforce them but may limit awards to actual proven losses.',example:'"The Receiving Party shall indemnify and hold harmless Acme Corp from any claims, losses, or expenses arising from the Receiving Party\'s breach."',watchout:'One-directional indemnity — where only you indemnify them, not vice versa — creates asymmetric liability. Always push for mutual indemnification.',docs:[],related:['Hold harmless','Liability cap','Consequential damages']},
+    'force-majeure':{word:'Force majeure',pron:'fors ma·zhur',tags:['Contract','Excuse from performance'],plain:'"A clause that lets you off the hook for failing to meet your obligations when something extraordinary and beyond your control makes it impossible."',complexity:40,complexityColor:'var(--color-text-success)',complexityLabel:'Low',context:'Force majeure clauses became highly scrutinised during COVID-19 when parties tried to invoke them for supply chain failures and lockdowns. What counts as force majeure varies significantly — some clauses are broad (acts of God, government action), others narrowly define specific events.',jnotes:'Recognised in India under Section 32 and Section 56 of the Indian Contract Act. Courts narrowly interpret force majeure — mere commercial hardship is usually not enough; performance must be truly impossible.',example:'"Neither party shall be liable for delays caused by events beyond reasonable control, including acts of God, war, or government action."',watchout:'Vague force majeure clauses — "any event beyond reasonable control" — invite disputes about what qualifies. Push for an enumerated list of covered events.',docs:[],related:['Frustration of contract','Material adverse change','Impossibility']},
+    'consideration':{word:'Consideration',pron:'con·sid·er·a·tion',tags:['Contract','Formation'],plain:'"The something-for-something exchange that makes a contract legally valid. Without it, you just have a promise — not an enforceable agreement."',complexity:40,complexityColor:'var(--color-text-success)',complexityLabel:'Low',context:'Consideration is a foundational contract law concept. It can be money, a service, a promise to do something, or a promise to refrain from doing something. In NDAs, the mutual exchange of confidential information often serves as consideration.',jnotes:'Required in most common law jurisdictions (India, UK, US). Indian Contract Act Section 10 requires lawful consideration for a valid contract. Some civil law jurisdictions (France, Germany) don\'t require consideration in the same way.',example:'"In consideration of the mutual covenants contained herein, the parties agree as follows…"',watchout:null,docs:[{name:'Acme Corp NDA v3.pdf',clause:'Clause 6 — Entire agreement · Passing',color:'var(--color-text-success)'}],related:['Offer and acceptance','Capacity','Void contract']},
+    'severability':{word:'Severability',pron:'sev·er·a·bil·i·ty',tags:['Contract','Boilerplate'],plain:'"A safety net clause: if one part of the contract turns out to be unenforceable, the rest of the agreement survives intact."',complexity:25,complexityColor:'var(--color-text-success)',complexityLabel:'Low',context:'Severability is standard boilerplate in most commercial contracts. It prevents a single invalid clause from unravelling the entire agreement. Particularly important in NDAs with aggressive terms — if a court strikes down the liquidated damages clause, the confidentiality obligations still stand.',jnotes:'Standard and enforceable across India, US, and UK. Courts will typically sever an offending clause and enforce the rest rather than voiding the entire contract.',example:'"If any provision of this Agreement is found to be invalid or unenforceable, the remaining provisions shall continue in full force and effect."',watchout:null,docs:[{name:'Acme Corp NDA v3.pdf',clause:'Clause 11 — Severability · Clear',color:'var(--color-text-success)'}],related:['Boilerplate','Void clause','Entire agreement']}
+  };
+  var t=terms[id];
+  if(!t)return;
+  var panel=document.getElementById('term-detail');
+  var docsHtml=t.docs.length?'<div class="in-your-docs-section"><div class="sl" style="margin-bottom:6px">Found in your documents</div>'+t.docs.map(d=>'<div class="iyd-item" onclick="sendPrompt(\'What should the Clause Breakdown page show in a legal document summarizer?\')"><div class="iyd-bullet" style="background:'+d.color+'"></div><div><div class="iyd-doc">'+d.name+'</div><div class="iyd-clause">'+d.clause+'</div></div></div>').join('')+'</div>':'';
+  var watchoutHtml=t.watchout?'<div class="watchout"><svg viewBox="0 0 11 11" fill="none" stroke-width="1.5" stroke-linecap="round" stroke="var(--color-text-warning)"><path d="M5.5 1v5M5.5 8v.5"/></svg><span class="watchout-text">'+t.watchout+'</span></div>':'';
+  panel.innerHTML=`<div class="sl" style="margin-bottom:10px">Selected term</div>
+<p class="td-word">${t.word}</p>
+<p class="td-pronunciation">${t.pron}</p>
+<div class="td-tags">${t.tags.map(tag=>'<span class="td-tag">'+tag+'</span>').join('')}</div>
+<p class="td-plain">${t.plain}</p>
+<div class="complexity-row"><span class="cr-label">Complexity</span><div class="cr-bar"><div class="cr-fill" style="width:${t.complexity}%;background:${t.complexityColor}"></div></div><span class="cr-val" style="color:${t.complexityColor}">${t.complexityLabel}</span></div>
+<div class="td-section"><div class="td-section-label">Legal context</div><div class="td-section-text">${t.context}</div></div>
+<div class="td-section"><div class="td-section-label">Jurisdiction notes</div><div class="td-section-text">${t.jnotes}</div></div>
+<div class="td-section"><div class="td-section-label">Example in a contract</div><div class="example-block">"${t.example}"</div>${watchoutHtml}</div>
+${docsHtml}
+<div class="td-section"><div class="td-section-label">Related terms</div><div class="related-terms">${t.related.map(r=>'<span class="rt" onclick="sendPrompt(\'Explain the legal term: '+r+'\')" >'+r+'</span>').join('')}</div></div>
+<div class="ask-row"><button onclick="sendPrompt('Explain how ${t.word} affects my documents')">Ask about this in my docs ↗</button><button onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask a custom question ↗</button></div>`;
+}
+function handleSearch(v){
+  var hint=document.querySelector('.search-hint');
+  if(v.length>2)hint.textContent='Searching for "'+v+'"…';
+  else hint.textContent='142 terms · 23 appear in your documents · Showing terms starting with A';
+}
+</script>

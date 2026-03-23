@@ -1,0 +1,349 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.bar-acts{display:flex;gap:6px}
+.bar-acts button{font-size:12px;padding:4px 12px}
+.nav-strip{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;gap:0;padding:0 20px}
+.ntab{font-size:12px;padding:9px 12px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
+.ntab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.ntab:hover:not(.active){color:var(--color-text-secondary)}
+.layout{display:grid;grid-template-columns:200px 1fr 240px;min-height:560px}
+
+.left-rail{border-right:0.5px solid var(--color-border-tertiary);padding:12px 0;background:var(--color-background-primary);overflow:hidden}
+.rail-head{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);padding:0 12px 8px}
+.clause-nav-item{padding:7px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .12s;border-left:2px solid transparent}
+.clause-nav-item:hover{background:var(--color-background-secondary)}
+.clause-nav-item.active{background:var(--color-background-secondary);border-left-color:var(--color-text-primary)}
+.clause-nav-item.flagged{border-left-color:var(--color-border-danger)}
+.clause-nav-item.warn{border-left-color:var(--color-border-warning)}
+.cni-name{font-size:12px;color:var(--color-text-primary);font-weight:500}
+.cni-sub{font-size:10px;color:var(--color-text-tertiary);margin-top:1px}
+.cni-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.cni-dot.red{background:var(--color-text-danger)}
+.cni-dot.amber{background:var(--color-text-warning)}
+.cni-dot.green{background:var(--color-text-success)}
+.cni-dot.none{background:var(--color-border-secondary)}
+
+.center-col{padding:20px;background:var(--color-background-tertiary)}
+.filter-row{display:flex;gap:6px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.filter-pill{font-size:11px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);background:var(--color-background-primary);cursor:pointer;user-select:none;transition:all .15s}
+.filter-pill:hover{border-color:var(--color-border-secondary)}
+.filter-pill.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.filter-spacer{flex:1}
+.search-input{font-size:12px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);width:140px;height:28px}
+
+.clause-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.clause-card:hover{border-color:var(--color-border-secondary)}
+.clause-card.active{border:1.5px solid var(--color-border-primary)}
+.clause-card.danger{border-left:3px solid var(--color-border-danger)}
+.clause-card.warning{border-left:3px solid var(--color-border-warning)}
+.clause-card.safe{border-left:3px solid var(--color-border-success)}
+.cc-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
+.cc-num{font-size:10px;font-weight:500;color:var(--color-text-tertiary)}
+.cc-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.cc-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.cc-badge.danger{background:var(--color-background-danger);color:var(--color-text-danger)}
+.cc-badge.warning{background:var(--color-background-warning);color:var(--color-text-warning)}
+.cc-badge.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.cc-badge.neutral{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.cc-body{padding:0 14px 12px;border-top:0.5px solid var(--color-border-tertiary)}
+.original-text{font-size:11px;font-family:var(--font-mono);color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;line-height:1.6;margin:10px 0 8px}
+.plain-label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 4px}
+.plain-text{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.flag-note{display:flex;gap:6px;align-items:flex-start;background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:7px 10px;margin-top:8px}
+.flag-note svg{width:12px;height:12px;flex-shrink:0;margin-top:1px}
+.flag-note-text{font-size:11px;color:var(--color-text-danger);line-height:1.5}
+.warn-note{background:var(--color-background-warning);border-color:var(--color-border-warning)}
+.warn-note .flag-note-text{color:var(--color-text-warning)}
+.warn-note svg{stroke:var(--color-text-warning)}
+.flag-note svg{stroke:var(--color-text-danger)}
+
+.cc-collapsed{padding:6px 14px 10px}
+.cc-plain-preview{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+
+.right-rail{border-left:0.5px solid var(--color-border-tertiary);padding:14px;background:var(--color-background-primary)}
+.rr-section{margin-bottom:18px}
+.rr-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+.rr-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px}
+.rr-stat{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.rr-stat:last-child{border-bottom:none}
+.rr-key{font-size:11px;color:var(--color-text-tertiary)}
+.rr-val{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.rr-val.danger{color:var(--color-text-danger)}
+.rr-val.warn{color:var(--color-text-warning)}
+.rr-val.ok{color:var(--color-text-success)}
+
+.legend-item{display:flex;align-items:center;gap:7px;padding:4px 0}
+.leg-bar{width:3px;height:16px;border-radius:2px;flex-shrink:0}
+.leg-text{font-size:11px;color:var(--color-text-secondary)}
+.leg-count{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-left:auto}
+
+.ask-bar{display:flex;gap:8px;padding:10px 20px;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary)}
+.ask-bar input{flex:1;font-size:12px}
+.ask-bar button{font-size:12px;padding:0 14px}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc">
+        <span>Vault</span><span>›</span>
+        <span>Acme Corp NDA v3.pdf</span><span>›</span>
+        <span class="cur">Clause breakdown</span>
+      </div>
+    </div>
+    <div class="bar-acts">
+      <button onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report ↗</button>
+      <button>Export ↗</button>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <div class="ntab" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Summary</div>
+    <div class="ntab active">Clause breakdown</div>
+    <div class="ntab" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report</div>
+    <div class="ntab" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">Key dates</div>
+    <div class="ntab" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask the doc</div>
+  </div>
+
+  <div class="layout">
+
+    <div class="left-rail">
+      <div class="rail-head">11 clauses</div>
+      <div class="clause-nav-item flagged" onclick="selectClause(1)">
+        <div><div class="cni-name">Confidentiality</div><div class="cni-sub">Unlimited term</div></div>
+        <div class="cni-dot red"></div>
+      </div>
+      <div class="clause-nav-item active" onclick="selectClause(2)">
+        <div><div class="cni-name">Obligations</div><div class="cni-sub">Use restriction</div></div>
+        <div class="cni-dot amber"></div>
+      </div>
+      <div class="clause-nav-item flagged" onclick="selectClause(3)">
+        <div><div class="cni-name">Penalties</div><div class="cni-sub">$500K liquidated</div></div>
+        <div class="cni-dot red"></div>
+      </div>
+      <div class="clause-nav-item flagged" onclick="selectClause(4)">
+        <div><div class="cni-name">Assignment</div><div class="cni-sub">One-sided</div></div>
+        <div class="cni-dot red"></div>
+      </div>
+      <div class="clause-nav-item warn" onclick="selectClause(5)">
+        <div><div class="cni-name">Jurisdiction</div><div class="cni-sub">Delaware only</div></div>
+        <div class="cni-dot amber"></div>
+      </div>
+      <div class="clause-nav-item" onclick="selectClause(6)">
+        <div><div class="cni-name">Term</div><div class="cni-sub">Indefinite</div></div>
+        <div class="cni-dot none"></div>
+      </div>
+      <div class="clause-nav-item" onclick="selectClause(7)">
+        <div><div class="cni-name">Permitted disclosure</div><div class="cni-sub">Standard carve-outs</div></div>
+        <div class="cni-dot green"></div>
+      </div>
+      <div class="clause-nav-item" onclick="selectClause(8)">
+        <div><div class="cni-name">Definition of CI</div><div class="cni-sub">Broad scope</div></div>
+        <div class="cni-dot amber"></div>
+      </div>
+      <div class="clause-nav-item" onclick="selectClause(9)">
+        <div><div class="cni-name">Remedies</div><div class="cni-sub">Injunctive relief</div></div>
+        <div class="cni-dot none"></div>
+      </div>
+      <div class="clause-nav-item" onclick="selectClause(10)">
+        <div><div class="cni-name">Entire agreement</div><div class="cni-sub">Standard boilerplate</div></div>
+        <div class="cni-dot green"></div>
+      </div>
+      <div class="clause-nav-item" onclick="selectClause(11)">
+        <div><div class="cni-name">Severability</div><div class="cni-sub">Standard boilerplate</div></div>
+        <div class="cni-dot green"></div>
+      </div>
+    </div>
+
+    <div class="center-col">
+      <div class="filter-row">
+        <div class="filter-pill active" onclick="setFilter(this,'all')">All (11)</div>
+        <div class="filter-pill" onclick="setFilter(this,'flag')" style="border-color:var(--color-border-danger);color:var(--color-text-danger)">Flagged (3)</div>
+        <div class="filter-pill" onclick="setFilter(this,'warn')" style="border-color:var(--color-border-warning);color:var(--color-text-warning)">Review (2)</div>
+        <div class="filter-pill" onclick="setFilter(this,'ok')" style="border-color:var(--color-border-success);color:var(--color-text-success)">Clear (3)</div>
+        <div class="filter-spacer"></div>
+        <input class="search-input" type="text" placeholder="Search clauses..." />
+      </div>
+
+      <div class="clause-card danger active" onclick="toggleClause(this)">
+        <div class="cc-header">
+          <div>
+            <div class="cc-num">Clause 1</div>
+            <div class="cc-name">Confidentiality</div>
+          </div>
+          <span class="cc-badge danger">Flagged</span>
+        </div>
+        <div class="cc-body">
+          <div class="plain-label">Original text</div>
+          <div class="original-text">"The Receiving Party agrees to keep confidential all information disclosed by the Disclosing Party… for an <span style="background:rgba(226,75,74,0.18);border-radius:2px;padding:0 2px">unlimited period of time</span>."</div>
+          <div class="plain-label">Plain English</div>
+          <div class="plain-text">You must keep everything shared by Acme Corp secret — and this obligation never ends. Even after the business relationship is long over, you're still legally bound.</div>
+          <div class="flag-note">
+            <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5"><path d="M6 1v5M6 9v1"/></svg>
+            <span class="flag-note-text">No sunset clause. Industry standard is 2–5 years. An unlimited term is aggressive and difficult to negotiate out of later.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="clause-card warning active" onclick="toggleClause(this)">
+        <div class="cc-header">
+          <div>
+            <div class="cc-num">Clause 2</div>
+            <div class="cc-name">Obligations</div>
+          </div>
+          <span class="cc-badge warning">Review</span>
+        </div>
+        <div class="cc-body">
+          <div class="plain-label">Original text</div>
+          <div class="original-text">"The Receiving Party shall use the Confidential Information solely for <span style="background:rgba(186,117,23,0.15);border-radius:2px;padding:0 2px">evaluating a potential business partnership</span>."</div>
+          <div class="plain-label">Plain English</div>
+          <div class="plain-text">You can only use the information for one specific purpose: deciding whether to partner with Acme. Any other use — even internally comparing them with competitors — could be a breach.</div>
+          <div class="flag-note warn-note">
+            <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5"><path d="M6 1v5M6 9v1"/></svg>
+            <span class="flag-note-text">The permitted purpose is narrowly worded. Ensure your intended use falls within "evaluating a partnership" or push to broaden this definition.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="clause-card danger" onclick="toggleClause(this)">
+        <div class="cc-header">
+          <div>
+            <div class="cc-num">Clause 3</div>
+            <div class="cc-name">Penalties</div>
+          </div>
+          <span class="cc-badge danger">Flagged</span>
+        </div>
+        <div class="cc-collapsed">
+          <div class="cc-plain-preview">$500,000 liquidated damages per breach — regardless of actual harm to Acme Corp.</div>
+        </div>
+      </div>
+
+      <div class="clause-card danger" onclick="toggleClause(this)">
+        <div class="cc-header">
+          <div>
+            <div class="cc-num">Clause 4</div>
+            <div class="cc-name">Assignment</div>
+          </div>
+          <span class="cc-badge danger">Flagged</span>
+        </div>
+        <div class="cc-collapsed">
+          <div class="cc-plain-preview">Acme Corp can hand this agreement to any successor company without asking you.</div>
+        </div>
+      </div>
+
+      <div class="clause-card warning" onclick="toggleClause(this)">
+        <div class="cc-header">
+          <div>
+            <div class="cc-num">Clause 5</div>
+            <div class="cc-name">Jurisdiction</div>
+          </div>
+          <span class="cc-badge warning">Review</span>
+        </div>
+        <div class="cc-collapsed">
+          <div class="cc-plain-preview">Any dispute must be resolved exclusively in Delaware courts, regardless of where you are based.</div>
+        </div>
+      </div>
+
+      <div class="clause-card safe" onclick="toggleClause(this)">
+        <div class="cc-header">
+          <div>
+            <div class="cc-num">Clause 7</div>
+            <div class="cc-name">Permitted disclosure</div>
+          </div>
+          <span class="cc-badge ok">Clear</span>
+        </div>
+        <div class="cc-collapsed">
+          <div class="cc-plain-preview">Standard carve-outs for legally required disclosures and information already in the public domain.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="right-rail">
+      <div class="rr-section">
+        <div class="rr-label">Clause overview</div>
+        <div class="legend-item"><div class="leg-bar" style="background:var(--color-text-danger)"></div><span class="leg-text">Flagged</span><span class="leg-count">3</span></div>
+        <div class="legend-item"><div class="leg-bar" style="background:var(--color-text-warning)"></div><span class="leg-text">Review needed</span><span class="leg-count">2</span></div>
+        <div class="legend-item"><div class="leg-bar" style="background:var(--color-border-secondary)"></div><span class="leg-text">Neutral</span><span class="leg-count">3</span></div>
+        <div class="legend-item"><div class="leg-bar" style="background:var(--color-text-success)"></div><span class="leg-text">Clear</span><span class="leg-count">3</span></div>
+      </div>
+
+      <div class="rr-section">
+        <div class="rr-label">Selected clause</div>
+        <div class="rr-card">
+          <div class="rr-stat">
+            <span class="rr-key">Clause</span>
+            <span class="rr-val">Obligations (2)</span>
+          </div>
+          <div class="rr-stat">
+            <span class="rr-key">Status</span>
+            <span class="rr-val warn">Review needed</span>
+          </div>
+          <div class="rr-stat">
+            <span class="rr-key">Favours</span>
+            <span class="rr-val danger">Acme Corp</span>
+          </div>
+          <div class="rr-stat">
+            <span class="rr-key">Negotiable</span>
+            <span class="rr-val ok">Likely yes</span>
+          </div>
+        </div>
+        <button style="width:100%;font-size:11px;padding:6px;margin-bottom:6px" onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add note to this clause ↗</button>
+        <button style="width:100%;font-size:11px;padding:6px" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask about this clause ↗</button>
+      </div>
+
+      <div class="rr-section">
+        <div class="rr-label">Negotiation tips</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px">
+          For the Obligations clause, push to broaden "evaluating a potential partnership" to include "internal evaluation and integration planning." This is standard and rarely refused.
+        </div>
+      </div>
+
+      <div class="rr-section">
+        <div class="rr-label">Navigate</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;padding:5px 8px;border-radius:var(--border-radius-md);cursor:pointer;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)" onclick="selectClause(1)">← Prev: Confidentiality</div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;padding:5px 8px;border-radius:var(--border-radius-md);cursor:pointer;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)" onclick="selectClause(3)">Next: Penalties →</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ask-bar">
+    <input type="text" placeholder="Ask about any clause — e.g. 'Is the damages clause enforceable in India?'" />
+    <button onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask ↗</button>
+  </div>
+</div>
+
+<script>
+function toggleClause(card) {
+  var body = card.querySelector('.cc-body');
+  var collapsed = card.querySelector('.cc-collapsed');
+  document.querySelectorAll('.clause-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  if (body) return;
+  if (collapsed) {
+    var num = card.querySelector('.cc-num').textContent;
+    var name = card.querySelector('.cc-name').textContent;
+    sendPrompt('Tell me more about the ' + name + ' clause (' + num + ') in the context of this NDA analysis');
+  }
+}
+function setFilter(el, type) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+function selectClause(n) {
+  var items = document.querySelectorAll('.clause-nav-item');
+  items.forEach(i => i.classList.remove('active'));
+  if (items[n-1]) items[n-1].classList.add('active');
+}
+</script>

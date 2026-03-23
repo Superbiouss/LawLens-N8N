@@ -1,0 +1,483 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+.nav-strip{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;padding:0 20px}
+.ntab{font-size:12px;padding:9px 12px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
+.ntab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.ntab:hover:not(.active){color:var(--color-text-secondary)}
+
+.layout{display:grid;grid-template-columns:230px 1fr 250px;min-height:580px}
+
+.left-rail{border-right:0.5px solid var(--color-border-tertiary);padding:14px 0;background:var(--color-background-primary);overflow:hidden}
+.rs{padding:0 12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
+.rs:last-child{border-bottom:none;margin-bottom:0}
+
+.juris-btn{width:100%;text-align:left;padding:8px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:12px;color:var(--color-text-primary);cursor:pointer;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;transition:border-color .15s}
+.juris-btn:hover{border-color:var(--color-border-secondary)}
+.juris-btn.active{border-color:var(--color-border-info);background:var(--color-background-info)}
+.juris-btn.active span{color:var(--color-text-info);font-weight:500}
+.jb-flag{font-size:14px;margin-right:6px}
+.jb-name{flex:1;font-size:12px}
+.jb-score{font-size:11px;font-weight:500}
+.jb-score.pass{color:var(--color-text-success)}
+.jb-score.fail{color:var(--color-text-danger)}
+.jb-score.partial{color:var(--color-text-warning)}
+
+.doc-type-row{display:flex;flex-wrap:wrap;gap:5px}
+.dtype{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.dtype:hover{border-color:var(--color-border-secondary)}
+.dtype.active{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+
+.mini-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mstat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px}
+.ms-n{font-size:16px;font-weight:500;line-height:1}
+.ms-l{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.ms-n.ok{color:var(--color-text-success)}
+.ms-n.danger{color:var(--color-text-danger)}
+.ms-n.warn{color:var(--color-text-warning)}
+.ms-n.neutral{color:var(--color-text-primary)}
+
+.main{padding:16px 20px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:140px}
+.search-wrap input{width:100%;font-size:12px;padding-left:28px}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%)}
+.si svg{width:12px;height:12px;stroke:var(--color-text-tertiary)}
+.fpill{font-size:11px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;background:var(--color-background-primary);transition:all .15s;white-space:nowrap}
+.fpill.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.fpill:hover:not(.active){border-color:var(--color-border-secondary)}
+
+.score-banner{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:20px}
+.sb-ring{position:relative;width:64px;height:64px;flex-shrink:0}
+.sb-ring svg{width:64px;height:64px}
+.sb-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sb-pct{font-size:16px;font-weight:500}
+.sb-label{font-size:9px;color:var(--color-text-tertiary)}
+.sb-info{flex:1}
+.sb-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 3px}
+.sb-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin:0 0 8px}
+.sb-bars{display:flex;gap:6px}
+.sb-bar-item{flex:1;text-align:center}
+.sb-bar-track{height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.sb-bar-fill{height:100%;border-radius:2px}
+.sb-bar-label{font-size:10px;color:var(--color-text-tertiary)}
+.sb-bar-val{font-size:10px;font-weight:500}
+
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:4px}
+.sh-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.sh-count{font-size:11px;color:var(--color-text-tertiary)}
+
+.check-item{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.check-item:hover{border-color:var(--color-border-secondary)}
+.check-item.fail{border-left:3px solid var(--color-border-danger)}
+.check-item.warn{border-left:3px solid var(--color-border-warning)}
+.check-item.pass{border-left:3px solid var(--color-border-success)}
+.check-item.na{border-left:3px solid var(--color-border-tertiary)}
+.ci-head{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.ci-check{width:18px;height:18px;border-radius:4px;border:1.5px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-check.pass{border-color:var(--color-border-success);background:var(--color-background-success)}
+.ci-check.fail{border-color:var(--color-border-danger);background:var(--color-background-danger)}
+.ci-check.warn{border-color:var(--color-border-warning);background:var(--color-background-warning)}
+.ci-check.na{border-color:var(--color-border-tertiary);background:var(--color-background-secondary)}
+.ci-check svg{width:10px;height:10px}
+.ci-body{flex:1}
+.ci-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.ci-source{font-size:10px;color:var(--color-text-tertiary);margin-top:1px}
+.ci-status{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.ci-status.pass{background:var(--color-background-success);color:var(--color-text-success)}
+.ci-status.fail{background:var(--color-background-danger);color:var(--color-text-danger)}
+.ci-status.warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.ci-status.na{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.ci-expand{padding:0 14px 12px;border-top:0.5px solid var(--color-border-tertiary)}
+.ci-finding{font-size:12px;color:var(--color-text-secondary);line-height:1.6;padding:8px 0 6px}
+.ci-clause-ref{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;background:var(--color-background-info);color:var(--color-text-info);border:0.5px solid var(--color-border-info);cursor:pointer;margin-right:5px}
+.ci-fix{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;margin-top:6px}
+.ci-fix-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-tertiary);margin-bottom:3px}
+.ci-fix-text{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.ci-actions{display:flex;gap:6px;margin-top:8px}
+.ci-actions button{font-size:11px;padding:4px 10px}
+
+.right-panel{border-left:0.5px solid var(--color-border-tertiary);padding:14px;background:var(--color-background-primary)}
+.verdict-card{border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:10px}
+.vc-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;color:var(--color-text-tertiary)}
+.vc-val{font-size:13px;font-weight:500}
+.vc-val.danger{color:var(--color-text-danger)}
+.vc-val.warn{color:var(--color-text-warning)}
+.vc-val.ok{color:var(--color-text-success)}
+
+.req-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.req-row:last-child{border-bottom:none}
+.rr-name{font-size:11px;color:var(--color-text-secondary)}
+.rr-dot{width:7px;height:7px;border-radius:50%}
+.rr-dot.pass{background:var(--color-text-success)}
+.rr-dot.fail{background:var(--color-text-danger)}
+.rr-dot.warn{background:var(--color-text-warning)}
+.rr-dot.na{background:var(--color-border-secondary)}
+
+.juris-compare-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.juris-compare-row:last-child{border-bottom:none}
+.jcr-name{font-size:11px;color:var(--color-text-secondary);flex:1}
+.jcr-dots{display:flex;gap:6px}
+.jcr-dot{width:7px;height:7px;border-radius:50%}
+
+.progress-wrap{margin-bottom:12px}
+.pw-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pw-label{font-size:11px;color:var(--color-text-secondary);width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pw-track{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.pw-fill{height:100%;border-radius:3px}
+.pw-val{font-size:10px;font-weight:500;color:var(--color-text-primary);min-width:26px;text-align:right}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc">
+        <span>Vault</span><span>›</span>
+        <span>Acme Corp NDA v3.pdf</span><span>›</span>
+        <span class="cur">Compliance checklist</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button style="font-size:12px;padding:4px 12px">Export report ↗</button>
+      <button style="font-size:12px;padding:4px 12px" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report ↗</button>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <div class="ntab" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Summary</div>
+    <div class="ntab" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Clause breakdown</div>
+    <div class="ntab" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report</div>
+    <div class="ntab active">Compliance checklist</div>
+    <div class="ntab" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">Key dates</div>
+  </div>
+
+  <div class="layout">
+
+    <div class="left-rail">
+      <div class="rs">
+        <div class="sl">Jurisdiction</div>
+        <div class="juris-btn active" onclick="setJuris(this)">
+          <span class="jb-name">🇮🇳 India (primary)</span>
+          <span class="jb-score fail">4/9</span>
+        </div>
+        <div class="juris-btn" onclick="setJuris(this)">
+          <span class="jb-name">🇺🇸 Delaware, USA</span>
+          <span class="jb-score partial">6/9</span>
+        </div>
+        <div class="juris-btn" onclick="setJuris(this)">
+          <span class="jb-name">🇬🇧 England & Wales</span>
+          <span class="jb-score partial">5/9</span>
+        </div>
+        <button style="width:100%;font-size:11px;padding:5px;margin-top:4px">+ Add jurisdiction</button>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Document type</div>
+        <div class="doc-type-row">
+          <div class="dtype active" onclick="setDtype(this)">NDA</div>
+          <div class="dtype" onclick="setDtype(this)">Employment</div>
+          <div class="dtype" onclick="setDtype(this)">Lease</div>
+          <div class="dtype" onclick="setDtype(this)">SaaS / MSA</div>
+          <div class="dtype" onclick="setDtype(this)">Custom</div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Checklist summary</div>
+        <div class="mini-stat-row">
+          <div class="mstat"><div class="ms-n danger">5</div><div class="ms-l">Failing</div></div>
+          <div class="mstat"><div class="ms-n warn">2</div><div class="ms-l">Partial</div></div>
+          <div class="mstat"><div class="ms-n ok">4</div><div class="ms-l">Passing</div></div>
+          <div class="mstat"><div class="ms-n neutral">2</div><div class="ms-l">N/A</div></div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Compliance areas</div>
+        <div class="progress-wrap">
+          <div class="pw-row"><span class="pw-label">Data privacy</span><div class="pw-track"><div class="pw-fill" style="width:33%;background:var(--color-text-danger)"></div></div><span class="pw-val" style="color:var(--color-text-danger)">1/3</span></div>
+          <div class="pw-row"><span class="pw-label">Contract law</span><div class="pw-track"><div class="pw-fill" style="width:75%;background:var(--color-text-warning)"></div></div><span class="pw-val" style="color:var(--color-text-warning)">3/4</span></div>
+          <div class="pw-row"><span class="pw-label">Enforceability</span><div class="pw-track"><div class="pw-fill" style="width:50%;background:var(--color-text-warning)"></div></div><span class="pw-val" style="color:var(--color-text-warning)">1/2</span></div>
+          <div class="pw-row"><span class="pw-label">Termination</span><div class="pw-track"><div class="pw-fill" style="width:0%;background:var(--color-text-danger)"></div></div><span class="pw-val" style="color:var(--color-text-danger)">0/2</span></div>
+          <div class="pw-row"><span class="pw-label">Jurisdiction</span><div class="pw-track"><div class="pw-fill" style="width:50%;background:var(--color-text-warning)"></div></div><span class="pw-val" style="color:var(--color-text-warning)">1/2</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <div class="si"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="5" r="3.5"/><path d="M8 8l2.5 2.5"/></svg></div>
+          <input type="text" placeholder="Search requirements…" />
+        </div>
+        <div class="fpill active" onclick="setF(this)">All (13)</div>
+        <div class="fpill" onclick="setF(this)" style="color:var(--color-text-danger);border-color:var(--color-border-danger)">Failing (5)</div>
+        <div class="fpill" onclick="setF(this)" style="color:var(--color-text-warning);border-color:var(--color-border-warning)">Partial (2)</div>
+        <div class="fpill" onclick="setF(this)" style="color:var(--color-text-success);border-color:var(--color-border-success)">Passing (4)</div>
+      </div>
+
+      <div class="score-banner">
+        <div class="sb-ring">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="var(--color-border-tertiary)" stroke-width="5"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#E24B4A" stroke-width="5" stroke-dasharray="68 163" stroke-dashoffset="41" stroke-linecap="round"/>
+          </svg>
+          <div class="sb-center"><span class="sb-pct" style="color:var(--color-text-danger)">42%</span><span class="sb-label">compliant</span></div>
+        </div>
+        <div class="sb-info">
+          <p class="sb-title">Not compliant for use in India under current terms</p>
+          <p class="sb-desc">This NDA fails 5 of 13 requirements for Indian jurisdiction, most critically around liquidated damages enforceability and data handling obligations under the DPDP Act 2023.</p>
+          <div class="sb-bars">
+            <div class="sb-bar-item"><div class="sb-bar-track"><div class="sb-bar-fill" style="width:33%;background:var(--color-text-danger)"></div></div><div class="sb-bar-label">Data privacy</div><div class="sb-bar-val" style="color:var(--color-text-danger)">1/3</div></div>
+            <div class="sb-bar-item"><div class="sb-bar-track"><div class="sb-bar-fill" style="width:75%;background:var(--color-text-warning)"></div></div><div class="sb-bar-label">Contract law</div><div class="sb-bar-val" style="color:var(--color-text-warning)">3/4</div></div>
+            <div class="sb-bar-item"><div class="sb-bar-track"><div class="sb-bar-fill" style="width:0%;background:var(--color-text-danger)"></div></div><div class="sb-bar-label">Termination</div><div class="sb-bar-val" style="color:var(--color-text-danger)">0/2</div></div>
+            <div class="sb-bar-item"><div class="sb-bar-track"><div class="sb-bar-fill" style="width:50%;background:var(--color-text-warning)"></div></div><div class="sb-bar-label">Jurisdiction</div><div class="sb-bar-val" style="color:var(--color-text-warning)">1/2</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head"><span class="sh-title">Failing requirements</span><span class="sh-count">5 items</span></div>
+
+      <div class="check-item fail" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check fail"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Liquidated damages must reflect genuine pre-estimate of loss</div><div class="ci-source">Indian Contract Act 1872, Section 74</div></div>
+          <span class="ci-status fail">Failing</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">Clause 3 sets $500,000 per breach "regardless of actual harm." Section 74 of the Indian Contract Act limits recovery to <em>actual proven loss</em> — a court will not award a punitive penalty. The clause as written is unenforceable in India, but you would still face the cost of defending any claim filed in Delaware.</div>
+          <div><span class="ci-clause-ref" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">§3 Penalties</span></div>
+          <div class="ci-fix"><div class="ci-fix-label">Required fix</div><div class="ci-fix-text">Remove "regardless of actual harm" and replace with "not exceeding actual documented losses arising from the breach." This aligns with both Indian and Delaware law.</div></div>
+          <div class="ci-actions">
+            <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add note ↗</button>
+            <button onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask about this ↗</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-item fail" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check fail"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Personal data processing obligations (DPDP Act 2023)</div><div class="ci-source">Digital Personal Data Protection Act 2023, India</div></div>
+          <span class="ci-status fail">Failing</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">This NDA makes no mention of personal data handling, data fiduciary obligations, or consent requirements. If any confidential information shared includes personal data of Indian citizens, the DPDP Act 2023 applies and requires explicit data processing obligations in the agreement.</div>
+          <div class="ci-fix"><div class="ci-fix-label">Required fix</div><div class="ci-fix-text">Add a data protection addendum or clause specifying: nature of personal data shared, processing purpose, retention limits, and obligations of both parties as data fiduciaries under the DPDP Act.</div></div>
+          <div class="ci-actions">
+            <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add note ↗</button>
+            <button>View template clause ↗</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-item fail" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check fail"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Return or destruction of confidential materials on termination</div><div class="ci-source">Standard NDA requirement — Indian courts</div></div>
+          <span class="ci-status fail">Missing clause</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">No return-of-materials clause exists in this NDA. Indian courts expect this as a standard term in commercial confidentiality agreements. Without it, there is no clear obligation on either party regarding physical or digital copies of disclosed information once the relationship ends.</div>
+          <div class="ci-fix"><div class="ci-fix-label">Required fix</div><div class="ci-fix-text">Add: "Upon termination or request, the Receiving Party shall promptly return or certifiably destroy all Confidential Information and confirm destruction in writing within 30 days."</div></div>
+        </div>
+      </div>
+
+      <div class="check-item fail" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check fail"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Reasonably defined confidentiality duration</div><div class="ci-source">Indian Contract Act 1872, reasonableness doctrine</div></div>
+          <span class="ci-status fail">Failing</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">The unlimited confidentiality term may be challenged under Indian courts' reasonableness doctrine. Perpetual restraints on trade or information are scrutinised carefully. While not automatically void, an unlimited term weakens enforceability and invites challenge.</div>
+          <div class="ci-fix"><div class="ci-fix-label">Recommended fix</div><div class="ci-fix-text">Replace unlimited term with a fixed 3-year term. This is defensible in both Indian and US courts and meets commercial expectations.</div></div>
+        </div>
+      </div>
+
+      <div class="check-item fail" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check fail"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Governing law must be specified or mutually agreed</div><div class="ci-source">Code of Civil Procedure 1908, India</div></div>
+          <span class="ci-status fail">Failing</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">The agreement specifies Delaware law exclusively. If you are based in India and the breach occurs there, Indian courts may assert jurisdiction regardless. A one-sided foreign jurisdiction clause is often challenged in Indian courts — particularly by individuals, not corporations.</div>
+          <div class="ci-fix"><div class="ci-fix-label">Required fix</div><div class="ci-fix-text">Propose mutual jurisdiction in the defendant's home territory, or use ICC arbitration (New Delhi seat) as a neutral alternative acceptable to both parties.</div></div>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-top:6px"><span class="sh-title">Partial compliance</span><span class="sh-count">2 items</span></div>
+
+      <div class="check-item warn" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check warn"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round"><path d="M5 2v4M5 8v.5"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Permitted disclosure carve-outs (legal compulsion)</div><div class="ci-source">Evidence Act 1872, India</div></div>
+          <span class="ci-status warn">Partial</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">Clause 7 includes a carve-out for legally required disclosures, but does not specify that the Receiving Party must give prompt notice to the Disclosing Party before complying. Indian practice and the Evidence Act expect this notice obligation to be explicit.</div>
+          <div class="ci-fix"><div class="ci-fix-label">Recommended addition</div><div class="ci-fix-text">Add: "…provided that the Receiving Party shall give the Disclosing Party prompt written notice where legally permissible prior to any such disclosure."</div></div>
+        </div>
+      </div>
+
+      <div class="check-item warn" onclick="toggleItem(this)">
+        <div class="ci-head">
+          <div class="ci-check warn"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round"><path d="M5 2v4M5 8v.5"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Stamp duty compliance (if executed in India)</div><div class="ci-source">Indian Stamp Act 1899</div></div>
+          <span class="ci-status warn">Check needed</span>
+        </div>
+        <div class="ci-expand">
+          <div class="ci-finding">If this agreement is signed in India or relates to property/business in India, it may require stamping under the Indian Stamp Act. Unstamped agreements are inadmissible as evidence in Indian courts. The requirement varies by state.</div>
+          <div class="ci-fix"><div class="ci-fix-label">Action required</div><div class="ci-fix-text">Consult a local solicitor to determine applicable stamp duty in your state before signing. Maharashtra and Delhi have different rates.</div></div>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-top:6px"><span class="sh-title">Passing</span><span class="sh-count">4 items</span></div>
+
+      <div class="check-item pass">
+        <div class="ci-head">
+          <div class="ci-check pass"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l3 3 4-5"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Consideration — valid offer and acceptance structure</div><div class="ci-source">Indian Contract Act 1872, Section 10</div></div>
+          <span class="ci-status pass">Passing</span>
+        </div>
+      </div>
+
+      <div class="check-item pass">
+        <div class="ci-head">
+          <div class="ci-check pass"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l3 3 4-5"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Parties identified with legal names and capacity</div><div class="ci-source">Indian Contract Act 1872, Section 11</div></div>
+          <span class="ci-status pass">Passing</span>
+        </div>
+      </div>
+
+      <div class="check-item pass">
+        <div class="ci-head">
+          <div class="ci-check pass"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l3 3 4-5"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Confidential information defined with sufficient specificity</div><div class="ci-source">Standard NDA requirement</div></div>
+          <span class="ci-status pass">Passing</span>
+        </div>
+      </div>
+
+      <div class="check-item pass">
+        <div class="ci-head">
+          <div class="ci-check pass"><svg viewBox="0 0 10 10" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l3 3 4-5"/></svg></div>
+          <div class="ci-body"><div class="ci-name">Public domain carve-out present</div><div class="ci-source">Standard NDA requirement</div></div>
+          <span class="ci-status pass">Passing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <p class="sl">Overall verdict</p>
+      <div style="background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-danger);margin-bottom:3px">Not safe to sign (India)</div>
+        <div style="font-size:12px;color:var(--color-text-danger);line-height:1.5">5 requirements unmet. Key clauses unenforceable under Indian law. Address all failing items before execution.</div>
+      </div>
+
+      <p class="sl">Compare jurisdictions</p>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px">
+        <div style="display:flex;justify-content:flex-end;gap:12px;margin-bottom:6px">
+          <span style="font-size:10px;color:var(--color-text-tertiary)">🇮🇳</span>
+          <span style="font-size:10px;color:var(--color-text-tertiary)">🇺🇸</span>
+          <span style="font-size:10px;color:var(--color-text-tertiary)">🇬🇧</span>
+        </div>
+        <div class="juris-compare-row">
+          <span class="jcr-name">Liquidated damages</span>
+          <div class="jcr-dots">
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-warning)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-success)"></div>
+          </div>
+        </div>
+        <div class="juris-compare-row">
+          <span class="jcr-name">Confidentiality term</span>
+          <div class="jcr-dots">
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-warning)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-warning)"></div>
+          </div>
+        </div>
+        <div class="juris-compare-row">
+          <span class="jcr-name">Data protection</span>
+          <div class="jcr-dots">
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-success)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+          </div>
+        </div>
+        <div class="juris-compare-row">
+          <span class="jcr-name">Return of materials</span>
+          <div class="jcr-dots">
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-danger)"></div>
+          </div>
+        </div>
+        <div class="juris-compare-row">
+          <span class="jcr-name">Assignment clause</span>
+          <div class="jcr-dots">
+            <div class="jcr-dot" style="background:var(--color-text-warning)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-success)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-warning)"></div>
+          </div>
+        </div>
+        <div class="juris-compare-row">
+          <span class="jcr-name">Parties & capacity</span>
+          <div class="jcr-dots">
+            <div class="jcr-dot" style="background:var(--color-text-success)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-success)"></div>
+            <div class="jcr-dot" style="background:var(--color-text-success)"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sl">Priority fixes</p>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 12px;margin-bottom:12px">
+        <div class="req-row"><span class="rr-name">1. Remove "regardless of harm" from §3</span><div class="rr-dot fail"></div></div>
+        <div class="req-row"><span class="rr-name">2. Add DPDP Act data clause</span><div class="rr-dot fail"></div></div>
+        <div class="req-row"><span class="rr-name">3. Add return of materials clause</span><div class="rr-dot fail"></div></div>
+        <div class="req-row"><span class="rr-name">4. Propose ICC arbitration</span><div class="rr-dot fail"></div></div>
+        <div class="req-row"><span class="rr-name">5. Cap confidentiality at 3 years</span><div class="rr-dot fail"></div></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button style="width:100%;font-size:11px;padding:6px" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask about any requirement ↗</button>
+        <button style="width:100%;font-size:11px;padding:6px">Export compliance report PDF ↗</button>
+        <button style="width:100%;font-size:11px;padding:6px" onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Flag all fails as annotations ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleItem(el){
+  var exp=el.querySelector('.ci-expand');
+  if(!exp)return;
+  var open=exp.style.display!=='none'&&exp.style.display!=='';
+  document.querySelectorAll('.ci-expand').forEach(e=>e.style.display='none');
+  if(!open)exp.style.display='block';
+}
+function setJuris(el){
+  document.querySelectorAll('.juris-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setDtype(el){
+  document.querySelectorAll('.dtype').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+}
+function setF(el){
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+document.querySelectorAll('.ci-expand').forEach(e=>e.style.display='none');
+document.querySelector('.check-item.fail .ci-expand').style.display='block';
+</script>

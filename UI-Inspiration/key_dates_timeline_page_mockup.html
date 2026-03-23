@@ -1,0 +1,507 @@
+
+<style>
+*{box-sizing:border-box}
+.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
+.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
+.bc .cur{color:var(--color-text-primary);font-weight:500}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+.nav-strip{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;padding:0 20px}
+.ntab{font-size:12px;padding:9px 12px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
+.ntab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.ntab:hover:not(.active){color:var(--color-text-secondary)}
+
+.layout{display:grid;grid-template-columns:220px 1fr 256px;min-height:600px}
+
+.left-rail{border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px 0}
+.rs{padding:0 12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
+.rs:last-child{border-bottom:none;margin-bottom:0}
+
+.view-toggle{display:flex;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:2px;margin-bottom:10px}
+.vt{flex:1;text-align:center;font-size:11px;padding:5px 8px;border-radius:6px;cursor:pointer;color:var(--color-text-secondary);user-select:none;transition:all .15s}
+.vt.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border:0.5px solid var(--color-border-tertiary)}
+
+.doc-filter{display:flex;flex-direction:column;gap:4px}
+.df-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;border:0.5px solid transparent}
+.df-item:hover{background:var(--color-background-secondary)}
+.df-item.active{background:var(--color-background-secondary);border-color:var(--color-border-tertiary)}
+.df-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.df-name{font-size:11px;color:var(--color-text-primary);flex:1}
+.df-count{font-size:10px;color:var(--color-text-tertiary)}
+
+.type-filter{display:flex;flex-wrap:wrap;gap:5px}
+.tf{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.tf.active{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mstat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px}
+.ms-n{font-size:16px;font-weight:500;line-height:1}
+.ms-l{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.ms-n.danger{color:var(--color-text-danger)}
+.ms-n.warn{color:var(--color-text-warning)}
+.ms-n.ok{color:var(--color-text-success)}
+.ms-n.neutral{color:var(--color-text-primary)}
+
+.main{padding:16px 20px;overflow:hidden}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.toolbar button{font-size:11px;padding:5px 12px}
+
+.urgent-banner{background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-lg);padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.ub-icon{width:28px;height:28px;border-radius:50%;background:var(--color-background-danger);border:1px solid var(--color-border-danger);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ub-icon svg{width:14px;height:14px;stroke:var(--color-text-danger)}
+.ub-text{flex:1;font-size:12px;color:var(--color-text-danger);line-height:1.5}
+.ub-action{font-size:11px;font-weight:500;color:var(--color-text-danger);cursor:pointer;white-space:nowrap;border:0.5px solid var(--color-border-danger);padding:4px 10px;border-radius:var(--border-radius-md);transition:background .15s}
+.ub-action:hover{background:rgba(226,75,74,.1)}
+
+.timeline-wrap{position:relative;padding-left:20px}
+.tl-spine{position:absolute;left:6px;top:0;bottom:0;width:1.5px;background:var(--color-border-tertiary)}
+.today-line{position:absolute;left:0;right:0;display:flex;align-items:center;gap:8px;z-index:2}
+.today-dot{width:13px;height:13px;border-radius:50%;background:var(--color-text-info);border:2px solid var(--color-background-primary);flex-shrink:0;margin-left:0}
+.today-label{font-size:10px;font-weight:500;color:var(--color-text-info);background:var(--color-background-info);padding:2px 7px;border-radius:999px;border:0.5px solid var(--color-border-info)}
+
+.tl-section{margin-bottom:6px}
+.tl-month{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);padding:8px 0 4px 14px}
+
+.tl-event{display:flex;align-items:flex-start;gap:0;margin-bottom:6px;position:relative;cursor:pointer}
+.tl-event:hover .te-card{border-color:var(--color-border-secondary)}
+.te-node{position:relative;width:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding-top:14px}
+.te-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid;flex-shrink:0;background:var(--color-background-primary);z-index:1}
+.te-dot.overdue{background:var(--color-text-danger);border-color:var(--color-text-danger)}
+.te-dot.urgent{background:var(--color-text-warning);border-color:var(--color-text-warning)}
+.te-dot.upcoming{border-color:var(--color-border-info);background:var(--color-background-info)}
+.te-dot.future{border-color:var(--color-border-secondary)}
+.te-dot.done{background:var(--color-text-success);border-color:var(--color-text-success)}
+.te-card{flex:1;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:10px 14px;margin-left:10px;transition:border-color .15s}
+.te-card.overdue{border-left:3px solid var(--color-border-danger)}
+.te-card.urgent{border-left:3px solid var(--color-border-warning)}
+.te-card.upcoming{border-left:3px solid var(--color-border-info)}
+.te-card.done{opacity:.65}
+.te-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.te-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.te-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.te-badge.overdue{background:var(--color-background-danger);color:var(--color-text-danger)}
+.te-badge.urgent{background:var(--color-background-warning);color:var(--color-text-warning)}
+.te-badge.upcoming{background:var(--color-background-info);color:var(--color-text-info)}
+.te-badge.future{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.te-badge.done{background:var(--color-background-success);color:var(--color-text-success)}
+.te-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.te-date{font-size:12px;font-weight:500;color:var(--color-text-secondary)}
+.te-doc{font-size:11px;color:var(--color-text-tertiary)}
+.te-countdown{font-size:11px;color:var(--color-text-tertiary)}
+.te-countdown.urgent{color:var(--color-text-warning);font-weight:500}
+.te-countdown.overdue{color:var(--color-text-danger);font-weight:500}
+.te-expand{padding-top:8px;border-top:0.5px solid var(--color-border-tertiary);margin-top:8px}
+.te-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:8px}
+.te-consequence{display:flex;gap:6px;align-items:flex-start;background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:7px 10px;margin-bottom:8px}
+.tc-text{font-size:12px;color:var(--color-text-danger);line-height:1.5}
+.te-consequence svg{width:12px;height:12px;stroke:var(--color-text-danger);flex-shrink:0;margin-top:2px}
+.te-consequence.warn{background:var(--color-background-warning);border-color:var(--color-border-warning)}
+.te-consequence.warn svg{stroke:var(--color-text-warning)}
+.te-consequence.warn .tc-text{color:var(--color-text-warning)}
+.te-actions{display:flex;gap:6px}
+.te-actions button{font-size:11px;padding:4px 10px}
+.reminder-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.reminder-dot{width:5px;height:5px;border-radius:50%;background:var(--color-text-success);flex-shrink:0}
+.reminder-text{font-size:11px;color:var(--color-text-secondary)}
+
+.right-panel{border-left:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:14px}
+
+.mini-cal{margin-bottom:14px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-month{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.cal-nav{display:flex;gap:4px}
+.cal-nav-btn{width:20px;height:20px;border-radius:4px;border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:var(--color-text-secondary);background:var(--color-background-primary);transition:background .15s}
+.cal-nav-btn:hover{background:var(--color-background-secondary)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.cal-day-label{font-size:9px;color:var(--color-text-tertiary);text-align:center;padding:2px 0}
+.cal-day{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-secondary);border-radius:4px;cursor:pointer;position:relative;transition:background .15s}
+.cal-day:hover{background:var(--color-background-secondary)}
+.cal-day.today{background:var(--color-background-info);color:var(--color-text-info);font-weight:500}
+.cal-day.has-event::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%}
+.cal-day.ev-danger::after{background:var(--color-text-danger)}
+.cal-day.ev-warn::after{background:var(--color-text-warning)}
+.cal-day.ev-info::after{background:var(--color-text-info)}
+.cal-day.ev-ok::after{background:var(--color-text-success)}
+.cal-day.other-month{color:var(--color-text-tertiary);opacity:.4}
+
+.upcoming-item{padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.upcoming-item:last-child{border-bottom:none}
+.upcoming-item:hover .ui-name{color:var(--color-text-info)}
+.ui-datebox{width:32px;flex-shrink:0;text-align:center;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:3px 0}
+.ui-day{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.ui-mon{font-size:9px;color:var(--color-text-tertiary);text-transform:uppercase}
+.ui-name{font-size:12px;color:var(--color-text-primary);line-height:1.4}
+.ui-doc{font-size:10px;color:var(--color-text-tertiary)}
+
+.export-btns{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.export-btns button{font-size:11px;padding:6px}
+</style>
+
+<div class="pg">
+  <div class="bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+      <div class="bc">
+        <span>Vault</span><span>›</span>
+        <span class="cur">Key dates timeline</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button style="font-size:12px;padding:4px 12px">Sync to calendar ↗</button>
+      <button style="font-size:12px;padding:4px 12px">Export all dates ↗</button>
+    </div>
+  </div>
+
+  <div class="nav-strip">
+    <div class="ntab" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Summary</div>
+    <div class="ntab" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Clause breakdown</div>
+    <div class="ntab" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report</div>
+    <div class="ntab active">Key dates</div>
+    <div class="ntab" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask the doc</div>
+  </div>
+
+  <div class="layout">
+
+    <div class="left-rail">
+      <div class="rs">
+        <div class="sl">View</div>
+        <div class="view-toggle">
+          <div class="vt active" onclick="setView(this)">Timeline</div>
+          <div class="vt" onclick="setView(this)">Calendar</div>
+          <div class="vt" onclick="setView(this)">List</div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Documents</div>
+        <div class="doc-filter">
+          <div class="df-item active" onclick="setDoc(this)">
+            <div class="df-dot" style="background:var(--color-text-info)"></div>
+            <span class="df-name">All documents</span>
+            <span class="df-count">14 dates</span>
+          </div>
+          <div class="df-item" onclick="setDoc(this)">
+            <div class="df-dot" style="background:#E24B4A"></div>
+            <span class="df-name">Acme NDA v3</span>
+            <span class="df-count">3</span>
+          </div>
+          <div class="df-item" onclick="setDoc(this)">
+            <div class="df-dot" style="background:#EF9F27"></div>
+            <span class="df-name">Freelance MSA</span>
+            <span class="df-count">4</span>
+          </div>
+          <div class="df-item" onclick="setDoc(this)">
+            <div class="df-dot" style="background:#639922"></div>
+            <span class="df-name">Office Lease Mumbai</span>
+            <span class="df-count">5</span>
+          </div>
+          <div class="df-item" onclick="setDoc(this)">
+            <div class="df-dot" style="background:#378ADD"></div>
+            <span class="df-name">DataFlow SaaS</span>
+            <span class="df-count">2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Event type</div>
+        <div class="type-filter">
+          <div class="tf active" onclick="setType(this)">All</div>
+          <div class="tf" onclick="setType(this)">Deadline</div>
+          <div class="tf" onclick="setType(this)">Renewal</div>
+          <div class="tf" onclick="setType(this)">Notice</div>
+          <div class="tf" onclick="setType(this)">Expiry</div>
+          <div class="tf" onclick="setType(this)">Payment</div>
+          <div class="tf" onclick="setType(this)">Review</div>
+        </div>
+      </div>
+
+      <div class="rs">
+        <div class="sl">Summary</div>
+        <div class="stat-grid">
+          <div class="mstat"><div class="ms-n danger">2</div><div class="ms-l">Overdue</div></div>
+          <div class="mstat"><div class="ms-n warn">3</div><div class="ms-l">This month</div></div>
+          <div class="mstat"><div class="ms-n ok">9</div><div class="ms-l">Upcoming</div></div>
+          <div class="mstat"><div class="ms-n neutral">14</div><div class="ms-l">Total dates</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="toolbar">
+        <span style="font-size:13px;font-weight:500;color:var(--color-text-primary)">March 2025 – December 2025</span>
+        <div style="display:flex;gap:6px;margin-left:auto">
+          <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add manual date ↗</button>
+          <button>Set reminder ↗</button>
+        </div>
+      </div>
+
+      <div class="urgent-banner">
+        <div class="ub-icon"><svg viewBox="0 0 14 14" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M7 1v6M7 10v.5"/><circle cx="7" cy="7" r="6"/></svg></div>
+        <div class="ub-text"><strong style="font-weight:500">Notice window closing in 9 days.</strong> The Office Lease notice deadline is 30 Apr 2025. Missing it triggers automatic 12-month renewal.</div>
+        <div class="ub-action">View deadline →</div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="tl-spine"></div>
+
+        <div class="tl-section">
+          <div class="tl-month">Overdue</div>
+
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot overdue"></div></div>
+            <div class="te-card overdue">
+              <div class="te-head">
+                <div class="te-title">Acme NDA — Counter-proposal deadline</div>
+                <span class="te-badge overdue">12 days overdue</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">8 Mar 2025</span>
+                <span class="te-doc">Acme Corp NDA v3.pdf</span>
+                <span class="te-countdown overdue">Passed without action</span>
+              </div>
+              <div class="te-expand" style="display:none">
+                <div class="te-desc">The informal deadline for responding to Acme Corp's redline with your counter-proposal has passed. While this is a self-imposed milestone rather than a contractual obligation, delay weakens your negotiating position.</div>
+                <div class="te-consequence">
+                  <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5"><path d="M6 1v5M6 9v1"/></svg>
+                  <span class="tc-text">Acme Corp may interpret silence as acceptance. Send your counter-draft as soon as possible to preserve your negotiating footing.</span>
+                </div>
+                <div class="te-actions">
+                  <button onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Open compare view ↗</button>
+                  <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Open annotations ↗</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-section">
+          <div class="tl-month">April 2025</div>
+
+          <div style="position:relative;margin-bottom:8px">
+            <div class="today-line" style="padding-left:0">
+              <div class="te-node" style="padding-top:0"><div class="today-dot"></div></div>
+              <div style="margin-left:10px"><span class="today-label">Today — 22 Apr 2025</span></div>
+            </div>
+          </div>
+
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot urgent"></div></div>
+            <div class="te-card urgent">
+              <div class="te-head">
+                <div class="te-title">Office Lease — Notice to vacate deadline</div>
+                <span class="te-badge urgent">8 days left</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">30 Apr 2025</span>
+                <span class="te-doc">Office Lease Mumbai 2025.pdf</span>
+                <span class="te-countdown urgent">Must act by 30 Apr</span>
+              </div>
+              <div class="te-expand">
+                <div class="te-desc">Clause 7 of the lease requires 90 days' written notice to vacate. The notice window opens today and closes 30 April. If you miss this deadline, the lease automatically renews for a further 12 months at the same terms.</div>
+                <div class="te-consequence warn">
+                  <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke="var(--color-text-warning)"><path d="M6 1v5M6 9v1"/></svg>
+                  <span class="tc-text" style="color:var(--color-text-warning)">Missing this deadline = automatic 12-month renewal. Total exposure: ₹18L additional rent.</span>
+                </div>
+                <div style="margin-bottom:8px">
+                  <div class="sl">Reminders set</div>
+                  <div class="reminder-row"><div class="reminder-dot"></div><span class="reminder-text">Email reminder — sent 15 Apr</span></div>
+                  <div class="reminder-row"><div class="reminder-dot"></div><span class="reminder-text">Email reminder — sent today</span></div>
+                  <div class="reminder-row"><div class="reminder-dot" style="background:var(--color-text-warning)"></div><span class="reminder-text">Final reminder — 28 Apr (pending)</span></div>
+                </div>
+                <div class="te-actions">
+                  <button onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">View clause ↗</button>
+                  <button>Mark as actioned</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot urgent"></div></div>
+            <div class="te-card urgent">
+              <div class="te-head">
+                <div class="te-title">DataFlow SaaS — Auto-renewal date</div>
+                <span class="te-badge urgent">14 days left</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">6 May 2025</span>
+                <span class="te-doc">DataFlow SaaS Agreement.pdf</span>
+                <span class="te-countdown urgent">Cancel by 6 May or renews</span>
+              </div>
+              <div class="te-expand" style="display:none">
+                <div class="te-desc">The SaaS agreement auto-renews annually unless either party provides 30 days written notice. The cancellation window closes 6 May. After that, you are committed for another 12 months.</div>
+                <div class="te-consequence warn">
+                  <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke="var(--color-text-warning)"><path d="M6 1v5M6 9v1"/></svg>
+                  <span class="tc-text" style="color:var(--color-text-warning)">Auto-renewal locks in $24,000 annual commitment. Decide now whether to continue or terminate.</span>
+                </div>
+                <div class="te-actions">
+                  <button onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Open agreement ↗</button>
+                  <button>Set cancel reminder</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-section">
+          <div class="tl-month">May 2025</div>
+
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot upcoming"></div></div>
+            <div class="te-card upcoming">
+              <div class="te-head">
+                <div class="te-title">Freelance MSA — Contract expiry</div>
+                <span class="te-badge upcoming">In 53 days</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">14 Jun 2025</span>
+                <span class="te-doc">Freelance Services MSA — Jan 2025.pdf</span>
+              </div>
+              <div class="te-expand" style="display:none">
+                <div class="te-desc">The Master Services Agreement with Rajan Mehta expires on 14 June. Ongoing work after this date has no contractual protection. You must renew, renegotiate, or terminate before this date.</div>
+                <div class="te-actions">
+                  <button onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">View MSA ↗</button>
+                  <button>Add renewal reminder</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot upcoming"></div></div>
+            <div class="te-card upcoming">
+              <div class="te-head">
+                <div class="te-title">Freelance MSA — Quarterly payment milestone</div>
+                <span class="te-badge upcoming">In 38 days</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">30 May 2025</span>
+                <span class="te-doc">Freelance Services MSA — Jan 2025.pdf</span>
+              </div>
+              <div class="te-expand" style="display:none">
+                <div class="te-desc">Q2 payment of ₹2,50,000 due under Schedule B of the MSA. Late payment triggers 2% monthly interest per Clause 9.</div>
+                <div class="te-actions">
+                  <button>Mark as paid</button>
+                  <button>Set payment reminder</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-section">
+          <div class="tl-month">December 2025</div>
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot future"></div></div>
+            <div class="te-card">
+              <div class="te-head">
+                <div class="te-title">Office Lease — Annual rent review</div>
+                <span class="te-badge future">In 8 months</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">1 Dec 2025</span>
+                <span class="te-doc">Office Lease Mumbai 2025.pdf</span>
+              </div>
+            </div>
+          </div>
+          <div class="tl-event" onclick="toggleEvent(this)">
+            <div class="te-node"><div class="te-dot done"></div></div>
+            <div class="te-card done">
+              <div class="te-head">
+                <div class="te-title">Acme NDA — Effective date</div>
+                <span class="te-badge done">Completed</span>
+              </div>
+              <div class="te-meta">
+                <span class="te-date">1 Jan 2025</span>
+                <span class="te-doc">Acme Corp NDA v3.pdf</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <p class="sl">April 2025</p>
+      <div class="mini-cal">
+        <div class="cal-header">
+          <span class="cal-month">April 2025</span>
+          <div class="cal-nav">
+            <div class="cal-nav-btn">‹</div>
+            <div class="cal-nav-btn">›</div>
+          </div>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day-label">M</div><div class="cal-day-label">T</div><div class="cal-day-label">W</div><div class="cal-day-label">T</div><div class="cal-day-label">F</div><div class="cal-day-label">S</div><div class="cal-day-label">S</div>
+          <div class="cal-day other-month">31</div>
+          <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div>
+          <div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div>
+          <div class="cal-day">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div>
+          <div class="cal-day">21</div><div class="cal-day today">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div>
+          <div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day has-event ev-warn">30</div><div class="cal-day other-month">1</div><div class="cal-day other-month has-event ev-warn">6</div><div class="cal-day other-month">7</div><div class="cal-day other-month">8</div>
+        </div>
+      </div>
+
+      <p class="sl">Next 30 days</p>
+      <div style="margin-bottom:14px">
+        <div class="upcoming-item" onclick="toggleEvent(document.querySelectorAll('.tl-event')[1])">
+          <div class="ui-datebox"><div class="ui-day">30</div><div class="ui-mon">Apr</div></div>
+          <div><div class="ui-name" style="color:var(--color-text-warning)">Notice to vacate — Office Lease</div><div class="ui-doc">8 days · Lease</div></div>
+        </div>
+        <div class="upcoming-item" onclick="toggleEvent(document.querySelectorAll('.tl-event')[2])">
+          <div class="ui-datebox"><div class="ui-day">6</div><div class="ui-mon">May</div></div>
+          <div><div class="ui-name" style="color:var(--color-text-warning)">DataFlow auto-renewal window</div><div class="ui-doc">14 days · SaaS</div></div>
+        </div>
+        <div class="upcoming-item">
+          <div class="ui-datebox"><div class="ui-day">30</div><div class="ui-mon">May</div></div>
+          <div><div class="ui-name">Freelance MSA — Q2 payment</div><div class="ui-doc">38 days · MSA</div></div>
+        </div>
+        <div class="upcoming-item">
+          <div class="ui-datebox"><div class="ui-day">14</div><div class="ui-mon">Jun</div></div>
+          <div><div class="ui-name">Freelance MSA — expiry</div><div class="ui-doc">53 days · MSA</div></div>
+        </div>
+      </div>
+
+      <p class="sl">Reminders &amp; integrations</p>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:6px">
+          <span style="color:var(--color-text-secondary)">Email reminders</span>
+          <span style="color:var(--color-text-success);font-weight:500;font-size:11px">On</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:6px">
+          <span style="color:var(--color-text-secondary)">Google Calendar sync</span>
+          <span style="color:var(--color-text-tertiary);font-size:11px">Not connected</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+          <span style="color:var(--color-text-secondary)">Slack alerts</span>
+          <span style="color:var(--color-text-tertiary);font-size:11px">Not connected</span>
+        </div>
+      </div>
+
+      <div class="export-btns">
+        <button style="font-size:11px;padding:6px">Sync to Google Calendar ↗</button>
+        <button style="font-size:11px;padding:6px">Export as .ics file ↗</button>
+        <button style="font-size:11px;padding:6px" onclick="sendPrompt('What should the Document Vault look like in a legal document summarizer?')">Back to vault ↗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleEvent(el){
+  if(!el)return;
+  var exp=el.querySelector('.te-expand');
+  if(!exp)return;
+  var open=exp.style.display==='block';
+  document.querySelectorAll('.te-expand').forEach(e=>{if(e!==exp)e.style.display='none'});
+  exp.style.display=open?'none':'block';
+}
+function setView(el){document.querySelectorAll('.vt').forEach(v=>v.classList.remove('active'));el.classList.add('active')}
+function setDoc(el){document.querySelectorAll('.df-item').forEach(d=>d.classList.remove('active'));el.classList.add('active')}
+function setType(el){document.querySelectorAll('.tf').forEach(t=>t.classList.remove('active'));el.classList.add('active')}
+document.querySelectorAll('.te-expand').forEach(e=>{if(!e.closest('.te-card.urgent[style]'))e.style.display='none'});
+document.querySelector('.te-card.urgent .te-expand').style.display='block';
+</script>
