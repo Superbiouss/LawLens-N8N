@@ -1,5 +1,5 @@
 export function renderTemplates(container) {
-    container.innerHTML = `
+  container.innerHTML = `
     <div class="flex justify-between items-center mb-24">
       <div>
         <h1 class="page-title">Template library</h1>
@@ -17,15 +17,15 @@ export function renderTemplates(container) {
       <div class="pill">Corporate</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:20px;">
+    <div class="grid stagger" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:20px;">
       ${[
-            { name: 'Mutual NDA', cat: 'IP', desc: 'Standard non-disclosure agreement for mutual information exchange.', usage: '2.4k uses', risk: 'low' },
-            { name: 'Software Development Agreement', cat: 'Services', desc: 'Contract for outsourcing software development work.', usage: '1.2k uses', risk: 'medium' },
-            { name: 'Standard Employment Contract', cat: 'HR', desc: 'Full-time employment agreement with standard clauses.', usage: '5.1k uses', risk: 'medium' },
-            { name: 'Commercial Lease Agreement', cat: 'Estate', desc: 'Lease for office or retail space in commercial properties.', usage: '800 uses', risk: 'high' },
-            { name: 'SaaS Master Service Agreement', cat: 'SaaS', desc: 'Framework agreement for licensing software as a service.', usage: '1.5k uses', risk: 'medium' },
-            { name: 'Founder Agreement', cat: 'Corporate', desc: 'Governing agreement for startup co-founders.', usage: '600 uses', risk: 'high' }
-        ].map(t => `
+      { name: 'Mutual NDA', cat: 'IP', desc: 'Standard non-disclosure agreement for mutual information exchange.', usage: '2.4k uses', risk: 'low' },
+      { name: 'Software Development Agreement', cat: 'Services', desc: 'Contract for outsourcing software development work.', usage: '1.2k uses', risk: 'medium' },
+      { name: 'Standard Employment Contract', cat: 'HR', desc: 'Full-time employment agreement with standard clauses.', usage: '5.1k uses', risk: 'medium' },
+      { name: 'Commercial Lease Agreement', cat: 'Estate', desc: 'Lease for office or retail space in commercial properties.', usage: '800 uses', risk: 'high' },
+      { name: 'SaaS Master Service Agreement', cat: 'SaaS', desc: 'Framework agreement for licensing software as a service.', usage: '1.5k uses', risk: 'medium' },
+      { name: 'Founder Agreement', cat: 'Corporate', desc: 'Governing agreement for startup co-founders.', usage: '600 uses', risk: 'high' }
+    ].map(t => `
         <div class="card doc-card" style="display:flex;flex-direction:column;">
           <div class="doc-card-body" style="flex:1;">
             <div class="flex justify-between items-center mb-12">

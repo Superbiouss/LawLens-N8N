@@ -1,5 +1,5 @@
 export function renderUpload(container) {
-    container.innerHTML = `
+  container.innerHTML = `
     <div class="layout-2col">
       <div>
         <div class="mb-16">
@@ -83,7 +83,9 @@ export function renderUpload(container) {
 
         <div class="mt-24" style="padding-top:20px;border-top:0.5px solid var(--color-border-tertiary);">
           <p class="section-label">Recent documents</p>
-          ${renderRecentDocs()}
+          <div class="stagger">
+            ${renderRecentDocs()}
+          </div>
         </div>
       </div>
 
@@ -113,102 +115,132 @@ export function renderUpload(container) {
     </div>
   `;
 
-    // Tab switching
-    container.querySelectorAll('.seg-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            container.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            ['upload', 'paste', 'url'].forEach(p => {
-                const panel = container.querySelector(`#panel-${p}`);
-                if (panel) panel.style.display = p === tab.dataset.tab ? 'block' : 'none';
-            });
-        });
+  // Init Tab Indicator
+  setTimeout(() => {
+    if (window.updateTabIndicator) {
+      window.updateTabIndicator(container.querySelector('.seg-tabs'));
+    }
+  }, 0);
+
+  // Tab switching
+  container.querySelectorAll('.seg-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      container.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      ['upload', 'paste', 'url'].forEach(p => {
+        const panel = container.querySelector(`#panel-${p}`);
+        if (panel) panel.style.display = p === tab.dataset.tab ? 'block' : 'none';
+      });
     });
+  });
 
-    // Document type pills
-    container.querySelectorAll('[data-dtype]').forEach(pill => {
-        pill.addEventListener('click', () => {
-            container.querySelectorAll('[data-dtype]').forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-        });
+  // Document type pills
+  container.querySelectorAll('[data-dtype]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      container.querySelectorAll('[data-dtype]').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
     });
+  });
 
-    // Depth cards
-    container.querySelectorAll('.depth-card').forEach(card => {
-        card.addEventListener('click', () => {
-            container.querySelectorAll('.depth-card').forEach(c => {
-                c.classList.remove('selected');
-                c.style.borderColor = '';
-                c.style.background = '';
-            });
-            card.classList.add('selected');
-            card.style.borderColor = 'var(--color-border-info)';
-            card.style.background = 'var(--color-background-info)';
-        });
+  // Depth cards
+  container.querySelectorAll('.depth-card').forEach(card => {
+    card.addEventListener('click', () => {
+      container.querySelectorAll('.depth-card').forEach(c => {
+        c.classList.remove('selected');
+        c.style.borderColor = '';
+        c.style.background = '';
+      });
+      card.classList.add('selected');
+      card.style.borderColor = 'var(--color-border-info)';
+      card.style.background = 'var(--color-background-info)';
     });
+  });
 
-    // Init selected depth
-    const quick = container.querySelector('#d-quick');
-    if (quick) { quick.style.borderColor = 'var(--color-border-info)'; quick.style.background = 'var(--color-background-info)'; }
+  // Init selected depth
+  const quick = container.querySelector('#d-quick');
+  if (quick) { quick.style.borderColor = 'var(--color-border-info)'; quick.style.background = 'var(--color-background-info)'; }
 
-    // Drop zone click simulation
-    const dropzone = container.querySelector('#dropzone');
-    dropzone.addEventListener('click', () => {
-        container.querySelector('#dropzone-title').textContent = 'contract_nda_v3.pdf';
-        container.querySelector('#dropzone-sub').textContent = '142 KB — ready to analyze';
-        dropzone.classList.add('has-file');
-        container.querySelector('#analyze-btn').disabled = false;
-    });
+  // Drop zone click simulation
+  const dropzone = container.querySelector('#dropzone');
+  dropzone.addEventListener('click', () => {
+    container.querySelector('#dropzone-title').textContent = 'contract_nda_v3.pdf';
+    container.querySelector('#dropzone-sub').textContent = '142 KB — ready to analyze';
+    dropzone.classList.add('has-file');
+    container.querySelector('#analyze-btn').disabled = false;
+  });
 
-    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
-    dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('drag'); });
-    dropzone.addEventListener('drop', (e) => { e.preventDefault(); dropzone.click(); });
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('drag'); });
+  dropzone.addEventListener('drop', (e) => { e.preventDefault(); dropzone.click(); });
 
-    // Analyze button
-    container.querySelector('#analyze-btn').addEventListener('click', () => {
-        startAnalysis(container);
-    });
+  // Analyze button
+  container.querySelector('#analyze-btn').addEventListener('click', () => {
+    startAnalysis(container);
+  });
 }
 
 function startAnalysis(container) {
-    container.querySelector('#analyze-btn').style.display = 'none';
-    container.querySelector('#progress-wrap').style.display = 'block';
+  const mainArea = container.querySelector('.layout-2col > div:first-child');
+  const originalContent = mainArea.innerHTML;
 
-    const steps = ['ps1', 'ps2', 'ps3', 'ps4', 'ps5'];
-    const pcts = [15, 35, 58, 78, 100];
-    let step = 0;
+  container.querySelector('#analyze-btn').style.display = 'none';
+  container.querySelector('#progress-wrap').style.display = 'block';
 
-    function advance() {
-        if (step >= steps.length) return;
-        if (step > 0) {
-            const prev = container.querySelector(`#${steps[step - 1]}`);
-            prev.style.color = 'var(--color-text-secondary)';
-            prev.innerHTML = `<div style="width:7px;height:7px;border-radius:50%;background:var(--color-text-success);flex-shrink:0;"></div>${prev.textContent.trim()}`;
-        }
-        const cur = container.querySelector(`#${steps[step]}`);
-        cur.style.color = 'var(--color-text-primary)';
-        cur.style.fontWeight = '500';
-        if (step > 0) {
-            cur.innerHTML = `<div class="spinner"></div>${cur.textContent.trim()}`;
-        }
-        container.querySelector('#pbar').style.width = pcts[step] + '%';
-        step++;
-        if (step < steps.length) {
-            setTimeout(advance, 1100);
-        } else {
-            setTimeout(() => { window.navigateTo('summary'); }, 1200);
-        }
+  const steps = ['ps1', 'ps2', 'ps3', 'ps4', 'ps5'];
+  const pcts = [15, 35, 58, 78, 100];
+  let step = 0;
+
+  function advance() {
+    if (step >= steps.length) return;
+    if (step > 0) {
+      const prev = container.querySelector(`#${steps[step - 1]}`);
+      if (prev) {
+        prev.style.color = 'var(--color-text-secondary)';
+        prev.innerHTML = `<div style="width:7px;height:7px;border-radius:50%;background:var(--color-text-success);flex-shrink:0;"></div>${prev.textContent.trim()}`;
+      }
     }
-    advance();
+    const cur = container.querySelector(`#${steps[step]}`);
+    if (cur) {
+      cur.style.color = 'var(--color-text-primary)';
+      cur.style.fontWeight = '500';
+      if (step > 0) {
+        cur.innerHTML = `<div class="spinner"></div>${cur.textContent.trim()}`;
+      }
+    }
+
+    const pbar = container.querySelector('#pbar');
+    if (pbar) pbar.style.width = pcts[step] + '%';
+
+    step++;
+    if (step < steps.length) {
+      setTimeout(advance, 1100);
+    } else {
+      // Show skeleton for a brief moment before navigating
+      mainArea.innerHTML = `
+            <div class="animate-fade">
+                <div class="skeleton skeleton-title mb-24"></div>
+                <div class="skeleton-rect skeleton mb-16"></div>
+                <div class="flex gap-12 mb-16">
+                    <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
+                    <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
+                </div>
+                <div class="skeleton-text skeleton"></div>
+                <div class="skeleton-text skeleton" style="width:80%;"></div>
+            </div>
+        `;
+      setTimeout(() => { window.navigateTo('summary'); }, 1000);
+    }
+  }
+  advance();
 }
 
 function renderRecentDocs() {
-    const docs = [
-        { name: 'Acme Corp — NDA v3.pdf', ago: '2 days ago', risk: 'high', page: 'summary' },
-        { name: 'Freelance Services Agreement — Jan 2025.docx', ago: '5 days ago', risk: 'medium', page: 'summary' },
-        { name: 'Office Lease — Mumbai — 2025.pdf', ago: 'Last week', risk: 'low', page: 'summary' },
-    ];
-    return docs.map(d => `
+  const docs = [
+    { name: 'Acme Corp — NDA v3.pdf', ago: '2 days ago', risk: 'high', page: 'summary' },
+    { name: 'Freelance Services Agreement — Jan 2025.docx', ago: '5 days ago', risk: 'medium', page: 'summary' },
+    { name: 'Office Lease — Mumbai — 2025.pdf', ago: 'Last week', risk: 'low', page: 'summary' },
+  ];
+  return docs.map(d => `
     <div class="flex items-center gap-10" style="padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;" onclick="navigateTo('${d.page}')">
       <div style="width:28px;height:28px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>

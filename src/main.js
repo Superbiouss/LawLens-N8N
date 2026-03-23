@@ -68,6 +68,12 @@ function navigate() {
     updateNav(page);
 
     const content = document.getElementById('page-content');
+
+    // Trigger fade-in transition
+    content.classList.remove('page-transition');
+    void content.offsetWidth; // Force reflow
+    content.classList.add('page-transition');
+
     content.innerHTML = '';
     route.render(content);
 }
@@ -79,3 +85,59 @@ window.navigateTo = function (page) {
 
 window.addEventListener('hashchange', navigate);
 window.addEventListener('DOMContentLoaded', navigate);
+
+// Toast Notification System
+window.showToast = function (message, duration = 3000) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+};
+
+// Mobile Sidebar Toggle
+document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('mobile-menu-toggle');
+
+    if (toggle && toggle.contains(e.target)) {
+        sidebar.classList.toggle('open');
+    } else if (sidebar && !sidebar.contains(e.target) && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+    }
+});
+
+// Tab Indicator Update
+window.updateTabIndicator = function (tabsContainer) {
+    if (!tabsContainer) return;
+
+    let indicator = tabsContainer.querySelector('.tab-indicator') || tabsContainer.querySelector('.seg-indicator');
+
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.className = tabsContainer.classList.contains('nav-tabs') ? 'tab-indicator' : 'seg-indicator';
+        tabsContainer.appendChild(indicator);
+    }
+
+    const activeTab = tabsContainer.querySelector('.active');
+    if (activeTab) {
+        indicator.style.left = activeTab.offsetLeft + 'px';
+        indicator.style.width = activeTab.offsetWidth + 'px';
+    }
+};
+
+// Auto-update indicators on window resize
+window.addEventListener('resize', () => {
+    document.querySelectorAll('.nav-tabs, .seg-tabs').forEach(updateTabIndicator);
+});

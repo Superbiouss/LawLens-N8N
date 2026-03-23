@@ -1,5 +1,5 @@
 export function renderSummary(container) {
-    container.innerHTML = `
+  container.innerHTML = `
     <div style="background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);margin:-24px -24px 24px;">
       <div class="nav-tabs" style="border-bottom:none;">
         <div class="nav-tab active">Summary</div>
@@ -85,13 +85,13 @@ export function renderSummary(container) {
         </div>
 
         <p class="section-label">Red flags</p>
-        <div class="flex flex-col gap-8 mb-20">
+        <div class="flex flex-col gap-8 mb-20 stagger">
           ${[
-            "Unlimited confidentiality term — no sunset clause. You're bound permanently with no way out.",
-            "$500,000 liquidated damages per breach — regardless of actual harm. Disproportionate and aggressive.",
-            "Acme Corp can assign this agreement to any successor without your consent."
-        ].map(r => `
-            <div class="card bg-danger flex items-start gap-10" style="padding:10px 14px;background:var(--color-background-danger);border-color:var(--color-border-danger);cursor:pointer;transition:opacity .15s;" onclick="navigateTo('risk-report')" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      "Unlimited confidentiality term — no sunset clause. You're bound permanently with no way out.",
+      "$500,000 liquidated damages per breach — regardless of actual harm. Disproportionate and aggressive.",
+      "Acme Corp can assign this agreement to any successor without your consent."
+    ].map(r => `
+            <div class="card bg-danger flex items-start gap-10" style="padding:10px 14px;background:var(--color-background-danger);border-color:var(--color-border-danger);cursor:pointer;transition:all var(--duration-fast);" onclick="navigateTo('risk-report')" onmouseover="this.style.opacity='.8';this.style.transform='translateX(4px)'" onmouseout="this.style.opacity='1';this.style.transform='none'">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5" style="margin-top:2px;flex-shrink:0;"><path d="M7 1v8M7 11v1.5"/></svg>
               <div style="font-size:13px;color:var(--color-text-danger);flex:1;line-height:1.5;">${r}</div>
               <div style="color:var(--color-text-danger);opacity:0.5;">›</div>
@@ -102,10 +102,10 @@ export function renderSummary(container) {
         <p class="section-label">Obligations</p>
         <div class="card mb-20" style="padding:4px 14px;">
           ${[
-            { party: 'John Doe', text: 'Must keep all disclosed information strictly confidential indefinitely.' },
-            { party: 'John Doe', text: 'May only use confidential information to evaluate a potential partnership — no other purpose.' },
-            { party: 'Acme Corp', text: 'May assign this agreement to any entity without notice or consent.' }
-        ].map((o, i, arr) => `
+      { party: 'John Doe', text: 'Must keep all disclosed information strictly confidential indefinitely.' },
+      { party: 'John Doe', text: 'May only use confidential information to evaluate a potential partnership — no other purpose.' },
+      { party: 'Acme Corp', text: 'May assign this agreement to any entity without notice or consent.' }
+    ].map((o, i, arr) => `
             <div class="flex items-start gap-10" style="padding:12px 0;${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
               <span class="badge badge-info" style="margin-top:2px;">${o.party}</span>
               <span style="font-size:13px;color:var(--color-text-secondary);line-height:1.5;">${o.text}</span>
@@ -116,11 +116,11 @@ export function renderSummary(container) {
         <p class="section-label">Missing standard clauses</p>
         <div class="card" style="padding:8px 14px;">
           ${[
-            "Return or destruction of confidential materials on termination",
-            "Residual knowledge carve-out (what employees can retain in memory)",
-            "Limitation of liability cap for the Disclosing Party",
-            "Dispute resolution / mediation step before litigation"
-        ].map((m, i, arr) => `
+      "Return or destruction of confidential materials on termination",
+      "Residual knowledge carve-out (what employees can retain in memory)",
+      "Limitation of liability cap for the Disclosing Party",
+      "Dispute resolution / mediation step before litigation"
+    ].map((m, i, arr) => `
             <div class="flex items-center gap-10" style="padding:10px 0;${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
               <div style="width:14px;height:1.5px;background:var(--color-border-secondary);flex-shrink:0;"></div>
               <span style="font-size:13px;color:var(--color-text-secondary);">${m}</span>
@@ -149,11 +149,11 @@ export function renderSummary(container) {
         <p class="section-label">Explore further</p>
         <div class="card mb-16" style="padding:8px;">
           ${[
-            { title: 'Clause breakdown', desc: 'Every clause explained', page: 'clause-breakdown' },
-            { title: 'Risk report', desc: 'Full red flag analysis', page: 'risk-report' },
-            { title: 'Key dates', desc: 'Timeline & reminders', page: 'key-dates' },
-            { title: 'Compare versions', desc: 'Diff against another draft', page: 'compare' }
-        ].map(l => `
+      { title: 'Clause breakdown', desc: 'Every clause explained', page: 'clause-breakdown' },
+      { title: 'Risk report', desc: 'Full red flag analysis', page: 'risk-report' },
+      { title: 'Key dates', desc: 'Timeline & reminders', page: 'key-dates' },
+      { title: 'Compare versions', desc: 'Diff against another draft', page: 'compare' }
+    ].map(l => `
             <div class="flex items-center justify-between" style="padding:10px 12px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;" onclick="navigateTo('${l.page}')" onmouseover="this.style.background='var(--color-background-secondary)'" onmouseout="this.style.background=''">
               <div>
                 <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0;">${l.title}</p>
@@ -183,9 +183,16 @@ export function renderSummary(container) {
         <p class="section-label">Share & export</p>
         <div class="flex flex-col gap-8">
           <button class="btn-full" onclick="navigateTo('export')">Download summary PDF ↗</button>
-          <button class="btn-full">Copy share link</button>
+          <button class="btn-full" onclick="showToast('Link copied to clipboard!')">Copy share link</button>
         </div>
       </div>
     </div>
   `;
+
+  // Init Tab Indicator
+  setTimeout(() => {
+    if (window.updateTabIndicator) {
+      window.updateTabIndicator(container.querySelector('.nav-tabs'));
+    }
+  }, 0);
 }

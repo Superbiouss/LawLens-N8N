@@ -1,5 +1,5 @@
 export function renderRiskReport(container) {
-    container.innerHTML = `
+  container.innerHTML = `
     <div style="background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);margin:-24px -24px 24px;">
       <div class="nav-tabs" style="border-bottom:none;">
         <div class="nav-tab" onclick="navigateTo('summary')">Summary</div>
@@ -55,90 +55,92 @@ export function renderRiskReport(container) {
           </div>
         </div>
 
-        <div class="flag-card critical">
-          <div class="flag-head">
-            <div class="severity-dot critical"></div>
-            <span class="flag-title">Unlimited confidentiality term</span>
-            <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 1</span>
-            <span class="badge badge-danger">Critical</span>
-          </div>
-          <div class="flag-body">
-            <p class="body-text mb-12">The NDA imposes confidentiality obligations with no end date. Unlike standard NDAs which expire after 2–5 years, this binds you permanently — even if the partnership never materialises or ends years from now.</p>
-            <div class="flex items-start gap-8 mb-12">
-              <span class="micro-label" style="padding-top:2px;">Impact</span>
-              <span style="font-size:12px;color:var(--color-text-danger);line-height:1.5;">Perpetual legal exposure with no exit mechanism, even after the business relationship ends.</span>
+        <div class="flex flex-col gap-10 stagger">
+          <div class="flag-card critical">
+            <div class="flag-head">
+              <div class="severity-dot critical"></div>
+              <span class="flag-title">Unlimited confidentiality term</span>
+              <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 1</span>
+              <span class="badge badge-danger">Critical</span>
             </div>
-            <div class="card-surface mt-8 mb-12">
-              <div class="micro-label mb-4">Suggested fix</div>
-              <div class="body-text" style="font-size:12px;">Replace "unlimited period of time" with "a period of 3 years from the date of disclosure." This is industry standard and rarely contested.</div>
-            </div>
-            <div class="flex gap-8">
-              <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
-              <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="flag-card critical">
-          <div class="flag-head">
-            <div class="severity-dot critical"></div>
-            <span class="flag-title">$500,000 liquidated damages — no harm required</span>
-            <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 3</span>
-            <span class="badge badge-danger">Critical</span>
-          </div>
-          <div class="flag-body">
-            <p class="body-text mb-12">The penalty clause sets a fixed $500,000 per-breach fee regardless of what harm, if any, Acme Corp actually suffers. In practice, a single accidental disclosure — even a forwarded email — could trigger this clause.</p>
-            <div class="flex items-start gap-8 mb-12">
-              <span class="micro-label" style="padding-top:2px;">Impact</span>
-              <span style="font-size:12px;color:var(--color-text-danger);line-height:1.5;">Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.</span>
-            </div>
-            <div class="card-surface mt-8 mb-12">
-              <div class="micro-label mb-4">Suggested fix</div>
-              <div class="body-text" style="font-size:12px;">Push to remove the liquidated damages clause entirely, or cap it at actual documented losses. Add a gross negligence/wilful misconduct threshold before it triggers.</div>
-            </div>
-            <div class="flex gap-8">
-              <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
-              <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
+            <div class="flag-body">
+              <p class="body-text mb-12">The NDA imposes confidentiality obligations with no end date. Unlike standard NDAs which expire after 2–5 years, this binds you permanently — even if the partnership never materialises or ends years from now.</p>
+              <div class="flex items-start gap-8 mb-12">
+                <span class="micro-label" style="padding-top:2px;">Impact</span>
+                <span style="font-size:12px;color:var(--color-text-danger);line-height:1.5;">Perpetual legal exposure with no exit mechanism, even after the business relationship ends.</span>
+              </div>
+              <div class="card-surface mt-8 mb-12">
+                <div class="micro-label mb-4">Suggested fix</div>
+                <div class="body-text" style="font-size:12px;">Replace "unlimited period of time" with "a period of 3 years from the date of disclosure." This is industry standard and rarely contested.</div>
+              </div>
+              <div class="flex gap-8">
+                <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
+                <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="flag-card critical">
-          <div class="flag-head">
-            <div class="severity-dot critical"></div>
-            <span class="flag-title">Unilateral assignment — no consent required</span>
-            <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 4</span>
-            <span class="badge badge-danger">Critical</span>
-          </div>
-          <div class="flag-body">
-            <p class="body-text mb-12">Acme Corp can transfer this agreement to any successor entity — including a competitor — without notifying or obtaining consent from you. Your obligations follow regardless of who now holds the other side of the contract.</p>
-            <div class="flex items-start gap-8 mb-12">
-              <span class="micro-label" style="padding-top:2px;">Impact</span>
-              <span style="font-size:12px;color:var(--color-text-danger);line-height:1.5;">You could end up contractually bound to an unknown third party you never agreed to deal with.</span>
+  
+          <div class="flag-card critical">
+            <div class="flag-head">
+              <div class="severity-dot critical"></div>
+              <span class="flag-title">$500,000 liquidated damages — no harm required</span>
+              <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 3</span>
+              <span class="badge badge-danger">Critical</span>
             </div>
-            <div class="card-surface mt-8 mb-12">
-              <div class="micro-label mb-4">Suggested fix</div>
-              <div class="body-text" style="font-size:12px;">Add "…provided that the Receiving Party's prior written consent is obtained, not to be unreasonably withheld." Both parties should have equal assignment rights.</div>
-            </div>
-            <div class="flex gap-8">
-              <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
-              <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
+            <div class="flag-body">
+              <p class="body-text mb-12">The penalty clause sets a fixed $500,000 per-breach fee regardless of what harm, if any, Acme Corp actually suffers. In practice, a single accidental disclosure — even a forwarded email — could trigger this clause.</p>
+              <div class="flex items-start gap-8 mb-12">
+                <span class="micro-label" style="padding-top:2px;">Impact</span>
+                <span style="font-size:12px;color:var(--color-text-danger);line-height:1.5;">Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.</span>
+              </div>
+              <div class="card-surface mt-8 mb-12">
+                <div class="micro-label mb-4">Suggested fix</div>
+                <div class="body-text" style="font-size:12px;">Push to remove the liquidated damages clause entirely, or cap it at actual documented losses. Add a gross negligence/wilful misconduct threshold before it triggers.</div>
+              </div>
+              <div class="flex gap-8">
+                <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
+                <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="flag-card review">
-          <div class="flag-head">
-            <div class="severity-dot review"></div>
-            <span class="flag-title">Exclusive jurisdiction in Delaware</span>
-            <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 5</span>
-            <span class="badge badge-warning">Review</span>
+  
+          <div class="flag-card critical">
+            <div class="flag-head">
+              <div class="severity-dot critical"></div>
+              <span class="flag-title">Unilateral assignment — no consent required</span>
+              <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 4</span>
+              <span class="badge badge-danger">Critical</span>
+            </div>
+            <div class="flag-body">
+              <p class="body-text mb-12">Acme Corp can transfer this agreement to any successor entity — including a competitor — without notifying or obtaining consent from you. Your obligations follow regardless of who now holds the other side of the contract.</p>
+              <div class="flex items-start gap-8 mb-12">
+                <span class="micro-label" style="padding-top:2px;">Impact</span>
+                <span style="font-size:12px;color:var(--color-text-danger);line-height:1.5;">You could end up contractually bound to an unknown third party you never agreed to deal with.</span>
+              </div>
+              <div class="card-surface mt-8 mb-12">
+                <div class="micro-label mb-4">Suggested fix</div>
+                <div class="body-text" style="font-size:12px;">Add "…provided that the Receiving Party's prior written consent is obtained, not to be unreasonably withheld." Both parties should have equal assignment rights.</div>
+              </div>
+              <div class="flex gap-8">
+                <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
+                <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
+              </div>
+            </div>
           </div>
-          <div class="flag-body">
-            <p class="body-text mb-12">All disputes must be litigated exclusively in Delaware courts. If you are based outside the US, this creates a significant logistical and financial burden to defend any claim.</p>
-            <div class="card-surface mt-8 mb-12">
-              <div class="micro-label mb-4">Suggested fix</div>
-              <div class="body-text" style="font-size:12px;">Propose mutual jurisdiction in the defendant's home country, or ICC arbitration as a neutral alternative.</div>
+  
+          <div class="flag-card review">
+            <div class="flag-head">
+              <div class="severity-dot review"></div>
+              <span class="flag-title">Exclusive jurisdiction in Delaware</span>
+              <span class="meta-text" style="font-size:10px;margin-left:auto;margin-right:6px;">Clause 5</span>
+              <span class="badge badge-warning">Review</span>
+            </div>
+            <div class="flag-body">
+              <p class="body-text mb-12">All disputes must be litigated exclusively in Delaware courts. If you are based outside the US, this creates a significant logistical and financial burden to defend any claim.</p>
+              <div class="card-surface mt-8 mb-12">
+                <div class="micro-label mb-4">Suggested fix</div>
+                <div class="body-text" style="font-size:12px;">Propose mutual jurisdiction in the defendant's home country, or ICC arbitration as a neutral alternative.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -203,13 +205,13 @@ export function renderRiskReport(container) {
         <p class="section-label">Risk dimensions</p>
         <div class="flex flex-col gap-8 mb-24">
           ${[
-            { label: 'Financial', score: 9, color: 'danger', pct: 90 },
-            { label: 'Term & exit', score: 8, color: 'danger', pct: 80 },
-            { label: 'Jurisdiction', score: 6, color: 'warning', pct: 60 },
-            { label: 'Scope / purpose', score: 6, color: 'warning', pct: 60 },
-            { label: 'Assignment', score: 8, color: 'danger', pct: 80 },
-            { label: 'Boilerplate', score: 2, color: 'success', pct: 20 }
-        ].map(d => `
+      { label: 'Financial', score: 9, color: 'danger', pct: 90 },
+      { label: 'Term & exit', score: 8, color: 'danger', pct: 80 },
+      { label: 'Jurisdiction', score: 6, color: 'warning', pct: 60 },
+      { label: 'Scope / purpose', score: 6, color: 'warning', pct: 60 },
+      { label: 'Assignment', score: 8, color: 'danger', pct: 80 },
+      { label: 'Boilerplate', score: 2, color: 'success', pct: 20 }
+    ].map(d => `
             <div class="flex items-center gap-8">
               <span class="meta-text" style="width:100px;">${d.label}</span>
               <div class="progress-track" style="flex:1;height:5px;"><div class="progress-bar" style="width:${d.pct}%;background:var(--color-text-${d.color});"></div></div>
