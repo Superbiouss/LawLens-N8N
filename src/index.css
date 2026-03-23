@@ -270,6 +270,7 @@ a:hover {
     flex-direction: column;
     z-index: 100;
     overflow-y: auto;
+    transition: transform var(--duration-normal) var(--ease-in-out);
 }
 
 .sidebar-header {
@@ -391,9 +392,10 @@ a:hover {
 
 .page-content {
     flex: 1;
-    padding: 24px;
-    max-width: 1400px;
+    padding: 24px 32px;
+    max-width: 1600px;
     width: 100%;
+    margin: 0 auto;
 }
 
 /* ---- Cards ---- */
@@ -1292,7 +1294,25 @@ textarea {
 
 @media (max-width: 767px) {
     .sidebar {
-        display: none;
+        width: 260px;
+        transform: translateX(-100%);
+        box-shadow: none;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar .nav-item span,
+    .sidebar .sidebar-section-label,
+    .sidebar .logo-text {
+        display: block;
+        /* Show labels in the mobile slide-out */
+    }
+
+    .sidebar-section-label {
+        display: block !important;
     }
 
     .main-wrapper {
@@ -1423,26 +1443,6 @@ textarea {
     border-radius: 50%;
 }
 
-/* Mobile Sidebar Toggle Support */
-.sidebar {
-    transition: transform var(--duration-normal) var(--ease-in-out);
-}
-
-@media (max-width: 767px) {
-    .sidebar.open {
-        display: flex !important;
-        transform: translateX(0);
-        width: 260px;
-        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
-    }
-
-    .sidebar:not(.open) {
-        transform: translateX(-100%);
-        display: flex !important;
-        /* Always flex but hidden by transform */
-    }
-}
-
 .menu-btn {
     display: none;
     padding: 8px;
@@ -1453,5 +1453,33 @@ textarea {
 @media (max-width: 767px) {
     .menu-btn {
         display: flex;
+    }
+}
+
+/* ---- Ultra-Wide Optimization ---- */
+@media (min-width: 1600px) {
+    .page-content {
+        padding: 40px 60px;
+    }
+
+    .layout-2col {
+        grid-template-columns: 1fr 340px;
+        gap: 32px;
+    }
+
+    .layout-3col {
+        grid-template-columns: 240px 1fr 300px;
+    }
+}
+
+@media (min-width: 2000px) {
+    .page-content {
+        max-width: 1800px;
+        padding: 60px 80px;
+    }
+
+    html {
+        font-size: 15px;
+        /* Slight scale up for ultra-wide */
     }
 }
