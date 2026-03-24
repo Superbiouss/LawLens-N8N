@@ -1,26 +1,46 @@
+import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+
+const RED_FLAGS = [
+  "Unlimited confidentiality term - no sunset clause. You're bound permanently with no way out.",
+  '$500,000 liquidated damages per breach - regardless of actual harm. Disproportionate and aggressive.',
+  'Acme Corp can assign this agreement to any successor without your consent.',
+];
+
+const OBLIGATIONS = [
+  { party: 'John Doe', text: 'Must keep all disclosed information strictly confidential indefinitely.' },
+  { party: 'John Doe', text: 'May only use confidential information to evaluate a potential partnership - no other purpose.' },
+  { party: 'Acme Corp', text: 'May assign this agreement to any entity without notice or consent.' },
+];
+
+const MISSING_CLAUSES = [
+  'Return or destruction of confidential materials on termination',
+  'Residual knowledge carve-out (what employees can retain in memory)',
+  'Limitation of liability cap for the Disclosing Party',
+  'Dispute resolution / mediation step before litigation',
+];
+
+const EXPLORE_LINKS = [
+  { title: 'Clause breakdown', desc: 'Every clause explained', page: 'clause-breakdown' },
+  { title: 'Risk report', desc: 'Full red flag analysis', page: 'risk-report' },
+  { title: 'Key dates', desc: 'Timeline & reminders', page: 'key-dates' },
+  { title: 'Compare versions', desc: 'Diff against another draft', page: 'compare' },
+];
+
 export function renderSummary(container) {
   container.innerHTML = `
-    <div style="background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);margin:-24px -24px 24px;">
-      <div class="nav-tabs" style="border-bottom:none;">
-        <div class="nav-tab active">Summary</div>
-        <div class="nav-tab" onclick="navigateTo('clause-breakdown')">Clause breakdown</div>
-        <div class="nav-tab" onclick="navigateTo('risk-report')">Risk report</div>
-        <div class="nav-tab" onclick="navigateTo('key-dates')">Key dates</div>
-        <div class="nav-tab" onclick="navigateTo('ask')">Ask the doc</div>
-      </div>
-    </div>
+    ${renderPageTabs(DOCUMENT_TABS, 'summary')}
 
     <div class="layout-2col">
       <div>
         <div class="card-accent-left danger mb-16">
           <div class="flex justify-between items-center mb-8">
             <div>
-              <p class="section-heading">Acme Corp — Non-Disclosure Agreement v3</p>
+              <p class="section-heading">Acme Corp - Non-Disclosure Agreement v3</p>
               <p class="meta-text mt-4">NDA · 6 pages · Analyzed 2 min ago</p>
             </div>
             <span class="badge badge-danger">High risk</span>
           </div>
-          <p class="body-text" style="line-height:1.7;">This is a one-sided mutual NDA that heavily favours Acme Corp. It imposes an unlimited confidentiality term on the Receiving Party, includes a $500,000 per-incident liquidated damages clause, and allows Acme to assign the agreement without consent. Several standard protections for the Receiving Party are absent.</p>
+          <p class="body-text summary-lead-copy">This is a one-sided mutual NDA that heavily favours Acme Corp. It imposes an unlimited confidentiality term on the Receiving Party, includes a $500,000 per-incident liquidated damages clause, and allows Acme to assign the agreement without consent. Several standard protections for the Receiving Party are absent.</p>
         </div>
 
         <div class="stats-row mb-16">
@@ -42,42 +62,45 @@ export function renderSummary(container) {
           </div>
         </div>
 
-        <div class="layout-2col-equal mb-16" style="gap:12px;">
+        <div class="layout-2col-equal gap-12 mb-16">
           <div>
             <p class="section-label">Parties</p>
-            <div class="card" style="padding:12px;display:flex;flex-direction:column;gap:12px;">
-              <div class="flex justify-between items-center" style="padding-bottom:12px;border-bottom:0.5px solid var(--color-border-tertiary);">
-                <span class="meta-text">Disclosing party</span>
-                <span class="fs-13 fw-500">Acme Corp</span>
-              </div>
-              <div class="flex justify-between items-center" style="padding-bottom:12px;border-bottom:0.5px solid var(--color-border-tertiary);">
-                <span class="meta-text">Receiving party</span>
-                <span class="fs-13 fw-500">John Doe</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="meta-text">Governing law</span>
-                <span class="fs-13 fw-500">Delaware, USA</span>
+            <div class="card p-12">
+              <div class="panel-list">
+                <div class="panel-list-row">
+                  <span class="meta-text">Disclosing party</span>
+                  <span class="fs-13 fw-500">Acme Corp</span>
+                </div>
+                <div class="panel-list-row">
+                  <span class="meta-text">Receiving party</span>
+                  <span class="fs-13 fw-500">John Doe</span>
+                </div>
+                <div class="panel-list-row">
+                  <span class="meta-text">Governing law</span>
+                  <span class="fs-13 fw-500">Delaware, USA</span>
+                </div>
               </div>
             </div>
           </div>
+
           <div>
             <p class="section-label">Key dates</p>
-            <div class="card" style="padding:14px;">
+            <div class="card p-14">
               <div class="timeline">
                 <div class="tl-item">
                   <div class="tl-dot success"></div>
                   <div class="meta-text">Effective date</div>
-                  <div style="font-size:13px;font-weight:500;">1 Jan 2025</div>
+                  <div class="fs-13 fw-500">1 Jan 2025</div>
                 </div>
                 <div class="tl-item">
                   <div class="tl-dot warning"></div>
                   <div class="meta-text">Expiry</div>
-                  <div class="fs-13 fw-500 text-warning">Unlimited — no end date</div>
+                  <div class="fs-13 fw-500 text-warning">Unlimited - no end date</div>
                 </div>
-                <div class="tl-item" style="border-left-color:transparent;padding-bottom:0;">
+                <div class="tl-item">
                   <div class="tl-dot"></div>
                   <div class="meta-text">Notice period</div>
-                  <div style="font-size:13px;font-weight:500;">Not specified</div>
+                  <div class="fs-13 fw-500">Not specified</div>
                 </div>
               </div>
             </div>
@@ -86,46 +109,21 @@ export function renderSummary(container) {
 
         <p class="section-label">Red flags</p>
         <div class="flex flex-col gap-8 mb-20 stagger">
-          ${[
-      "Unlimited confidentiality term — no sunset clause. You're bound permanently with no way out.",
-      "$500,000 liquidated damages per breach — regardless of actual harm. Disproportionate and aggressive.",
-      "Acme Corp can assign this agreement to any successor without your consent."
-    ].map(r => `
-            <div class="card bg-danger flex items-start gap-10 hover-raise-danger" style="padding:10px 14px;background:var(--color-background-danger);border-color:var(--color-border-danger);cursor:pointer;" onclick="navigateTo('risk-report')">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5" style="margin-top:2px;flex-shrink:0;"><path d="M7 1v8M7 11v1.5"/></svg>
-              <div class="fs-13 text-danger lh-15" style="flex:1;">${r}</div>
-              <div class="text-danger" style="opacity:0.5;">›</div>
-            </div>
-          `).join('')}
+          ${renderRedFlags()}
         </div>
 
         <p class="section-label">Obligations</p>
-        <div class="card mb-20" style="padding:4px 14px;">
-          ${[
-      { party: 'John Doe', text: 'Must keep all disclosed information strictly confidential indefinitely.' },
-      { party: 'John Doe', text: 'May only use confidential information to evaluate a potential partnership — no other purpose.' },
-      { party: 'Acme Corp', text: 'May assign this agreement to any entity without notice or consent.' }
-    ].map((o, i, arr) => `
-            <div class="flex items-start gap-10" style="padding:12px 0;${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
-              <span class="badge badge-info" style="margin-top:2px;">${o.party}</span>
-              <span class="fs-13 text-secondary lh-15">${o.text}</span>
-            </div>
-          `).join('')}
+        <div class="card mb-20 p-14">
+          <div class="panel-list">
+            ${renderObligations()}
+          </div>
         </div>
 
         <p class="section-label">Missing standard clauses</p>
-        <div class="card" style="padding:8px 14px;">
-          ${[
-      "Return or destruction of confidential materials on termination",
-      "Residual knowledge carve-out (what employees can retain in memory)",
-      "Limitation of liability cap for the Disclosing Party",
-      "Dispute resolution / mediation step before litigation"
-    ].map((m, i, arr) => `
-            <div class="flex items-center gap-10" style="padding:10px 0;${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
-              <div style="width:14px;height:1.5px;background:var(--color-border-secondary);flex-shrink:0;"></div>
-              <span class="fs-13 text-secondary">${m}</span>
-            </div>
-          `).join('')}
+        <div class="card p-14">
+          <div class="panel-list">
+            ${renderMissingClauses()}
+          </div>
         </div>
       </div>
 
@@ -138,30 +136,17 @@ export function renderSummary(container) {
               <circle cx="36" cy="36" r="28" fill="none" stroke="var(--color-red-400)" stroke-width="6" stroke-dasharray="126 176" stroke-dashoffset="44" stroke-linecap="round"/>
             </svg>
             <div class="score-center">
-              <span class="score-number" style="color:var(--color-text-danger);">7.2</span>
+              <span class="score-number text-danger">7.2</span>
               <span class="score-denom">/ 10</span>
             </div>
           </div>
-          <p class="fs-13 fw-500 text-danger" style="margin:0 0 2px;">High risk</p>
+          <p class="fs-13 fw-500 text-danger mb-4">High risk</p>
           <p class="meta-text mt-0">3 critical issues found</p>
         </div>
 
         <p class="section-label">Explore further</p>
-        <div class="card mb-16" style="padding:8px;">
-          ${[
-      { title: 'Clause breakdown', desc: 'Every clause explained', page: 'clause-breakdown' },
-      { title: 'Risk report', desc: 'Full red flag analysis', page: 'risk-report' },
-      { title: 'Key dates', desc: 'Timeline & reminders', page: 'key-dates' },
-      { title: 'Compare versions', desc: 'Diff against another draft', page: 'compare' }
-    ].map(l => `
-            <div class="flex items-center justify-between hover-bg-secondary" style="padding:10px 12px;border-radius:var(--border-radius-md);cursor:pointer;" onclick="navigateTo('${l.page}')">
-              <div>
-                <p class="fs-13 fw-500 text-primary m-0">${l.title}</p>
-                <p class="fs-11 text-tertiary m-0">${l.desc}</p>
-              </div>
-              <span class="text-tertiary">›</span>
-            </div>
-          `).join('')}
+        <div class="card mb-16 p-8">
+          ${renderExploreLinks()}
         </div>
 
         <p class="section-label">Readability</p>
@@ -182,17 +167,75 @@ export function renderSummary(container) {
 
         <p class="section-label">Share & export</p>
         <div class="flex flex-col gap-8">
-          <button class="btn-full" onclick="navigateTo('export')">Download summary PDF ↗</button>
-          <button class="btn-full" onclick="showToast('Link copied to clipboard!')">Copy share link</button>
+          <button class="btn-full" id="download-summary-btn">Download summary PDF ↗</button>
+          <button class="btn-full" id="share-summary-btn">Copy share link</button>
         </div>
       </div>
     </div>
   `;
 
-  // Init Tab Indicator
+  bindRouteTabs(container);
+  bindSummaryActions(container);
+
   setTimeout(() => {
     if (window.updateTabIndicator) {
       window.updateTabIndicator(container.querySelector('.nav-tabs'));
     }
   }, 0);
+}
+
+function renderRedFlags() {
+  return RED_FLAGS.map(flag => `
+    <button type="button" class="reset-btn card summary-alert-card flex items-start gap-10 hover-raise-danger" data-nav-target="risk-report">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5" class="flex-shrink-0 mt-4"><path d="M7 1v8M7 11v1.5"/></svg>
+      <div class="fs-13 text-danger lh-15 summary-alert-text">${flag}</div>
+      <div class="text-danger summary-alert-arrow">›</div>
+    </button>
+  `).join('');
+}
+
+function renderObligations() {
+  return OBLIGATIONS.map(obligation => `
+    <div class="panel-list-row align-start">
+      <span class="badge badge-info mt-4">${obligation.party}</span>
+      <span class="fs-13 text-secondary lh-15">${obligation.text}</span>
+    </div>
+  `).join('');
+}
+
+function renderMissingClauses() {
+  return MISSING_CLAUSES.map(clause => `
+    <div class="panel-list-row align-start">
+      <div class="panel-list-dash mt-8"></div>
+      <span class="fs-13 text-secondary">${clause}</span>
+    </div>
+  `).join('');
+}
+
+function renderExploreLinks() {
+  return EXPLORE_LINKS.map(link => `
+    <button type="button" class="reset-btn flex items-center justify-between hover-bg-secondary summary-link-row" data-nav-target="${link.page}">
+      <div>
+        <p class="fs-13 fw-500 text-primary m-0">${link.title}</p>
+        <p class="fs-11 text-tertiary m-0">${link.desc}</p>
+      </div>
+      <span class="text-tertiary">›</span>
+    </button>
+  `).join('');
+}
+
+function bindSummaryActions(container) {
+  container.querySelectorAll('.summary-alert-card, .summary-link-row').forEach(button => {
+    button.addEventListener('click', () => {
+      window.navigateTo(button.dataset.navTarget);
+    });
+  });
+
+  container.querySelector('#download-summary-btn').addEventListener('click', () => {
+    window.navigateTo('export');
+  });
+
+  container.querySelector('#share-summary-btn').addEventListener('click', () => {
+    window.showToast('Link copied to clipboard!');
+  });
 }

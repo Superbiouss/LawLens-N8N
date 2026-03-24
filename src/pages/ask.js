@@ -1,38 +1,37 @@
-export function renderAsk(container) {
-    container.innerHTML = `
-    <div style="background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);margin:-24px -24px 0;">
-      <div class="nav-tabs" style="border-bottom:none;">
-        <div class="nav-tab" onclick="navigateTo('summary')">Summary</div>
-        <div class="nav-tab" onclick="navigateTo('clause-breakdown')">Clause breakdown</div>
-        <div class="nav-tab" onclick="navigateTo('risk-report')">Risk report</div>
-        <div class="nav-tab" onclick="navigateTo('key-dates')">Key dates</div>
-        <div class="nav-tab active">Ask the doc</div>
-      </div>
-    </div>
+import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
 
-    <!-- 2 column layout: Chat on left, context on right -->
-    <div style="display:grid;grid-template-columns:1fr 280px;height:calc(100vh - var(--topbar-height) - 44px);margin:0 -24px -24px;">
-      
-      <!-- Left sidebar: Chat Area -->
-      <div style="display:flex;flex-direction:column;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);">
-        <div style="flex:1;overflow-y:auto;padding:32px 40px;display:flex;flex-direction:column;gap:24px;">
-          
+const SUGGESTED_QUESTIONS = [
+  'Summarize the obligations',
+  'What are the red flags?',
+  'Can I assign this?',
+];
+
+const HISTORY_ITEMS = [
+  'Can I assign this?',
+  'What are the red flags?',
+];
+
+export function renderAsk(container) {
+  container.innerHTML = `
+    ${renderPageTabs(DOCUMENT_TABS, 'ask', { flush: true })}
+
+    <div class="workspace-shell">
+      <div class="workspace-main with-divider">
+        <div class="workspace-scroll">
           <div class="chat-msg">
             <div class="chat-avatar ai">L</div>
             <div class="chat-bubble">
               <p>Hi. I've analyzed the <strong>Acme Corp Non-Disclosure Agreement v3</strong>. What would you like to know about it?</p>
               <div class="flex gap-8 flex-wrap mt-12">
-                <span class="badge badge-neutral" style="cursor:pointer;background:var(--color-background-primary);">Summarize the obligations</span>
-                <span class="badge badge-neutral" style="cursor:pointer;background:var(--color-background-primary);">What are the red flags?</span>
-                <span class="badge badge-neutral" style="cursor:pointer;background:var(--color-background-primary);">Can I assign this?</span>
+                ${renderSuggestedQuestions()}
               </div>
             </div>
           </div>
 
           <div class="chat-msg">
-            <div class="chat-avatar user" style="background:var(--color-border-secondary);">JD</div>
+            <div class="chat-avatar user chat-avatar-muted">JD</div>
             <div class="chat-bubble">
-              <p style="color:var(--color-text-primary);">Is the $500K damages clause enforceable in India?</p>
+              <p class="text-primary">Is the $500K damages clause enforceable in India?</p>
             </div>
           </div>
 
@@ -42,52 +41,94 @@ export function renderAsk(container) {
               <p>Under Indian law (specifically Section 74 of the Indian Contract Act, 1872), courts generally do not enforce liquidated damages clauses as a "penalty." Instead, they only award reasonable compensation up to the maximum amount stipulated (in this case $500,000) based on the <em>actual</em> loss suffered <span class="citation-badge" title="View Clause 3">Clause 3</span>.</p>
               <p>Because this clause sets a fixed, high penalty without requiring Acme Corp to prove actual harm, an Indian court is likely to view it as a penalty and require Acme to prove actual damages before awarding compensation.</p>
               <p>However, you would still face the burden and cost of litigation to contest it if Acme Corp brought a suit.</p>
-              
+
               <div class="disclaimer-callout mt-16">
                 <strong>Disclaimer:</strong> This analysis is AI-generated and does not constitute legal advice. Jurisdictional enforceability can depend on specific case facts. Consult a qualified Indian legal professional before taking action.
               </div>
             </div>
           </div>
-
         </div>
 
-        <!-- Chat Input -->
-        <div class="ask-bar" style="border-top:0.5px solid var(--color-border-tertiary);padding:16px 24px;">
-          <input type="text" placeholder="Ask anything about the Acme Corp NDA..." style="height:44px;border-radius:22px;padding:0 20px;box-shadow:none;" />
-          <button class="btn-primary" style="border-radius:22px;padding:0 20px;">Send ↗</button>
+        <div class="ask-bar p-16">
+          <input type="text" id="ask-input" class="ask-input" placeholder="Ask anything about the Acme Corp NDA..." />
+          <button class="btn-primary ask-send-btn" id="ask-send-btn">Send ↗</button>
         </div>
       </div>
 
-      <!-- Right sidebar: Document Context -->
-      <div style="background:var(--color-background-tertiary);padding:20px;overflow-y:auto;">
+      <div class="workspace-sidebar">
         <p class="section-label">Document Context</p>
-        
-        <div class="card mb-16" style="padding:12px;">
+
+        <div class="card mb-16 p-12">
           <div class="flex items-center gap-8 mb-8">
-            <div style="width:24px;height:24px;border-radius:4px;background:var(--color-background-danger);display:flex;align-items:center;justify-content:center;">
+            <div class="icon-tile-sm icon-danger">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
             </div>
-            <div style="font-size:13px;font-weight:500;">Acme Corp NDA v3.pdf</div>
+            <div class="context-card-title">Acme Corp NDA v3.pdf</div>
           </div>
           <div class="meta-text mb-4">6 pages · 11 clauses</div>
           <div class="badge badge-danger">High risk</div>
         </div>
 
         <p class="section-label">Referenced Clauses</p>
-        <div class="card-surface mb-16 hover-border-info" style="cursor:pointer;border:1px solid transparent;">
+        <button type="button" class="reset-btn card-surface mb-16 hover-border-info context-clause-card w-full text-left" data-nav-target="clause-breakdown">
           <div class="flex justify-between items-center mb-4">
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-info);">Clause 3</span>
-            <span class="badge badge-danger" style="font-size:9px;padding:1px 6px;">Critical</span>
+            <span class="fs-12 fw-500 text-info">Clause 3</span>
+            <span class="badge badge-danger citation-tiny">Critical</span>
           </div>
-          <p class="meta-text" style="font-size:11px;margin:0;line-height:1.4;">Liquidated Damages: $500,000 per incident regardless of actual harm...</p>
-        </div>
+          <p class="meta-text citation-copy m-0">Liquidated Damages: $500,000 per incident regardless of actual harm...</p>
+        </button>
 
         <p class="section-label">History</p>
         <div class="flex flex-col gap-4">
-          <div class="meta-text" style="padding:4px 0;cursor:pointer;">Can I assign this?</div>
-          <div class="meta-text" style="padding:4px 0;cursor:pointer;">What are the red flags?</div>
+          ${renderHistoryItems()}
         </div>
       </div>
     </div>
   `;
+
+  bindRouteTabs(container);
+  bindAskInteractions(container);
+
+  setTimeout(() => {
+    if (window.updateTabIndicator) {
+      window.updateTabIndicator(container.querySelector('.nav-tabs'));
+    }
+  }, 0);
+}
+
+function renderSuggestedQuestions() {
+  return SUGGESTED_QUESTIONS.map(question => `
+    <button type="button" class="reset-btn badge badge-neutral chat-chip" data-question="${question}">
+      ${question}
+    </button>
+  `).join('');
+}
+
+function renderHistoryItems() {
+  return HISTORY_ITEMS.map(item => `
+    <button type="button" class="reset-btn meta-text history-link" data-question="${item}">
+      ${item}
+    </button>
+  `).join('');
+}
+
+function bindAskInteractions(container) {
+  container.querySelectorAll('.context-clause-card').forEach(button => {
+    button.addEventListener('click', () => {
+      window.navigateTo(button.dataset.navTarget);
+    });
+  });
+
+  const input = container.querySelector('#ask-input');
+
+  container.querySelectorAll('[data-question]').forEach(button => {
+    button.addEventListener('click', () => {
+      input.value = button.dataset.question;
+      input.focus();
+    });
+  });
+
+  container.querySelector('#ask-send-btn').addEventListener('click', () => {
+    window.showToast('Ask-the-doc input is wired for UI preview.');
+  });
 }

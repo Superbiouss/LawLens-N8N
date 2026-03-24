@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:inline-styles": "sh ./scripts/check-inline-styles.sh"
   },
   "devDependencies": {
     "vite": "^6.0.0"

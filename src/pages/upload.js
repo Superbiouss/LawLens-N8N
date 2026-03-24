@@ -7,71 +7,27 @@ export function renderUpload(container) {
           <p class="body-text mt-8">Upload, paste, or link a legal document to get an instant plain-English analysis.</p>
         </div>
 
-        <div class="seg-tabs mb-16" id="upload-tabs">
-          <div class="seg-tab active" data-tab="upload">Upload file</div>
-          <div class="seg-tab" data-tab="paste">Paste text</div>
-          <div class="seg-tab" data-tab="url">From URL</div>
-        </div>
-
-        <div id="panel-upload">
-          <div class="upload-zone" id="dropzone">
-            <div style="width:40px;height:40px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M12 12V4"/><path d="M8 8l4-4 4 4"/></svg>
-            </div>
-            <p id="dropzone-title" class="dropzone-title">Drop your document here</p>
-            <p id="dropzone-sub" class="dropzone-sub">or click to browse files</p>
-            <div class="flex gap-6" style="justify-content:center;flex-wrap:wrap;">
-              <span class="badge badge-neutral">PDF</span>
-              <span class="badge badge-neutral">DOCX</span>
-              <span class="badge badge-neutral">TXT</span>
-              <span class="badge badge-neutral">up to 50 MB</span>
-            </div>
-          </div>
-        </div>
-
-        <div id="panel-paste" style="display:none">
-          <textarea rows="8" placeholder="Paste the full text of your legal document here..." style="font-family:var(--font-mono);height:160px;"></textarea>
-        </div>
-
-        <div id="panel-url" style="display:none">
-          <div class="flex gap-8">
-            <input type="url" placeholder="https://drive.google.com/... or any public document URL" style="flex:1;" />
-            <button class="btn-sm">Fetch</button>
-          </div>
-          <p class="fs-11 text-tertiary" style="margin:6px 0 0;">Supports Google Drive, Dropbox, OneDrive, and direct PDF links.</p>
-        </div>
+        ${renderUploadTabs()}
+        ${renderUploadPanels()}
 
         <div class="mt-20">
           <p class="section-label">Document type</p>
-          <div class="flex gap-6" style="flex-wrap:wrap;" id="dtypes">
-            <div class="pill active" data-dtype>Auto-detect</div>
-            <div class="pill" data-dtype>NDA</div>
-            <div class="pill" data-dtype>Employment</div>
-            <div class="pill" data-dtype>Lease</div>
-            <div class="pill" data-dtype>SaaS / MSA</div>
-            <div class="pill" data-dtype>Terms of service</div>
-            <div class="pill" data-dtype>Other</div>
+          <div class="flex gap-6 upload-pill-row" id="dtypes">
+            ${renderDocumentTypes()}
           </div>
         </div>
 
         <div class="mt-20">
           <p class="section-label">Analysis depth</p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="card depth-card selected" id="d-quick">
-              <p class="fs-13 fw-500 text-primary" style="margin:0 0 2px;">Quick scan</p>
-              <p class="fs-11 text-tertiary m-0">Summary + red flags only. ~10 sec.</p>
-            </div>
-            <div class="card depth-card" id="d-full">
-              <p class="fs-13 fw-500 text-primary" style="margin:0 0 2px;">Full analysis</p>
-              <p class="fs-11 text-tertiary m-0">Every clause, obligations, timeline. ~30 sec.</p>
-            </div>
+          <div class="upload-depth-grid">
+            ${renderDepthCards()}
           </div>
         </div>
 
         <button class="btn-primary btn-full mt-20" id="analyze-btn" disabled>Analyze document</button>
 
-        <div id="progress-wrap" style="display:none;margin-top:20px;">
-          <div class="progress-track"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+        <div id="progress-wrap" class="hidden mt-20">
+          <div class="progress-track"><div class="progress-bar" id="pbar"></div></div>
           <div class="flex flex-col gap-8 mt-12" id="psteps">
             <div class="progress-step active" id="ps1"><div class="spinner"></div>Reading document structure</div>
             <div class="progress-step muted" id="ps2"><div class="severity-dot progress-dot-muted"></div>Identifying parties & dates</div>
@@ -81,7 +37,7 @@ export function renderUpload(container) {
           </div>
         </div>
 
-        <div class="mt-24" style="padding-top:20px;border-top:0.5px solid var(--color-border-tertiary);">
+        <div class="mt-24 upload-divider-section">
           <p class="section-label">Recent documents</p>
           <div class="stagger">
             ${renderRecentDocs()}
@@ -90,97 +46,229 @@ export function renderUpload(container) {
       </div>
 
       <div>
-        <div class="card mb-16">
-          <p class="fs-12 fw-500 text-secondary" style="margin:0 0 10px;">What you'll get</p>
-          <div class="flex flex-col gap-8">
-            ${['Plain-English summary of the whole document', 'Parties, key dates & obligations identified', 'Red flags and one-sided clauses highlighted', 'Overall risk score (Low / Medium / High)', 'Missing standard clauses flagged'].map(t => `
-            <div class="flex items-center gap-8" style="align-items:flex-start;">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:6px;flex-shrink:0;"></div>
-                <span class="fs-12 text-secondary lh-15">${t}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-
-        <div class="card mb-16">
-          <p class="fs-12 fw-500 text-secondary" style="margin:0 0 6px;">Privacy</p>
-          <p class="fs-12 text-tertiary lh-16 m-0">Your documents are processed securely and never stored beyond your session unless you choose to save them to your vault.</p>
-        </div>
-
-        <div class="card">
-          <p class="fs-12 fw-500 text-secondary" style="margin:0 0 2px;">Not a lawyer</p>
-          <p class="fs-12 text-tertiary lh-16 m-0">This tool provides AI-assisted analysis. Always consult a qualified legal professional for binding decisions.</p>
-        </div>
+        ${renderUploadSidebar()}
       </div>
     </div>
   `;
 
-  // Init Tab Indicator
   setTimeout(() => {
     if (window.updateTabIndicator) {
       window.updateTabIndicator(container.querySelector('.seg-tabs'));
     }
   }, 0);
 
-  // Tab switching
-  container.querySelectorAll('.seg-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      container.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      ['upload', 'paste', 'url'].forEach(p => {
-        const panel = container.querySelector(`#panel-${p}`);
-        if (panel) panel.style.display = p === tab.dataset.tab ? 'block' : 'none';
-      });
-    });
-  });
+  bindUploadTabs(container);
+  bindDocumentTypes(container);
+  bindDepthCards(container);
+  bindDropzone(container);
+  bindRecentDocs(container);
 
-  // Document type pills
-  container.querySelectorAll('[data-dtype]').forEach(pill => {
-    pill.addEventListener('click', () => {
-      container.querySelectorAll('[data-dtype]').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-    });
-  });
-
-  // Depth cards
-  container.querySelectorAll('.depth-card').forEach(card => {
-    card.addEventListener('click', () => {
-      container.querySelectorAll('.depth-card').forEach(c => {
-        c.classList.remove('selected');
-      });
-      card.classList.add('selected');
-    });
-  });
-
-  // Init selected depth
-  const quick = container.querySelector('#d-quick');
-  if (quick) { quick.classList.add('selected'); }
-
-  // Drop zone click simulation
-  const dropzone = container.querySelector('#dropzone');
-  dropzone.addEventListener('click', () => {
-    container.querySelector('#dropzone-title').textContent = 'contract_nda_v3.pdf';
-    container.querySelector('#dropzone-sub').textContent = '142 KB — ready to analyze';
-    dropzone.classList.add('has-file');
-    container.querySelector('#analyze-btn').disabled = false;
-  });
-
-  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
-  dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('drag'); });
-  dropzone.addEventListener('drop', (e) => { e.preventDefault(); dropzone.click(); });
-
-  // Analyze button
   container.querySelector('#analyze-btn').addEventListener('click', () => {
     startAnalysis(container);
   });
 }
 
+function renderUploadTabs() {
+  const tabs = [
+    { id: 'upload', label: 'Upload file', active: true },
+    { id: 'paste', label: 'Paste text' },
+    { id: 'url', label: 'From URL' },
+  ];
+
+  return `
+    <div class="seg-tabs mb-16" id="upload-tabs">
+      ${tabs.map(tab => `
+        <button
+          type="button"
+          class="reset-btn seg-tab${tab.active ? ' active' : ''}"
+          data-tab="${tab.id}"
+          ${tab.active ? 'aria-current="page"' : ''}
+        >
+          ${tab.label}
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderUploadPanels() {
+  return `
+    <div id="panel-upload">
+      <div class="upload-zone" id="dropzone" role="button" tabindex="0" aria-label="Upload a legal document">
+        <div class="upload-drop-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M12 12V4"/><path d="M8 8l4-4 4 4"/></svg>
+        </div>
+        <p id="dropzone-title" class="dropzone-title">Drop your document here</p>
+        <p id="dropzone-sub" class="dropzone-sub">or click to browse files</p>
+        <div class="flex gap-6 upload-badge-row">
+          <span class="badge badge-neutral">PDF</span>
+          <span class="badge badge-neutral">DOCX</span>
+          <span class="badge badge-neutral">TXT</span>
+          <span class="badge badge-neutral">up to 50 MB</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-paste" class="hidden">
+      <textarea rows="8" class="upload-paste-area" placeholder="Paste the full text of your legal document here..."></textarea>
+    </div>
+
+    <div id="panel-url" class="hidden">
+      <div class="flex gap-8 upload-url-row">
+        <input type="url" class="upload-url-input" placeholder="https://drive.google.com/... or any public document URL" />
+        <button class="btn-sm">Fetch</button>
+      </div>
+      <p class="fs-11 text-tertiary upload-url-note">Supports Google Drive, Dropbox, OneDrive, and direct PDF links.</p>
+    </div>
+  `;
+}
+
+function renderDocumentTypes() {
+  return ['Auto-detect', 'NDA', 'Employment', 'Lease', 'SaaS / MSA', 'Terms of service', 'Other']
+    .map((label, index) => `
+      <button type="button" class="reset-btn pill${index === 0 ? ' active' : ''}" data-dtype>${label}</button>
+    `)
+    .join('');
+}
+
+function renderDepthCards() {
+  return [
+    {
+      id: 'd-quick',
+      title: 'Quick scan',
+      copy: 'Summary + red flags only. ~10 sec.',
+      selected: true,
+    },
+    {
+      id: 'd-full',
+      title: 'Full analysis',
+      copy: 'Every clause, obligations, timeline. ~30 sec.',
+    },
+  ].map(option => `
+    <button type="button" class="reset-btn card depth-card${option.selected ? ' selected' : ''}" id="${option.id}">
+      <p class="fs-13 fw-500 text-primary mb-4">${option.title}</p>
+      <p class="fs-11 text-tertiary m-0">${option.copy}</p>
+    </button>
+  `).join('');
+}
+
+function renderUploadSidebar() {
+  const checklist = [
+    'Plain-English summary of the whole document',
+    'Parties, key dates & obligations identified',
+    'Red flags and one-sided clauses highlighted',
+    'Overall risk score (Low / Medium / High)',
+    'Missing standard clauses flagged',
+  ];
+
+  return `
+    <div class="card mb-16">
+      <p class="fs-12 fw-500 text-secondary mb-12">What you'll get</p>
+      <div class="check-list">
+        ${checklist.map(item => `
+          <div class="check-list-item">
+            <div class="check-list-dot"></div>
+            <span class="fs-12 text-secondary lh-15">${item}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="card mb-16">
+      <p class="fs-12 fw-500 text-secondary mb-4">Privacy</p>
+      <p class="fs-12 text-tertiary lh-16 m-0">Your documents are processed securely and never stored beyond your session unless you choose to save them to your vault.</p>
+    </div>
+
+    <div class="card">
+      <p class="fs-12 fw-500 text-secondary mb-4">Not a lawyer</p>
+      <p class="fs-12 text-tertiary lh-16 m-0">This tool provides AI-assisted analysis. Always consult a qualified legal professional for binding decisions.</p>
+    </div>
+  `;
+}
+
+function bindUploadTabs(container) {
+  container.querySelectorAll('.seg-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      container.querySelectorAll('.seg-tab').forEach(item => {
+        item.classList.remove('active');
+        item.removeAttribute('aria-current');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-current', 'page');
+
+      ['upload', 'paste', 'url'].forEach(panelId => {
+        const panel = container.querySelector(`#panel-${panelId}`);
+        if (panel) panel.classList.toggle('hidden', panelId !== tab.dataset.tab);
+      });
+
+      if (window.updateTabIndicator) {
+        window.updateTabIndicator(container.querySelector('.seg-tabs'));
+      }
+    });
+  });
+}
+
+function bindDocumentTypes(container) {
+  container.querySelectorAll('[data-dtype]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      container.querySelectorAll('[data-dtype]').forEach(item => item.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+}
+
+function bindDepthCards(container) {
+  container.querySelectorAll('.depth-card').forEach(card => {
+    card.addEventListener('click', () => {
+      container.querySelectorAll('.depth-card').forEach(item => item.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+}
+
+function bindDropzone(container) {
+  const dropzone = container.querySelector('#dropzone');
+
+  const selectFile = () => {
+    container.querySelector('#dropzone-title').textContent = 'contract_nda_v3.pdf';
+    container.querySelector('#dropzone-sub').textContent = '142 KB - ready to analyze';
+    dropzone.classList.add('has-file');
+    container.querySelector('#analyze-btn').disabled = false;
+  };
+
+  dropzone.addEventListener('click', selectFile);
+  dropzone.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      selectFile();
+    }
+  });
+  dropzone.addEventListener('dragover', event => {
+    event.preventDefault();
+    dropzone.classList.add('drag');
+  });
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('drag');
+  });
+  dropzone.addEventListener('drop', event => {
+    event.preventDefault();
+    selectFile();
+  });
+}
+
+function bindRecentDocs(container) {
+  container.querySelectorAll('[data-nav-target]').forEach(button => {
+    button.addEventListener('click', () => {
+      window.navigateTo(button.dataset.navTarget);
+    });
+  });
+}
+
 function startAnalysis(container) {
   const mainArea = container.querySelector('.layout-2col > div:first-child');
-  const originalContent = mainArea.innerHTML;
 
-  container.querySelector('#analyze-btn').style.display = 'none';
-  container.querySelector('#progress-wrap').style.display = 'block';
+  container.querySelector('#analyze-btn').classList.add('hidden');
+  container.querySelector('#progress-wrap').classList.remove('hidden');
 
   const steps = ['ps1', 'ps2', 'ps3', 'ps4', 'ps5'];
   const pcts = [15, 35, 58, 78, 100];
@@ -188,62 +276,70 @@ function startAnalysis(container) {
 
   function advance() {
     if (step >= steps.length) return;
+
     if (step > 0) {
       const prev = container.querySelector(`#${steps[step - 1]}`);
       if (prev) {
-        prev.style.color = 'var(--color-text-secondary)';
-        prev.innerHTML = `<div style="width:7px;height:7px;border-radius:50%;background:var(--color-text-success);flex-shrink:0;"></div>${prev.textContent.trim()}`;
+        prev.classList.remove('active');
+        prev.innerHTML = `<div class="progress-dot-done"></div>${prev.textContent.trim()}`;
       }
     }
+
     const cur = container.querySelector(`#${steps[step]}`);
     if (cur) {
-      cur.style.color = 'var(--color-text-primary)';
-      cur.style.fontWeight = '500';
+      cur.classList.remove('muted');
+      cur.classList.add('active');
       if (step > 0) {
         cur.innerHTML = `<div class="spinner"></div>${cur.textContent.trim()}`;
       }
     }
 
     const pbar = container.querySelector('#pbar');
-    if (pbar) pbar.style.width = pcts[step] + '%';
+    if (pbar) pbar.style.width = `${pcts[step]}%`;
 
     step++;
+
     if (step < steps.length) {
       setTimeout(advance, 1100);
-    } else {
-      // Show skeleton for a brief moment before navigating
-      mainArea.innerHTML = `
-            <div class="animate-fade">
-                <div class="skeleton skeleton-title mb-24"></div>
-                <div class="skeleton-rect skeleton mb-16"></div>
-                <div class="flex gap-12 mb-16">
-                    <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
-                    <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
-                </div>
-                <div class="skeleton-text skeleton"></div>
-                <div class="skeleton-text skeleton" style="width:80%;"></div>
-            </div>
-        `;
-      setTimeout(() => { window.navigateTo('summary'); }, 1000);
+      return;
     }
+
+    mainArea.innerHTML = `
+      <div class="animate-fade">
+        <div class="skeleton skeleton-title mb-24"></div>
+        <div class="skeleton-rect skeleton mb-16"></div>
+        <div class="flex gap-12 mb-16">
+          <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
+          <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
+        </div>
+        <div class="skeleton-text skeleton"></div>
+        <div class="skeleton-text skeleton" style="width:80%;"></div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      window.navigateTo('summary');
+    }, 1000);
   }
+
   advance();
 }
 
 function renderRecentDocs() {
   const docs = [
-    { name: 'Acme Corp — NDA v3.pdf', ago: '2 days ago', risk: 'high', page: 'summary' },
-    { name: 'Freelance Services Agreement — Jan 2025.docx', ago: '5 days ago', risk: 'medium', page: 'summary' },
-    { name: 'Office Lease — Mumbai — 2025.pdf', ago: 'Last week', risk: 'low', page: 'summary' },
+    { name: 'Acme Corp - NDA v3.pdf', ago: '2 days ago', risk: 'high', page: 'summary' },
+    { name: 'Freelance Services Agreement - Jan 2025.docx', ago: '5 days ago', risk: 'medium', page: 'summary' },
+    { name: 'Office Lease - Mumbai - 2025.pdf', ago: 'Last week', risk: 'low', page: 'summary' },
   ];
-  return docs.map(d => `
-    <div class="flex items-center gap-10" style="padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;" onclick="navigateTo('${d.page}')">
-      <div style="width:28px;height:28px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+
+  return docs.map(doc => `
+    <button type="button" class="reset-btn flex items-center gap-10 recent-doc-row" data-nav-target="${doc.page}">
+      <div class="recent-doc-icon">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
       </div>
-      <div class="fs-13 fw-500 text-primary" style="flex:1;">${d.name}</div>
-      <div class="fs-11 text-tertiary">${d.ago}</div>
-      <span class="badge badge-${d.risk === 'high' ? 'danger' : d.risk === 'medium' ? 'warning' : 'success'}">${d.risk.charAt(0).toUpperCase() + d.risk.slice(1)} risk</span>
-    </div>
+      <div class="fs-13 fw-500 text-primary recent-doc-name">${doc.name}</div>
+      <div class="fs-11 text-tertiary">${doc.ago}</div>
+      <span class="badge badge-${doc.risk === 'high' ? 'danger' : doc.risk === 'medium' ? 'warning' : 'success'}">${doc.risk.charAt(0).toUpperCase() + doc.risk.slice(1)} risk</span>
+    </button>
   `).join('');
 }

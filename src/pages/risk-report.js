@@ -1,27 +1,77 @@
+import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+
+const RISK_ISSUES = [
+  {
+    tone: 'critical',
+    title: 'Unlimited confidentiality term',
+    clause: 'Clause 1',
+    badge: 'Critical',
+    body: 'The NDA imposes confidentiality obligations with no end date. Unlike standard NDAs which expire after 2-5 years, this binds you permanently - even if the partnership never materialises or ends years from now.',
+    impact: 'Perpetual legal exposure with no exit mechanism, even after the business relationship ends.',
+    fix: 'Replace "unlimited period of time" with "a period of 3 years from the date of disclosure." This is industry standard and rarely contested.',
+  },
+  {
+    tone: 'critical',
+    title: '$500,000 liquidated damages - no harm required',
+    clause: 'Clause 3',
+    badge: 'Critical',
+    body: 'The penalty clause sets a fixed $500,000 per-breach fee regardless of what harm, if any, Acme Corp actually suffers. In practice, a single accidental disclosure - even a forwarded email - could trigger this clause.',
+    impact: "Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.",
+    fix: 'Push to remove the liquidated damages clause entirely, or cap it at actual documented losses. Add a gross negligence/wilful misconduct threshold before it triggers.',
+  },
+  {
+    tone: 'critical',
+    title: 'Unilateral assignment - no consent required',
+    clause: 'Clause 4',
+    badge: 'Critical',
+    body: 'Acme Corp can transfer this agreement to any successor entity - including a competitor - without notifying or obtaining consent from you. Your obligations follow regardless of who now holds the other side of the contract.',
+    impact: 'You could end up contractually bound to an unknown third party you never agreed to deal with.',
+    fix: `Add "…provided that the Receiving Party's prior written consent is obtained, not to be unreasonably withheld." Both parties should have equal assignment rights.`,
+  },
+  {
+    tone: 'review',
+    title: 'Exclusive jurisdiction in Delaware',
+    clause: 'Clause 5',
+    badge: 'Review',
+    body: 'All disputes must be litigated exclusively in Delaware courts. If you are based outside the US, this creates a significant logistical and financial burden to defend any claim.',
+    fix: `Propose mutual jurisdiction in the defendant's home country, or ICC arbitration as a neutral alternative.`,
+  },
+];
+
+const MISSING_CLAUSES = [
+  {
+    title: 'No return or destruction of materials clause',
+    body: 'Without this, there is no mechanism to formally end the exchange of confidential materials. Standard NDAs require the Receiving Party to return or certifiably destroy all copies on request or at termination.',
+  },
+  { title: 'No residual knowledge carve-out' },
+  { title: 'No mutual limitation of liability' },
+];
+
+const RISK_DIMENSIONS = [
+  { label: 'Financial', score: 9, color: 'danger', pct: 90 },
+  { label: 'Term & exit', score: 8, color: 'danger', pct: 80 },
+  { label: 'Jurisdiction', score: 6, color: 'warning', pct: 60 },
+  { label: 'Scope / purpose', score: 6, color: 'warning', pct: 60 },
+  { label: 'Assignment', score: 8, color: 'danger', pct: 80 },
+  { label: 'Boilerplate', score: 2, color: 'success', pct: 20 },
+];
+
 export function renderRiskReport(container) {
   container.innerHTML = `
-    <div style="background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);margin:-24px -24px 24px;">
-      <div class="nav-tabs" style="border-bottom:none;">
-        <div class="nav-tab" onclick="navigateTo('summary')">Summary</div>
-        <div class="nav-tab" onclick="navigateTo('clause-breakdown')">Clause breakdown</div>
-        <div class="nav-tab active">Risk report</div>
-        <div class="nav-tab" onclick="navigateTo('key-dates')">Key dates</div>
-        <div class="nav-tab" onclick="navigateTo('ask')">Ask the doc</div>
-      </div>
-    </div>
+    ${renderPageTabs(DOCUMENT_TABS, 'risk-report')}
 
     <div class="layout-2col">
       <div>
-        <div class="card-accent-left mb-16" style="border-left-color:var(--color-red-400);display:flex;padding:0;">
-          <div style="padding:16px 20px;border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px;">
-            <div class="fs-32 fw-500 text-danger" style="line-height:1;">7.2</div>
+        <div class="card-accent-left mb-16 risk-hero">
+          <div class="risk-hero-score">
+            <div class="fs-32 fw-500 text-danger summary-score-tight">7.2</div>
             <div class="meta-text mt-4">/ 10</div>
-            <div class="badge badge-danger mt-8" style="background:transparent;padding:0;">High risk</div>
+            <div class="badge badge-danger mt-8 risk-badge-plain">High risk</div>
           </div>
-          <div style="padding:16px 20px;flex:1;">
+          <div class="risk-hero-main">
             <p class="section-heading mb-8">This document carries significant risk for the Receiving Party</p>
             <p class="body-text mb-12">3 critical issues, 2 items needing review, and 4 standard protections are missing. The terms are heavily weighted in Acme Corp's favour. Do not sign without negotiation.</p>
-            <div class="progress-track mb-4"><div class="progress-bar" style="width:72%;background:var(--color-red-400);"></div></div>
+            <div class="progress-track mb-4"><div class="progress-bar risk-progress-danger"></div></div>
             <div class="flex justify-between meta-text fs-10"><span>Low</span><span>Medium</span><span>High</span></div>
           </div>
         </div>
@@ -46,137 +96,28 @@ export function renderRiskReport(container) {
         </div>
 
         <div class="flex justify-between items-center mb-16">
-          <h2 class="section-label" style="margin:0;">Issues found</h2>
+          <h2 class="section-label m-0">Issues found</h2>
           <div class="flex gap-6 flex-wrap">
-            <div class="pill active">All (9)</div>
-            <div class="pill" style="color:var(--color-text-danger);border-color:var(--color-border-danger);">Critical (3)</div>
-            <div class="pill" style="color:var(--color-text-warning);border-color:var(--color-border-warning);">Review (2)</div>
-            <div class="pill">Missing (4)</div>
+            <button type="button" class="reset-btn pill active">All (9)</button>
+            <button type="button" class="reset-btn pill pill-danger-outline">Critical (3)</button>
+            <button type="button" class="reset-btn pill pill-warning-outline">Review (2)</button>
+            <button type="button" class="reset-btn pill">Missing (4)</button>
           </div>
         </div>
 
         <div class="flex flex-col gap-10 stagger">
-          <div class="flag-card critical">
-            <div class="flag-head">
-              <div class="severity-dot critical"></div>
-              <span class="flag-title">Unlimited confidentiality term</span>
-              <span class="meta-text fs-10 ml-auto mr-6">Clause 1</span>
-              <span class="badge badge-danger">Critical</span>
-            </div>
-            <div class="flag-body">
-              <p class="body-text mb-12">The NDA imposes confidentiality obligations with no end date. Unlike standard NDAs which expire after 2–5 years, this binds you permanently — even if the partnership never materialises or ends years from now.</p>
-              <div class="flex items-start gap-8 mb-12">
-                <span class="micro-label pt-2">Impact</span>
-                <span class="fs-12 text-danger lh-15">Perpetual legal exposure with no exit mechanism, even after the business relationship ends.</span>
-              </div>
-              <div class="card-surface mt-8 mb-12">
-                <div class="micro-label mb-4">Suggested fix</div>
-                <div class="body-text fs-12">Replace "unlimited period of time" with "a period of 3 years from the date of disclosure." This is industry standard and rarely contested.</div>
-              </div>
-              <div class="flex gap-8">
-                <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
-                <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
-              </div>
-            </div>
-          </div>
-  
-          <div class="flag-card critical">
-            <div class="flag-head">
-              <div class="severity-dot critical"></div>
-              <span class="flag-title">$500,000 liquidated damages — no harm required</span>
-              <span class="meta-text fs-10 ml-auto mr-6">Clause 3</span>
-              <span class="badge badge-danger">Critical</span>
-            </div>
-            <div class="flag-body">
-              <p class="body-text mb-12">The penalty clause sets a fixed $500,000 per-breach fee regardless of what harm, if any, Acme Corp actually suffers. In practice, a single accidental disclosure — even a forwarded email — could trigger this clause.</p>
-              <div class="flex items-start gap-8 mb-12">
-                <span class="micro-label pt-2">Impact</span>
-                <span class="fs-12 text-danger lh-15">Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.</span>
-              </div>
-              <div class="card-surface mt-8 mb-12">
-                <div class="micro-label mb-4">Suggested fix</div>
-                <div class="body-text fs-12">Push to remove the liquidated damages clause entirely, or cap it at actual documented losses. Add a gross negligence/wilful misconduct threshold before it triggers.</div>
-              </div>
-              <div class="flex gap-8">
-                <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
-                <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
-              </div>
-            </div>
-          </div>
-  
-          <div class="flag-card critical">
-            <div class="flag-head">
-              <div class="severity-dot critical"></div>
-              <span class="flag-title">Unilateral assignment — no consent required</span>
-              <span class="meta-text fs-10 ml-auto mr-6">Clause 4</span>
-              <span class="badge badge-danger">Critical</span>
-            </div>
-            <div class="flag-body">
-              <p class="body-text mb-12">Acme Corp can transfer this agreement to any successor entity — including a competitor — without notifying or obtaining consent from you. Your obligations follow regardless of who now holds the other side of the contract.</p>
-              <div class="flex items-start gap-8 mb-12">
-                <span class="micro-label pt-2">Impact</span>
-                <span class="fs-12 text-danger lh-15">You could end up contractually bound to an unknown third party you never agreed to deal with.</span>
-              </div>
-              <div class="card-surface mt-8 mb-12">
-                <div class="micro-label mb-4">Suggested fix</div>
-                <div class="body-text fs-12">Add "…provided that the Receiving Party's prior written consent is obtained, not to be unreasonably withheld." Both parties should have equal assignment rights.</div>
-              </div>
-              <div class="flex gap-8">
-                <button class="btn-sm" onclick="navigateTo('clause-breakdown')">View clause ↗</button>
-                <button class="btn-sm" onclick="navigateTo('annotations')">Add note ↗</button>
-              </div>
-            </div>
-          </div>
-  
-          <div class="flag-card review">
-            <div class="flag-head">
-              <div class="severity-dot review"></div>
-              <span class="flag-title">Exclusive jurisdiction in Delaware</span>
-              <span class="meta-text fs-10 ml-auto mr-6">Clause 5</span>
-              <span class="badge badge-warning">Review</span>
-            </div>
-            <div class="flag-body">
-              <p class="body-text mb-12">All disputes must be litigated exclusively in Delaware courts. If you are based outside the US, this creates a significant logistical and financial burden to defend any claim.</p>
-              <div class="card-surface mt-8 mb-12">
-                <div class="micro-label mb-4">Suggested fix</div>
-                <div class="body-text fs-12">Propose mutual jurisdiction in the defendant's home country, or ICC arbitration as a neutral alternative.</div>
-              </div>
-            </div>
-          </div>
+          ${renderIssueCards()}
         </div>
 
         <p class="section-label mt-24">Missing standard clauses</p>
-        <div class="flag-card missing">
-          <div class="flag-head risk-missing-head">
-            <div class="severity-dot missing"></div>
-            <span class="flag-title">No return or destruction of materials clause</span>
-            <span class="badge badge-neutral">Missing</span>
-          </div>
-          <div class="flag-body" style="padding:0 14px 14px;">
-            <p class="body-text m-0">Without this, there is no mechanism to formally end the exchange of confidential materials. Standard NDAs require the Receiving Party to return or certifiably destroy all copies on request or at termination.</p>
-          </div>
-        </div>
-        <div class="flag-card missing">
-          <div class="flag-head risk-missing-head">
-            <div class="severity-dot missing"></div>
-            <span class="flag-title">No residual knowledge carve-out</span>
-            <span class="badge badge-neutral">Missing</span>
-          </div>
-        </div>
-        <div class="flag-card missing">
-          <div class="flag-head risk-missing-head">
-            <div class="severity-dot missing"></div>
-            <span class="flag-title">No mutual limitation of liability</span>
-            <span class="badge badge-neutral">Missing</span>
-          </div>
-        </div>
+        ${renderMissingCards()}
       </div>
 
       <div>
         <p class="section-label">Verdict</p>
         <div class="card-surface mb-12 risk-verdict">
           <div class="meta-text mb-4">Should you sign as-is?</div>
-          <div class="fs-13 fw-500 text-danger">No — negotiate first</div>
+          <div class="fs-13 fw-500 text-danger">No - negotiate first</div>
         </div>
         <div class="card-surface mb-12 risk-verdict">
           <div class="meta-text mb-4">Negotiation priority</div>
@@ -188,59 +129,122 @@ export function renderRiskReport(container) {
         </div>
 
         <p class="section-label">Clause balance</p>
-        <div class="flex gap-4 items-end mb-24" style="height:110px;">
+        <div class="flex gap-4 items-end mb-24 risk-balance-chart">
           <div class="card-surface flex-1 text-center flex flex-col justify-end risk-balance-col">
             <div class="risk-balance-title">Acme Corp</div>
-            <div style="height:52px;background:var(--color-text-danger);border-radius:3px 3px 0 0;width:32px;margin:10px auto 0;"></div>
-            <div class="fs-11 fw-500 text-danger" style="margin-top:8px;">8 favourable</div>
+            <div class="risk-balance-bar-danger"></div>
+            <div class="fs-11 fw-500 text-danger mt-8">8 favourable</div>
           </div>
-          <div class="meta-text" style="padding-bottom:24px;">vs</div>
+          <div class="meta-text risk-balance-vs">vs</div>
           <div class="card-surface flex-1 text-center flex flex-col justify-end risk-balance-col">
             <div class="risk-balance-title">John Doe</div>
-            <div style="height:17px;background:var(--color-border-secondary);border-radius:3px 3px 0 0;width:32px;margin:10px auto 0;"></div>
-            <div class="fs-11 fw-500 text-tertiary" style="margin-top:8px;">3 favourable</div>
+            <div class="risk-balance-bar-muted"></div>
+            <div class="fs-11 fw-500 text-tertiary mt-8">3 favourable</div>
           </div>
         </div>
 
         <p class="section-label">Risk dimensions</p>
         <div class="flex flex-col gap-8 mb-24">
-          ${[
-      { label: 'Financial', score: 9, color: 'danger', pct: 90 },
-      { label: 'Term & exit', score: 8, color: 'danger', pct: 80 },
-      { label: 'Jurisdiction', score: 6, color: 'warning', pct: 60 },
-      { label: 'Scope / purpose', score: 6, color: 'warning', pct: 60 },
-      { label: 'Assignment', score: 8, color: 'danger', pct: 80 },
-      { label: 'Boilerplate', score: 2, color: 'success', pct: 20 }
-    ].map(d => `
-            <div class="flex items-center gap-8">
-              <span class="meta-text" style="width:100px;">${d.label}</span>
-              <div class="progress-track" style="flex:1;height:5px;"><div class="progress-bar" style="width:${d.pct}%;background:var(--color-text-${d.color});"></div></div>
-              <span style="font-size:11px;font-weight:500;width:24px;text-align:right;color:var(--color-text-${d.color});">${d.score}</span>
-            </div>
-          `).join('')}
+          ${renderRiskDimensions()}
         </div>
 
         <p class="section-label">Compare with similar docs</p>
         <div class="card-surface mb-24">
           <div class="flex justify-between mb-8">
             <span class="meta-text">Avg. NDA risk score</span>
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-primary);">4.1 / 10</span>
+            <span class="fs-12 fw-500 text-primary">4.1 / 10</span>
           </div>
           <div class="flex justify-between mb-8">
             <span class="meta-text">This document</span>
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-danger);">7.2 / 10</span>
+            <span class="fs-12 fw-500 text-danger">7.2 / 10</span>
           </div>
           <div class="flex justify-between">
             <span class="meta-text">Riskier than</span>
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-danger);">89% of NDAs</span>
+            <span class="fs-12 fw-500 text-danger">89% of NDAs</span>
           </div>
         </div>
 
         <div class="flex flex-col gap-8">
-          <button class="btn-full" onclick="navigateTo('compare')">Compare with another version ↗</button>
+          <button class="btn-full" data-nav-target="compare">Compare with another version ↗</button>
           <button class="btn-full">Download risk report PDF ↗</button>
         </div>
       </div>
     </div>
   `;
+
+  bindRouteTabs(container);
+  bindRiskActions(container);
+
+  setTimeout(() => {
+    if (window.updateTabIndicator) {
+      window.updateTabIndicator(container.querySelector('.nav-tabs'));
+    }
+  }, 0);
+}
+
+function renderIssueCards() {
+  return RISK_ISSUES.map(issue => `
+    <div class="flag-card ${issue.tone}">
+      <div class="flag-head">
+        <div class="severity-dot ${issue.tone}"></div>
+        <span class="flag-title">${issue.title}</span>
+        <span class="meta-text fs-10 ml-auto mr-6">${issue.clause}</span>
+        <span class="badge badge-${issue.tone === 'critical' ? 'danger' : 'warning'}">${issue.badge}</span>
+      </div>
+      <div class="flag-body">
+        <p class="body-text mb-12">${issue.body}</p>
+        ${issue.impact ? `
+          <div class="flex items-start gap-8 mb-12">
+            <span class="micro-label pt-2">Impact</span>
+            <span class="fs-12 text-${issue.tone === 'critical' ? 'danger' : 'warning'} lh-15">${issue.impact}</span>
+          </div>
+        ` : ''}
+        <div class="card-surface mt-8 mb-12">
+          <div class="micro-label mb-4">Suggested fix</div>
+          <div class="body-text fs-12">${issue.fix}</div>
+        </div>
+        ${issue.tone === 'critical' ? `
+          <div class="flex gap-8">
+            <button class="btn-sm" data-nav-target="clause-breakdown">View clause ↗</button>
+            <button class="btn-sm" data-nav-target="annotations">Add note ↗</button>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMissingCards() {
+  return MISSING_CLAUSES.map(item => `
+    <div class="flag-card missing">
+      <div class="flag-head risk-missing-head">
+        <div class="severity-dot missing"></div>
+        <span class="flag-title">${item.title}</span>
+        <span class="badge badge-neutral">Missing</span>
+      </div>
+      ${item.body ? `
+        <div class="flag-body p-14">
+          <p class="body-text m-0">${item.body}</p>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function renderRiskDimensions() {
+  return RISK_DIMENSIONS.map(dimension => `
+    <div class="flex items-center gap-8">
+      <span class="meta-text risk-dimension-label">${dimension.label}</span>
+      <div class="progress-track risk-dimension-track"><div class="progress-bar" style="width:${dimension.pct}%;background:var(--color-text-${dimension.color});"></div></div>
+      <span class="risk-dimension-score text-${dimension.color}">${dimension.score}</span>
+    </div>
+  `).join('');
+}
+
+function bindRiskActions(container) {
+  container.querySelectorAll('.btn-sm[data-nav-target], .btn-full[data-nav-target]').forEach(button => {
+    button.addEventListener('click', () => {
+      window.navigateTo(button.dataset.navTarget);
+    });
+  });
 }

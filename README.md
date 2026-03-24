@@ -52,6 +52,15 @@ The application will be available at `http://localhost:5173`.
 - `src/main.js`: Hash-based SPA router and entry point.
 - `src/index.css`: Global design system and component styles.
 - `src/pages/`: Modular page components for all 15 screens.
+- `docs/ui-baseline.md`: Current UI debt baseline and top offenders.
+- `docs/ui-conventions.md`: Styling and interaction rules for contributors.
+- `docs/ui-qa.md`: Manual light/dark and accessibility QA checklist.
+- `docs/ui-progress.md`: Cleanup progress and remaining high-debt pages.
+
+## UI Maintenance
+
+- Run `npm run check:inline-styles` before merging UI-heavy changes.
+- Use `docs/ui-conventions.md` as the default implementation guide for new screens and refactors.
 
 ## License
 
@@ -67,4 +76,3 @@ Use this quick pass before merging UI changes:
 - Verify focus visibility on keyboard navigation (`Tab` / `Shift+Tab`) for links, buttons, tabs, pills, and inputs.
 - Validate accent surfaces (danger/warning/info/success) remain readable in dark mode.
 - Ensure cards, toasts, and glass surfaces keep consistent elevation/shadows in both themes.
-
