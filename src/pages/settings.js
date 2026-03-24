@@ -1,4 +1,12 @@
-import { clearN8nAgentConfig, getN8nAgentConfig, saveN8nAgentConfig, testN8nAgentConnection } from './shared/n8n-agent.js';
+import {
+  canUseN8nAgent,
+  clearN8nAgentConfig,
+  getN8nAgentConfig,
+  humanizeN8nAgentError,
+  saveN8nAgentConfig,
+  testN8nAgentConnection,
+  validateN8nAgentConfig,
+} from '../services/n8n-agent.js';
 import { copyText, escapeHtml } from './shared/ui-actions.js';
 
 export function renderSettings(container) {
@@ -185,7 +193,7 @@ function renderAPI() {
             <h3 class="section-label mb-4">n8n AI Agent</h3>
             <p class="meta-text m-0">Configure the webhook that should receive messages from Normal Chat and Ask the Doc.</p>
           </div>
-          <span class="badge ${agent.enabled && agent.webhookUrl ? 'badge-success' : 'badge-neutral'}">${agent.enabled && agent.webhookUrl ? 'Connected' : 'Inactive'}</span>
+          <span class="badge ${canUseN8nAgent(agent) ? 'badge-success' : 'badge-neutral'}">${canUseN8nAgent(agent) ? 'Connected' : 'Inactive'}</span>
         </div>
 
         <div class="flex flex-col gap-16">
@@ -197,6 +205,7 @@ function renderAPI() {
           <div>
             <label class="meta-text mb-4 block" for="n8n-auth-token">Bearer Token (Optional)</label>
             <input type="password" id="n8n-auth-token" placeholder="Optional secret token" value="${escapeHtml(agent.authToken)}" />
+            <p class="meta-text mt-4 m-0">Stored only for the current browser session.</p>
           </div>
 
           <div class="flex justify-between items-center pt-12 border-top-tertiary">
@@ -409,29 +418,34 @@ function bindN8nAgentSettings(container) {
 
   container.querySelector('#save-n8n-config-btn')?.addEventListener('click', () => {
     const next = readConfig();
-    if (!next.webhookUrl) {
-      window.showToast('Add the n8n webhook URL first.');
+    const validation = validateN8nAgentConfig(next);
+    if (!validation.valid) {
+      window.showToast(validation.message);
       return;
     }
-    saveN8nAgentConfig(next);
-    window.showToast('n8n webhook saved.');
+
+    saveN8nAgentConfig(validation.config);
+    window.showToast(validation.config.authToken
+      ? 'n8n webhook saved. Token stored for this browser session only.'
+      : 'n8n webhook saved.');
   });
 
   container.querySelector('#test-n8n-connection-btn')?.addEventListener('click', async () => {
     const next = readConfig();
-    if (!next.webhookUrl) {
-      window.showToast('Add the n8n webhook URL first.');
+    const validation = validateN8nAgentConfig(next);
+    if (!validation.valid) {
+      window.showToast(validation.message);
       return;
     }
 
-    saveN8nAgentConfig(next);
+    saveN8nAgentConfig(validation.config);
     window.showToast('Testing webhook connection...');
 
     try {
       const result = await testN8nAgentConnection();
       window.showToast(result.reply ? 'n8n agent responded successfully.' : 'n8n agent responded, but without text.');
     } catch (error) {
-      window.showToast(`n8n test failed: ${error.message || 'Unknown error'}`);
+      window.showToast(`n8n test failed: ${humanizeN8nAgentError(error)}`);
     }
   });
 

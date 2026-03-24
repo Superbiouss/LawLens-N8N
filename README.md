@@ -5,6 +5,7 @@ LexAI is a powerful, AI-driven legal document assistant designed to help legal p
 ## Features
 
 - **AI Analysis**: Get instant summaries of complex legal terms.
+- **Normal Chat**: General legal chat for drafting help, negotiation prep, and concept questions.
 - **Risk Assessment**: High-fidelity risk scores (1-10) with detailed breakdowns of critical issues and missing protections.
 - **Clause Breakdown**: Side-by-side original text vs. plain-English translations.
 - **Ask the Doc**: Conversational AI interface for querying document specifics with citations.
@@ -51,7 +52,8 @@ The application will be available at `http://localhost:5173`.
 - `index.html`: Main application shell.
 - `src/main.js`: Hash-based SPA router and entry point.
 - `src/index.css`: Global design system and component styles.
-- `src/pages/`: Modular page components for all 15 screens.
+- `src/pages/`: Modular page components for the application screens and workflows.
+- `src/services/`: Shared service layer for chat, n8n agent integration, text utilities, and browser storage.
 - `docs/ui-baseline.md`: Current UI debt baseline and top offenders.
 - `docs/ui-conventions.md`: Styling and interaction rules for contributors.
 - `docs/ui-qa.md`: Manual light/dark and accessibility QA checklist.
@@ -61,6 +63,19 @@ The application will be available at `http://localhost:5173`.
 
 - Run `npm run check:inline-styles` before merging UI-heavy changes.
 - Use `docs/ui-conventions.md` as the default implementation guide for new screens and refactors.
+
+## Quality Commands
+
+- `npm run lint`: Run the ESLint baseline.
+- `npm run test`: Run Vitest unit tests for shared services.
+- `npm run format:check`: Verify Prettier formatting.
+- `npm run ci`: Run lint, tests, inline-style guardrail, build, and format checks.
+
+## n8n Agent Notes
+
+- Normal Chat and Ask the Doc now use the same webhook settings but keep separate conversation scopes.
+- The optional bearer token is stored in `sessionStorage`, so it lasts only for the current browser session.
+- For production, route webhook traffic through a backend proxy instead of exposing a long-lived secret to the browser.
 
 ## License
 

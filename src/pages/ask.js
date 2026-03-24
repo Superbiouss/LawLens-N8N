@@ -1,6 +1,14 @@
 import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
-import { askN8nAgent, getN8nAgentConfig } from './shared/n8n-agent.js';
-import { escapeHtml } from './shared/ui-actions.js';
+import { renderAgentStatusCard, renderChatMessage, renderPromptChips } from './shared/chat-ui.js';
+import {
+  createPendingAssistantMessage,
+  createUserChatMessage,
+  formatAgentError,
+  formatAssistantMessage,
+  getAgentStatusMeta,
+  resolveAgentReply,
+} from '../services/chat-service.js';
+import { getN8nAgentConfig } from '../services/n8n-agent.js';
 
 const SUGGESTED_QUESTIONS = [
   'Summarize the obligations',
@@ -32,7 +40,7 @@ export function renderAsk(container) {
   const state = {
     messages: [
       {
-        role: 'ai',
+        role: 'assistant',
         html: `Hi. I've analyzed the <strong>Acme Corp Non-Disclosure Agreement v3</strong>. What would you like to know about it?`,
       },
       {
@@ -40,7 +48,7 @@ export function renderAsk(container) {
         html: 'Is the $500K damages clause enforceable in India?',
       },
       {
-        role: 'ai',
+        role: 'assistant',
         html: `Under Indian law (specifically Section 74 of the Indian Contract Act, 1872), courts generally do not enforce liquidated damages clauses as a "penalty." Instead, they only award reasonable compensation up to the maximum amount stipulated (in this case $500,000) based on the <em>actual</em> loss suffered <span class="citation-badge" title="View Clause 3">Clause 3</span>.<br/><br/>Because this clause sets a fixed, high penalty without requiring Acme Corp to prove actual harm, an Indian court is likely to view it as a penalty and require Acme to prove actual damages before awarding compensation.<br/><br/>However, you would still face the burden and cost of litigation to contest it if Acme Corp brought a suit.<div class="disclaimer-callout mt-16"><strong>Disclaimer:</strong> This analysis is AI-generated and does not constitute legal advice. Jurisdictional enforceability can depend on specific case facts. Consult a qualified Indian legal professional before taking action.</div>`,
       },
     ],
@@ -48,7 +56,7 @@ export function renderAsk(container) {
   };
 
   const render = () => {
-    const agentConfig = getN8nAgentConfig();
+    const agentStatus = getAgentStatusMeta();
 
     container.innerHTML = `
       ${renderPageTabs(DOCUMENT_TABS, 'ask', { flush: true })}
@@ -66,13 +74,7 @@ export function renderAsk(container) {
         </div>
 
         <div class="workspace-sidebar">
-          <div class="ask-agent-status ${agentConfig.enabled && agentConfig.webhookUrl ? 'connected' : 'disconnected'}">
-            <div>
-              <p class="section-label mb-4">AI Agent</p>
-              <p class="meta-text m-0">${agentConfig.enabled && agentConfig.webhookUrl ? 'Connected to n8n webhook' : 'Using local fallback until webhook is configured'}</p>
-            </div>
-            <button class="btn-sm" id="open-agent-settings-btn">Configure</button>
-          </div>
+          ${renderAgentStatusCard(agentStatus, { buttonId: 'open-agent-settings-btn' })}
 
           <p class="section-label">Document Context</p>
 
@@ -127,34 +129,14 @@ function renderMessages(messages) {
       <div class="chat-bubble">
         <p>Hi. I've analyzed the <strong>Acme Corp Non-Disclosure Agreement v3</strong>. What would you like to know about it?</p>
         <div class="flex gap-8 flex-wrap mt-12">
-          ${renderSuggestedQuestions()}
+          ${renderPromptChips(SUGGESTED_QUESTIONS, 'data-question')}
         </div>
       </div>
     </div>
   `;
 
-  const remaining = messages.slice(1).map(message => renderMessageBubble(message)).join('');
+  const remaining = messages.slice(1).map(message => renderChatMessage(message)).join('');
   return `${intro}${remaining}`;
-}
-
-function renderMessageBubble(message) {
-  const isUser = message.role === 'user';
-  return `
-    <div class="chat-msg">
-      <div class="chat-avatar ${isUser ? 'user chat-avatar-muted' : 'ai'}">${isUser ? 'JD' : 'L'}</div>
-      <div class="chat-bubble${message.pending ? ' chat-bubble-pending' : ''}">
-        <p class="${isUser ? 'text-primary' : ''}">${message.html}</p>
-      </div>
-    </div>
-  `;
-}
-
-function renderSuggestedQuestions() {
-  return SUGGESTED_QUESTIONS.map(question => `
-    <button type="button" class="reset-btn badge badge-neutral chat-chip" data-question="${question}">
-      ${question}
-    </button>
-  `).join('');
 }
 
 function renderHistoryItems() {
@@ -194,15 +176,8 @@ function bindAskInteractions(container, state, render) {
       return;
     }
 
-    state.messages.push({
-      role: 'user',
-      html: escapeHtml(question),
-    });
-    state.messages.push({
-      role: 'ai',
-      html: 'Thinking…',
-      pending: true,
-    });
+    state.messages.push(createUserChatMessage(question));
+    state.messages.push(createPendingAssistantMessage('Thinking...'));
     state.sending = true;
     input.value = '';
     render();
@@ -210,13 +185,13 @@ function bindAskInteractions(container, state, render) {
     try {
       const reply = await getAgentReply(question, state.messages);
       state.messages[state.messages.length - 1] = {
-        role: 'ai',
-        html: formatAssistantReply(reply),
+        role: 'assistant',
+        html: formatAssistantMessage(reply),
       };
     } catch (error) {
       state.messages[state.messages.length - 1] = {
-        role: 'ai',
-        html: `I couldn't reach the configured AI agent. Check the webhook settings and try again.<div class="disclaimer-callout mt-16"><strong>Reason:</strong> ${escapeHtml(humanizeAgentError(error))}</div>`,
+        role: 'assistant',
+        html: formatAgentError(error, "I couldn't reach the configured AI agent. Check the webhook settings and try again."),
       };
     } finally {
       state.sending = false;
@@ -244,22 +219,10 @@ function bindAskInteractions(container, state, render) {
 
 async function getAgentReply(question, messages) {
   const config = getN8nAgentConfig();
-
-  if (!config.enabled || !config.webhookUrl) {
-    return resolveFallbackAnswer(question);
-  }
-
-  const history = messages
-    .filter(message => !message.pending)
-    .map(message => ({
-      role: message.role,
-      content: stripHtml(message.html),
-    }))
-    .slice(-12);
-
-  const response = await askN8nAgent({
-    message: question,
-    history,
+  return resolveAgentReply({
+    question,
+    messages,
+    fallback: resolveFallbackAnswer,
     context: {
       route: 'ask',
       documentName: 'Acme Corp NDA v3.pdf',
@@ -269,37 +232,9 @@ async function getAgentReply(question, messages) {
     },
     conversationScope: 'ask-doc',
   });
-
-  return response.reply;
 }
 
 function resolveFallbackAnswer(question) {
   return ASK_RESPONSES.find(item => item.test.test(question))?.response
     || 'The n8n webhook is not configured yet, so this screen is using the built-in fallback answerer. Add your webhook in Settings > API Keys to route questions to your external LLM agent.';
-}
-
-function formatAssistantReply(text) {
-  return escapeHtml(text).replace(/\n/g, '<br/>');
-}
-
-function stripHtml(value) {
-  const div = document.createElement('div');
-  div.innerHTML = value;
-  return div.textContent || div.innerText || '';
-}
-
-function humanizeAgentError(error) {
-  if (error?.message === 'N8N_WEBHOOK_NOT_CONFIGURED') {
-    return 'Webhook URL not configured.';
-  }
-
-  if (error?.message === 'N8N_WEBHOOK_INVALID_RESPONSE') {
-    return 'Webhook returned a response shape that LexAI could not parse.';
-  }
-
-  if (typeof error?.message === 'string' && error.message.startsWith('N8N_WEBHOOK_HTTP_')) {
-    return `Webhook returned HTTP ${error.message.replace('N8N_WEBHOOK_HTTP_', '')}.`;
-  }
-
-  return error?.message || 'Unknown connection error.';
 }

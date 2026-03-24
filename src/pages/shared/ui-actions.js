@@ -1,3 +1,5 @@
+export { escapeHtml } from '../../services/text-utils.js';
+
 export async function copyText(text, successMessage = 'Copied to clipboard!') {
   try {
     if (navigator.clipboard?.writeText) {
@@ -33,13 +35,4 @@ export function downloadTextFile(filename, content, mime = 'text/plain;charset=u
   link.remove();
   URL.revokeObjectURL(url);
   window.showToast(`${filename} downloaded`);
-}
-
-export function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }

@@ -1,5 +1,12 @@
-import { askN8nAgent, getN8nAgentConfig } from './shared/n8n-agent.js';
-import { escapeHtml } from './shared/ui-actions.js';
+import { renderAgentStatusCard, renderChatMessage, renderPromptChips } from './shared/chat-ui.js';
+import {
+  createPendingAssistantMessage,
+  createUserChatMessage,
+  formatAgentError,
+  formatAssistantMessage,
+  getAgentStatusMeta,
+  resolveAgentReply,
+} from '../services/chat-service.js';
 
 const CHAT_STARTERS = [
   'Draft a mutual NDA opening clause',
@@ -26,7 +33,7 @@ export function renderChat(container) {
   const state = {
     messages: [
       {
-        role: 'ai',
+        role: 'assistant',
         html: 'Hi. I can help with legal drafting, negotiation prep, and general contract questions. What are you working on?',
       },
     ],
@@ -34,7 +41,7 @@ export function renderChat(container) {
   };
 
   const render = () => {
-    const agentConfig = getN8nAgentConfig();
+    const agentStatus = getAgentStatusMeta();
 
     container.innerHTML = `
       <div class="mb-24">
@@ -50,13 +57,11 @@ export function renderChat(container) {
               <div class="chat-bubble">
                 <p>Hi. I can help with legal drafting, negotiation prep, and general contract questions. What are you working on?</p>
                 <div class="flex gap-8 flex-wrap mt-12">
-                  ${CHAT_STARTERS.map(starter => `
-                    <button type="button" class="reset-btn badge badge-neutral chat-chip" data-chat-starter="${starter}">${starter}</button>
-                  `).join('')}
+                  ${renderPromptChips(CHAT_STARTERS, 'data-chat-starter')}
                 </div>
               </div>
             </div>
-            ${state.messages.slice(1).map(renderChatMessage).join('')}
+            ${state.messages.slice(1).map(message => renderChatMessage(message)).join('')}
           </div>
 
           <div class="ask-bar p-16">
@@ -66,13 +71,7 @@ export function renderChat(container) {
         </div>
 
         <div class="workspace-sidebar">
-          <div class="ask-agent-status ${agentConfig.enabled && agentConfig.webhookUrl ? 'connected' : 'disconnected'}">
-            <div>
-              <p class="section-label mb-4">AI Agent</p>
-              <p class="meta-text m-0">${agentConfig.enabled && agentConfig.webhookUrl ? 'Connected to n8n webhook' : 'Using local fallback until webhook is configured'}</p>
-            </div>
-            <button class="btn-sm" id="open-chat-agent-settings-btn">Configure</button>
-          </div>
+          ${renderAgentStatusCard(agentStatus, { buttonId: 'open-chat-agent-settings-btn' })}
 
           <p class="section-label">What This Chat Is For</p>
           <div class="card mb-16 p-12">
@@ -105,18 +104,6 @@ export function renderChat(container) {
   render();
 }
 
-function renderChatMessage(message) {
-  const isUser = message.role === 'user';
-  return `
-    <div class="chat-msg">
-      <div class="chat-avatar ${isUser ? 'user chat-avatar-muted' : 'ai'}">${isUser ? 'JD' : 'L'}</div>
-      <div class="chat-bubble${message.pending ? ' chat-bubble-pending' : ''}">
-        <p class="${isUser ? 'text-primary' : ''}">${message.html}</p>
-      </div>
-    </div>
-  `;
-}
-
 function bindChatInteractions(container, state, render) {
   container.querySelector('#open-chat-agent-settings-btn')?.addEventListener('click', () => {
     sessionStorage.setItem('settings_tab_prefill', 'api');
@@ -145,8 +132,8 @@ function bindChatInteractions(container, state, render) {
       return;
     }
 
-    state.messages.push({ role: 'user', html: escapeHtml(question) });
-    state.messages.push({ role: 'ai', html: 'Thinking…', pending: true });
+    state.messages.push(createUserChatMessage(question));
+    state.messages.push(createPendingAssistantMessage('Thinking...'));
     state.sending = true;
     input.value = '';
     render();
@@ -154,13 +141,13 @@ function bindChatInteractions(container, state, render) {
     try {
       const reply = await getChatReply(question, state.messages);
       state.messages[state.messages.length - 1] = {
-        role: 'ai',
-        html: escapeHtml(reply).replace(/\n/g, '<br/>'),
+        role: 'assistant',
+        html: formatAssistantMessage(reply),
       };
     } catch (error) {
       state.messages[state.messages.length - 1] = {
-        role: 'ai',
-        html: `I couldn't reach the configured AI agent.<div class="disclaimer-callout mt-16"><strong>Reason:</strong> ${escapeHtml(error?.message || 'Unknown connection error.')}</div>`,
+        role: 'assistant',
+        html: formatAgentError(error),
       };
     } finally {
       state.sending = false;
@@ -178,23 +165,10 @@ function bindChatInteractions(container, state, render) {
 }
 
 async function getChatReply(question, messages) {
-  const config = getN8nAgentConfig();
-
-  if (!config.enabled || !config.webhookUrl) {
-    return resolveChatFallback(question);
-  }
-
-  const history = messages
-    .filter(message => !message.pending)
-    .map(message => ({
-      role: message.role,
-      content: stripHtml(message.html),
-    }))
-    .slice(-12);
-
-  const response = await askN8nAgent({
-    message: question,
-    history,
+  return resolveAgentReply({
+    question,
+    messages,
+    fallback: resolveChatFallback,
     context: {
       route: 'chat',
       mode: 'general',
@@ -202,17 +176,9 @@ async function getChatReply(question, messages) {
     },
     conversationScope: 'general-chat',
   });
-
-  return response.reply;
 }
 
 function resolveChatFallback(question) {
   return CHAT_FALLBACKS.find(item => item.test.test(question))?.response
     || 'The Normal Chat webhook is not configured yet, so this screen is using the local fallback responder. Configure your n8n webhook in Settings > API Keys to use your external LLM agent here.';
-}
-
-function stripHtml(value) {
-  const div = document.createElement('div');
-  div.innerHTML = value;
-  return div.textContent || div.innerText || '';
 }
