@@ -61,6 +61,7 @@ export function renderUpload(container) {
   bindDocumentTypes(container);
   bindDepthCards(container);
   bindDropzone(container);
+  bindAlternateSources(container);
   bindRecentDocs(container);
 
   container.querySelector('#analyze-btn').addEventListener('click', () => {
@@ -110,13 +111,13 @@ function renderUploadPanels() {
     </div>
 
     <div id="panel-paste" class="hidden">
-      <textarea rows="8" class="upload-paste-area" placeholder="Paste the full text of your legal document here..."></textarea>
+      <textarea rows="8" class="upload-paste-area" id="paste-input" placeholder="Paste the full text of your legal document here..."></textarea>
     </div>
 
     <div id="panel-url" class="hidden">
       <div class="flex gap-8 upload-url-row">
-        <input type="url" class="upload-url-input" placeholder="https://drive.google.com/... or any public document URL" />
-        <button class="btn-sm">Fetch</button>
+        <input type="url" class="upload-url-input" id="url-input" placeholder="https://drive.google.com/... or any public document URL" />
+        <button class="btn-sm" id="fetch-url-btn">Fetch</button>
       </div>
       <p class="fs-11 text-tertiary upload-url-note">Supports Google Drive, Dropbox, OneDrive, and direct PDF links.</p>
     </div>
@@ -254,6 +255,51 @@ function bindDropzone(container) {
     event.preventDefault();
     selectFile();
   });
+}
+
+function bindAlternateSources(container) {
+  const analyzeBtn = container.querySelector('#analyze-btn');
+  const pasteInput = container.querySelector('#paste-input');
+  const urlInput = container.querySelector('#url-input');
+  const fetchUrlBtn = container.querySelector('#fetch-url-btn');
+  const title = container.querySelector('#dropzone-title');
+  const sub = container.querySelector('#dropzone-sub');
+  const dropzone = container.querySelector('#dropzone');
+
+  pasteInput?.addEventListener('input', () => {
+    const text = pasteInput.value.trim();
+    const hasText = text.length > 0;
+    analyzeBtn.disabled = !hasText;
+
+    if (hasText) {
+      title.textContent = 'Pasted document text';
+      sub.textContent = `${text.split(/\s+/).length} words ready to analyze`;
+      dropzone.classList.add('has-file');
+    } else if (!urlInput?.value.trim()) {
+      resetUploadPreview(container);
+    }
+  });
+
+  fetchUrlBtn?.addEventListener('click', () => {
+    const url = urlInput.value.trim();
+    if (!url) {
+      window.showToast('Paste a public document URL first.');
+      return;
+    }
+
+    analyzeBtn.disabled = false;
+    title.textContent = 'Remote document linked';
+    sub.textContent = `${url.replace(/^https?:\/\//, '').slice(0, 42)} ready to analyze`;
+    dropzone.classList.add('has-file');
+    window.showToast('URL captured for analysis preview.');
+  });
+}
+
+function resetUploadPreview(container) {
+  container.querySelector('#dropzone-title').textContent = 'Drop your document here';
+  container.querySelector('#dropzone-sub').textContent = 'or click to browse files';
+  container.querySelector('#dropzone').classList.remove('has-file');
+  container.querySelector('#analyze-btn').disabled = true;
 }
 
 function bindRecentDocs(container) {

@@ -1,4 +1,5 @@
 import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+import { escapeHtml } from './shared/ui-actions.js';
 
 const SUGGESTED_QUESTIONS = [
   'Summarize the obligations',
@@ -11,13 +12,28 @@ const HISTORY_ITEMS = [
   'What are the red flags?',
 ];
 
+const ASK_RESPONSES = [
+  {
+    test: /red flag|risk/i,
+    response: `The biggest red flags are the unlimited confidentiality term, the $500,000 liquidated damages clause, and the unilateral assignment right. Each of those is already marked critical in the risk report.`,
+  },
+  {
+    test: /assign/i,
+    response: `Not safely as written. The current draft lets Acme Corp assign the agreement without your consent, but it does not give you equivalent protection.`,
+  },
+  {
+    test: /india|indian/i,
+    response: `In the UI preview, LexAI would point you to Section 74 of the Indian Contract Act and explain that courts usually award reasonable compensation rather than enforce a penalty mechanically.`,
+  },
+];
+
 export function renderAsk(container) {
   container.innerHTML = `
     ${renderPageTabs(DOCUMENT_TABS, 'ask', { flush: true })}
 
     <div class="workspace-shell">
       <div class="workspace-main with-divider">
-        <div class="workspace-scroll">
+        <div class="workspace-scroll" id="ask-thread">
           <div class="chat-msg">
             <div class="chat-avatar ai">L</div>
             <div class="chat-bubble">
@@ -120,6 +136,8 @@ function bindAskInteractions(container) {
   });
 
   const input = container.querySelector('#ask-input');
+  const thread = container.querySelector('#ask-thread');
+  const prefetchedQuestion = sessionStorage.getItem('ask_prefill');
 
   container.querySelectorAll('[data-question]').forEach(button => {
     button.addEventListener('click', () => {
@@ -128,7 +146,47 @@ function bindAskInteractions(container) {
     });
   });
 
-  container.querySelector('#ask-send-btn').addEventListener('click', () => {
-    window.showToast('Ask-the-doc input is wired for UI preview.');
+  const submit = () => {
+    const question = input.value.trim();
+    if (!question) {
+      window.showToast('Type a question first.');
+      return;
+    }
+
+    appendChatMessage(thread, 'user', escapeHtml(question));
+    appendChatMessage(thread, 'ai', escapeHtml(resolveAnswer(question)));
+    input.value = '';
+    thread.scrollTop = thread.scrollHeight;
+  };
+
+  container.querySelector('#ask-send-btn').addEventListener('click', submit);
+  input.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      submit();
+    }
   });
+
+  if (prefetchedQuestion) {
+    input.value = prefetchedQuestion;
+    sessionStorage.removeItem('ask_prefill');
+    submit();
+  }
+}
+
+function resolveAnswer(question) {
+  return ASK_RESPONSES.find(item => item.test.test(question))?.response
+    || 'This UI preview can handle common contract questions locally. For document-specific legal reasoning beyond the demo, the backend AI analysis pipeline would answer here.';
+}
+
+function appendChatMessage(thread, tone, message) {
+  const isUser = tone === 'user';
+  thread.insertAdjacentHTML('beforeend', `
+    <div class="chat-msg">
+      <div class="chat-avatar ${isUser ? 'user chat-avatar-muted' : 'ai'}">${isUser ? 'JD' : 'L'}</div>
+      <div class="chat-bubble">
+        <p class="${isUser ? 'text-primary' : ''}">${message}</p>
+      </div>
+    </div>
+  `);
 }

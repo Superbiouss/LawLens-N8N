@@ -1,4 +1,5 @@
 import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+import { downloadTextFile } from './shared/ui-actions.js';
 
 const RISK_ISSUES = [
   {
@@ -98,19 +99,21 @@ export function renderRiskReport(container) {
         <div class="flex justify-between items-center mb-16">
           <h2 class="section-label m-0">Issues found</h2>
           <div class="flex gap-6 flex-wrap">
-            <button type="button" class="reset-btn pill active">All (9)</button>
-            <button type="button" class="reset-btn pill pill-danger-outline">Critical (3)</button>
-            <button type="button" class="reset-btn pill pill-warning-outline">Review (2)</button>
-            <button type="button" class="reset-btn pill">Missing (4)</button>
+            <button type="button" class="reset-btn pill active" data-filter="all">All (9)</button>
+            <button type="button" class="reset-btn pill pill-danger-outline" data-filter="critical">Critical (3)</button>
+            <button type="button" class="reset-btn pill pill-warning-outline" data-filter="review">Review (2)</button>
+            <button type="button" class="reset-btn pill" data-filter="missing">Missing (4)</button>
           </div>
         </div>
 
-        <div class="flex flex-col gap-10 stagger">
+        <div class="flex flex-col gap-10 stagger" id="risk-issues">
           ${renderIssueCards()}
         </div>
 
-        <p class="section-label mt-24">Missing standard clauses</p>
-        ${renderMissingCards()}
+        <div id="risk-missing-section">
+          <p class="section-label mt-24">Missing standard clauses</p>
+          ${renderMissingCards()}
+        </div>
       </div>
 
       <div>
@@ -166,7 +169,7 @@ export function renderRiskReport(container) {
 
         <div class="flex flex-col gap-8">
           <button class="btn-full" data-nav-target="compare">Compare with another version ↗</button>
-          <button class="btn-full">Download risk report PDF ↗</button>
+          <button class="btn-full" id="download-risk-report-btn">Download risk report PDF ↗</button>
         </div>
       </div>
     </div>
@@ -242,9 +245,41 @@ function renderRiskDimensions() {
 }
 
 function bindRiskActions(container) {
+  container.querySelectorAll('[data-filter]').forEach(button => {
+    button.addEventListener('click', () => {
+      container.querySelectorAll('[data-filter]').forEach(item => item.classList.remove('active'));
+      button.classList.add('active');
+      applyRiskFilter(container, button.dataset.filter);
+    });
+  });
+
   container.querySelectorAll('.btn-sm[data-nav-target], .btn-full[data-nav-target]').forEach(button => {
     button.addEventListener('click', () => {
       window.navigateTo(button.dataset.navTarget);
     });
   });
+
+  container.querySelector('#download-risk-report-btn')?.addEventListener('click', () => {
+    downloadTextFile('risk-report.txt', [
+      'LexAI Risk Report Preview',
+      '',
+      'Overall risk: 7.2 / 10',
+      'Critical issues: 3',
+      'Review items: 2',
+      'Missing clauses: 4',
+      '',
+      ...RISK_ISSUES.map(issue => `- ${issue.title}: ${issue.fix}`),
+    ].join('\n'));
+  });
+}
+
+function applyRiskFilter(container, filter) {
+  container.querySelectorAll('#risk-issues .flag-card').forEach(card => {
+    card.classList.toggle('hidden', filter !== 'all' && !card.classList.contains(filter));
+  });
+
+  const missingSection = container.querySelector('#risk-missing-section');
+  if (missingSection) {
+    missingSection.classList.toggle('hidden', !['all', 'missing'].includes(filter));
+  }
 }

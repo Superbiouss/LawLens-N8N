@@ -1,3 +1,5 @@
+import { copyText } from './shared/ui-actions.js';
+
 export function renderSettings(container) {
   container.innerHTML = `
     <div class="mb-24">
@@ -49,8 +51,12 @@ export function renderSettings(container) {
       else if (page === 'api') content.innerHTML = renderAPI();
       else if (page === 'billing') content.innerHTML = renderBilling();
       else if (page === 'security') content.innerHTML = renderSecurity();
+      bindSettingsContent(container, page);
     });
   });
+
+  bindSettingsContent(container, 'profile');
+  bindSettingsSidebar(container);
 }
 
 function renderProfile() {
@@ -73,7 +79,7 @@ function renderProfile() {
             <label class="meta-text mb-4 block">Email Address</label>
             <input type="email" value="john@startup.com" />
           </div>
-          <button class="btn-primary" style="width:fit-content;" onclick="showToast('Profile updated')">Save changes</button>
+          <button class="btn-primary settings-fit-btn" id="settings-save-profile-btn">Save changes</button>
         </div>
       </div>
 
@@ -95,7 +101,7 @@ function renderProfile() {
               <p class="fs-13 fw-500">AI Suggestions</p>
               <p class="meta-text">Enable predictive legal terms and auto-complete in Ask the Doc.</p>
             </div>
-            <div class="toggle on"></div>
+            <button type="button" class="reset-btn toggle on" id="settings-ai-suggestions-toggle" aria-pressed="true"></button>
           </div>
         </div>
       </div>
@@ -122,7 +128,7 @@ function renderIntegrations() {
                 <p class="meta-text">${i.desc}</p>
               </div>
             </div>
-            <button class="btn-sm" style="${i.status === 'Connected' ? 'border-color:transparent;' : ''}" onclick="showToast('${i.name} ${i.status === 'Connected' ? 'manage' : 'connecting'}')">
+            <button class="btn-sm ${i.status === 'Connected' ? 'border-transparent' : ''}" data-integration-name="${i.name}" data-integration-status="${i.status}">
                 ${i.status}
             </button>
           </div>
@@ -145,11 +151,11 @@ function renderAPI() {
          </div>
          <div class="flex gap-8">
             <input type="password" value="sk_live_51Px2..." disabled style="flex:1;background:var(--color-background-primary);" />
-            <button class="btn-sm" onclick="showToast('Key copied')">Copy</button>
+            <button class="btn-sm" id="settings-copy-api-key-btn">Copy</button>
          </div>
       </div>
 
-      <button class="btn-sm" style="border-color:var(--color-border-primary);">+ Generate new secret key</button>
+      <button class="btn-sm border-primary" id="settings-generate-api-key-btn">+ Generate new secret key</button>
     </div>
     `;
 }
@@ -182,7 +188,7 @@ function renderBilling() {
             <p class="fs-13 fw-500">Visa ending in 4242</p>
             <p class="meta-text">Expires 12/28</p>
          </div>
-         <button class="btn-sm" onclick="showToast('Edit card')">Edit</button>
+         <button class="btn-sm" id="settings-edit-billing-btn">Edit</button>
       </div>
     </div>
     `;
@@ -199,14 +205,14 @@ function renderSecurity() {
               <p class="fs-13 fw-500">Two-Factor Authentication</p>
               <p class="meta-text">Secure your account with a secondary verification code.</p>
             </div>
-            <div class="toggle off" onclick="this.classList.toggle('on'); showToast('2FA updated');"></div>
+            <button type="button" class="reset-btn toggle off" id="settings-2fa-toggle" aria-pressed="false"></button>
           </div>
           <div class="flex justify-between items-center pt-12 border-top-tertiary">
             <div>
               <p class="fs-13 fw-500">SSO Integration</p>
               <p class="meta-text">Allow login via SAML or Okta.</p>
             </div>
-            <button class="btn-sm" onclick="showToast('SSO setup')">Configure</button>
+            <button class="btn-sm" id="settings-sso-configure-btn">Configure</button>
           </div>
         </div>
       </div>
@@ -216,7 +222,7 @@ function renderSecurity() {
         <div class="flex flex-col gap-12">
            <input type="password" placeholder="Current password" />
            <input type="password" placeholder="New password" />
-           <button class="btn-primary" style="width:fit-content;" onclick="showToast('Password changed')">Update password</button>
+           <button class="btn-primary settings-fit-btn" id="settings-update-password-btn">Update password</button>
         </div>
       </div>
     </div>
@@ -230,16 +236,89 @@ function renderSideInfo() {
        <p class="fs-24 fw-500 text-primary">$129<span class="text-tertiary" style="font-size:14px;">/mo</span></p>
        <div class="progress-track mt-12 mb-8"><div class="progress-bar" style="width:45%;background:var(--color-brand-purple);"></div></div>
        <p class="meta-text">45 of 100 documents analyzed this month.</p>
-       <button class="btn-sm mt-16 w-full" style="background:var(--color-background-primary);border-color:var(--color-brand-purple);color:var(--color-brand-purple);">Upgrade plan</button>
+       <button class="btn-sm mt-16 w-full settings-upgrade-btn" id="settings-upgrade-plan-btn">Upgrade plan</button>
     </div>
 
     <div class="card">
        <p class="section-label">Support</p>
        <div class="flex flex-col gap-8">
-          <button class="btn-sm w-full justify-start">Documentation</button>
-          <button class="btn-sm w-full justify-start">Help Center</button>
-          <button class="btn-sm w-full justify-start text-danger">Delete Account</button>
+          <button class="btn-sm w-full justify-start" data-support-action="documentation">Documentation</button>
+          <button class="btn-sm w-full justify-start" data-support-action="help">Help Center</button>
+          <button class="btn-sm w-full justify-start text-danger" data-support-action="delete">Delete Account</button>
        </div>
     </div>
     `;
+}
+
+function bindSettingsContent(container, page) {
+  if (page === 'profile') {
+    container.querySelector('#settings-save-profile-btn')?.addEventListener('click', () => {
+      window.showToast('Profile updated');
+    });
+
+    container.querySelector('#settings-ai-suggestions-toggle')?.addEventListener('click', event => {
+      event.currentTarget.classList.toggle('on');
+      event.currentTarget.setAttribute('aria-pressed', String(event.currentTarget.classList.contains('on')));
+      window.showToast('AI suggestions preference updated');
+    });
+  }
+
+  if (page === 'integrations') {
+    container.querySelectorAll('[data-integration-name]').forEach(button => {
+      button.addEventListener('click', () => {
+        const isConnected = button.dataset.integrationStatus === 'Connected';
+        button.dataset.integrationStatus = isConnected ? 'Connect' : 'Connected';
+        button.textContent = isConnected ? 'Connect' : 'Connected';
+        button.classList.toggle('border-transparent', !isConnected);
+        window.showToast(`${button.dataset.integrationName} ${isConnected ? 'disconnected' : 'connected'}`);
+      });
+    });
+  }
+
+  if (page === 'api') {
+    container.querySelector('#settings-copy-api-key-btn')?.addEventListener('click', () => {
+      copyText('sk_live_51Px2_demo_preview', 'Key copied');
+    });
+
+    container.querySelector('#settings-generate-api-key-btn')?.addEventListener('click', () => {
+      window.showToast('Key generation would require backend support.');
+    });
+  }
+
+  if (page === 'billing') {
+    container.querySelector('#settings-edit-billing-btn')?.addEventListener('click', () => {
+      window.showToast('Billing editor would open here.');
+    });
+  }
+
+  if (page === 'security') {
+    container.querySelector('#settings-2fa-toggle')?.addEventListener('click', event => {
+      event.currentTarget.classList.toggle('on');
+      event.currentTarget.setAttribute('aria-pressed', String(event.currentTarget.classList.contains('on')));
+      window.showToast('2FA updated');
+    });
+
+    container.querySelector('#settings-sso-configure-btn')?.addEventListener('click', () => {
+      window.showToast('SSO setup needs backend configuration.');
+    });
+
+    container.querySelector('#settings-update-password-btn')?.addEventListener('click', () => {
+      window.showToast('Password change submitted in preview mode.');
+    });
+  }
+}
+
+function bindSettingsSidebar(container) {
+  container.querySelector('#settings-upgrade-plan-btn')?.addEventListener('click', () => {
+    window.showToast('Plan upgrade would continue in billing.');
+  });
+
+  container.querySelectorAll('[data-support-action]').forEach(button => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.supportAction;
+      if (action === 'documentation') window.showToast('Documentation would open in a new tab.');
+      else if (action === 'help') window.showToast('Help Center would open in a new tab.');
+      else window.showToast('Account deletion requires backend confirmation.');
+    });
+  });
 }

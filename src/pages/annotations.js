@@ -1,4 +1,5 @@
 import { bindRouteTabs, REVIEW_TABS, renderPageTabs } from './shared/page-tabs.js';
+import { escapeHtml } from './shared/ui-actions.js';
 
 export function renderAnnotations(container) {
   container.innerHTML = `
@@ -30,7 +31,7 @@ export function renderAnnotations(container) {
           </div>
         </div>
 
-        <div class="workspace-panel-scroll">
+        <div class="workspace-panel-scroll" id="annotation-list">
           <div class="card p-12 annotation-card-info">
             <div class="flex items-center gap-8 mb-8">
               <div class="chat-avatar user chat-avatar-sm">JD</div>
@@ -59,10 +60,10 @@ export function renderAnnotations(container) {
         </div>
 
         <div class="workspace-panel-footer">
-          <textarea placeholder="Write a comment..." class="annotation-input"></textarea>
+          <textarea placeholder="Write a comment..." class="annotation-input" id="annotation-input"></textarea>
           <div class="flex justify-between items-center mt-8">
             <span class="meta-text">Press Ctrl+Enter to post</span>
-            <button class="btn-sm btn-primary">Post</button>
+            <button class="btn-sm btn-primary" id="post-annotation-btn">Post</button>
           </div>
         </div>
       </div>
@@ -70,10 +71,65 @@ export function renderAnnotations(container) {
   `;
 
   bindRouteTabs(container);
+  bindAnnotationActions(container);
 
   setTimeout(() => {
     if (window.updateTabIndicator) {
       window.updateTabIndicator(container.querySelector('.nav-tabs'));
     }
   }, 0);
+}
+
+function bindAnnotationActions(container) {
+  const list = container.querySelector('#annotation-list');
+  const input = container.querySelector('#annotation-input');
+
+  container.querySelectorAll('.workspace-panel-header .btn-sm')[0]?.addEventListener('click', () => {
+    input.focus();
+    window.showToast('Start a new annotation below.');
+  });
+
+  container.querySelectorAll('.workspace-panel-header .btn-sm')[1]?.addEventListener('click', () => {
+    const firstCard = list.querySelector('.card');
+    if (!firstCard) {
+      window.showToast('No open annotations to resolve.');
+      return;
+    }
+    firstCard.remove();
+    window.showToast('Annotation resolved.');
+  });
+
+  container.querySelector('.annotation-action')?.addEventListener('click', () => {
+    input.value = 'Commenting on Clause 2 highlight...';
+    input.focus();
+  });
+
+  const submit = () => {
+    const value = input.value.trim();
+    if (!value) {
+      window.showToast('Write a comment first.');
+      return;
+    }
+
+    list.insertAdjacentHTML('afterbegin', `
+      <div class="card p-12">
+        <div class="flex items-center gap-8 mb-8">
+          <div class="chat-avatar user chat-avatar-sm">JD</div>
+          <span class="fs-12 fw-500">John Doe</span>
+          <span class="meta-text fs-10">Just now</span>
+        </div>
+        <p class="fs-12 text-primary lh-15">${escapeHtml(value)}</p>
+      </div>
+    `);
+    input.value = '';
+    window.showToast('Annotation posted.');
+  };
+
+  container.querySelector('#post-annotation-btn')?.addEventListener('click', submit);
+  input.addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      event.preventDefault();
+      submit();
+    }
+  });
 }

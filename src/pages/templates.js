@@ -1,46 +1,79 @@
+const TEMPLATES = [
+  { name: 'Mutual NDA', cat: 'Intellectual Property', desc: 'Standard non-disclosure agreement for mutual information exchange.', usage: '2.4k uses', risk: 'low' },
+  { name: 'Software Development Agreement', cat: 'Service Agreements', desc: 'Contract for outsourcing software development work.', usage: '1.2k uses', risk: 'medium' },
+  { name: 'Standard Employment Contract', cat: 'Employment', desc: 'Full-time employment agreement with standard clauses.', usage: '5.1k uses', risk: 'medium' },
+  { name: 'Commercial Lease Agreement', cat: 'Real Estate', desc: 'Lease for office or retail space in commercial properties.', usage: '800 uses', risk: 'high' },
+  { name: 'SaaS Master Service Agreement', cat: 'Service Agreements', desc: 'Framework agreement for licensing software as a service.', usage: '1.5k uses', risk: 'medium' },
+  { name: 'Founder Agreement', cat: 'Corporate', desc: 'Governing agreement for startup co-founders.', usage: '600 uses', risk: 'high' },
+];
+
+const TEMPLATE_FILTERS = ['All templates', 'Employment', 'Intellectual Property', 'Service Agreements', 'Real Estate', 'Corporate'];
+
 export function renderTemplates(container) {
-  container.innerHTML = `
-    <div class="flex justify-between items-center mb-24">
-      <div>
-        <h1 class="page-title">Template library</h1>
-        <p class="body-text mt-4">Standardized starting points for commonly used legal documents.</p>
-      </div>
-      <button class="btn-primary">+ Create custom template</button>
-    </div>
+  const state = {
+    filter: 'All templates',
+  };
 
-    <div class="flex gap-8 mb-20 overflow-x-auto" style="padding-bottom:10px;">
-      <div class="pill active">All templates</div>
-      <div class="pill">Employment</div>
-      <div class="pill">Intellectual Property</div>
-      <div class="pill">Service Agreements</div>
-      <div class="pill">Real Estate</div>
-      <div class="pill">Corporate</div>
-    </div>
+  const render = () => {
+    const visibleTemplates = TEMPLATES.filter(template =>
+      state.filter === 'All templates' || template.cat === state.filter,
+    );
 
-    <div class="grid stagger" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:20px;">
-      ${[
-      { name: 'Mutual NDA', cat: 'IP', desc: 'Standard non-disclosure agreement for mutual information exchange.', usage: '2.4k uses', risk: 'low' },
-      { name: 'Software Development Agreement', cat: 'Services', desc: 'Contract for outsourcing software development work.', usage: '1.2k uses', risk: 'medium' },
-      { name: 'Standard Employment Contract', cat: 'HR', desc: 'Full-time employment agreement with standard clauses.', usage: '5.1k uses', risk: 'medium' },
-      { name: 'Commercial Lease Agreement', cat: 'Estate', desc: 'Lease for office or retail space in commercial properties.', usage: '800 uses', risk: 'high' },
-      { name: 'SaaS Master Service Agreement', cat: 'SaaS', desc: 'Framework agreement for licensing software as a service.', usage: '1.5k uses', risk: 'medium' },
-      { name: 'Founder Agreement', cat: 'Corporate', desc: 'Governing agreement for startup co-founders.', usage: '600 uses', risk: 'high' }
-    ].map(t => `
-        <div class="card doc-card" style="display:flex;flex-direction:column;">
-          <div class="doc-card-body" style="flex:1;">
-            <div class="flex justify-between items-center mb-12">
-              <span class="micro-label">${t.cat}</span>
-              <span class="badge badge-${t.risk === 'low' ? 'success' : t.risk === 'medium' ? 'warning' : 'danger'}">${t.risk.charAt(0).toUpperCase() + t.risk.slice(1)} risk</span>
-            </div>
-            <h3 style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;">${t.name}</h3>
-            <p class="meta-text" style="line-height:1.5;">${t.desc}</p>
-          </div>
-          <div style="padding:12px;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);display:flex;justify-content:between;align-items:center;">
-             <span class="meta-text" style="font-size:10px;">${t.usage}</span>
-             <button class="btn-sm" style="padding:4px 10px;font-size:11px;background:var(--color-background-primary);">Use template</button>
-          </div>
+    container.innerHTML = `
+      <div class="flex justify-between items-center mb-24">
+        <div>
+          <h1 class="page-title">Template library</h1>
+          <p class="body-text mt-4">Standardized starting points for commonly used legal documents.</p>
         </div>
-      `).join('')}
-    </div>
-  `;
+        <button class="btn-primary" id="create-template-btn">+ Create custom template</button>
+      </div>
+
+      <div class="flex gap-8 mb-20 overflow-x-auto template-filter-row">
+        ${TEMPLATE_FILTERS.map(filter => `
+          <button type="button" class="reset-btn pill${filter === state.filter ? ' active' : ''}" data-template-filter="${filter}">
+            ${filter}
+          </button>
+        `).join('')}
+      </div>
+
+      <div class="grid stagger template-grid">
+        ${visibleTemplates.map(template => `
+          <div class="card doc-card template-card">
+            <div class="doc-card-body flex-1">
+              <div class="flex justify-between items-center mb-12">
+                <span class="micro-label">${template.cat}</span>
+                <span class="badge badge-${template.risk === 'low' ? 'success' : template.risk === 'medium' ? 'warning' : 'danger'}">${template.risk.charAt(0).toUpperCase() + template.risk.slice(1)} risk</span>
+              </div>
+              <h3 class="template-title">${template.name}</h3>
+              <p class="meta-text template-copy">${template.desc}</p>
+            </div>
+            <div class="template-footer">
+              <span class="meta-text template-usage">${template.usage}</span>
+              <button class="btn-sm template-use-btn" data-template-name="${template.name}">Use template</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    container.querySelector('#create-template-btn')?.addEventListener('click', () => {
+      window.showToast('Custom template creation would open the drafting flow.');
+    });
+
+    container.querySelectorAll('[data-template-filter]').forEach(button => {
+      button.addEventListener('click', () => {
+        state.filter = button.dataset.templateFilter;
+        render();
+      });
+    });
+
+    container.querySelectorAll('[data-template-name]').forEach(button => {
+      button.addEventListener('click', () => {
+        localStorage.setItem('drafting_insert_clause', `${button.dataset.templateName} template inserted as a starting point.`);
+        window.navigateTo('drafting');
+      });
+    });
+  };
+
+  render();
 }

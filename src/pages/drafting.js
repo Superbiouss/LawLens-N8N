@@ -7,12 +7,12 @@ export function renderDrafting(container) {
       </div>
       <div class="flex items-center gap-12">
          <!-- Collaboration Dots (UX Polish) -->
-         <div class="flex -space-x-8">
+         <div class="flex draft-avatar-stack">
             <div title="John Doe (You)" class="draft-avatar draft-avatar-user">JD</div>
             <div title="LexAI (AI Assistant)" class="draft-avatar draft-avatar-ai">AI</div>
             <div title="Sarah (Legal Review)" class="draft-avatar draft-avatar-review">S</div>
          </div>
-         <button class="btn-primary" onclick="showToast('Document saved to vault')">Save Draft</button>
+         <button class="btn-primary" id="save-draft-btn">Save Draft</button>
       </div>
     </div>
 
@@ -20,23 +20,23 @@ export function renderDrafting(container) {
       <div class="card p-0 draft-editor-shell">
          <!-- Toolbar -->
          <div class="draft-toolbar">
-            <select class="draft-select">
+            <select class="draft-select" id="draft-block-style">
                <option>Heading 1</option>
                <option>Heading 2</option>
                <option selected>Body Text</option>
             </select>
             <div class="draft-toolbar-divider"></div>
-            <button class="btn-sm draft-icon-btn"><b>B</b></button>
-            <button class="btn-sm draft-icon-btn"><i>I</i></button>
-            <button class="btn-sm draft-icon-btn"><u>U</u></button>
+            <button class="btn-sm draft-icon-btn" data-format="bold"><b>B</b></button>
+            <button class="btn-sm draft-icon-btn" data-format="italic"><i>I</i></button>
+            <button class="btn-sm draft-icon-btn" data-format="underline"><u>U</u></button>
             <div class="draft-toolbar-divider"></div>
-            <button class="btn-sm draft-icon-btn">
+            <button class="btn-sm draft-icon-btn" id="insert-link-btn">
                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             </button>
          </div>
 
          <!-- Editor Area -->
-         <div class="draft-editor-area" contenteditable="true">
+         <div class="draft-editor-area" id="draft-editor" contenteditable="true">
             <h2 class="draft-title">MUTUAL NON-DISCLOSURE AGREEMENT</h2>
             <p>This NON-DISCLOSURE AGREEMENT (the "Agreement") is entered into as of January 24, 2026 (the "Effective Date"), by and between Acme Corp and [COUNTERPARTY NAME].</p>
             <p class="mt-20">1. <u>Purpose</u>. The parties wish to explore a business opportunity of mutual interest and in connection with this opportunity, may disclose certain proprietary and confidential information.</p>
@@ -56,23 +56,23 @@ export function renderDrafting(container) {
                <div class="card-surface p-12 draft-risk-card">
                   <p class="draft-risk-title">Risk Detected</p>
                   <p class="draft-risk-sub">Section 2 specifies a 5-year tail. Standard for this industry is 2 years.</p>
-                  <button class="btn-sm w-full btn-brand-solid" onclick="showToast('Applying clause improvement')">Fix to Standard (2 Year)</button>
+                  <button class="btn-sm w-full btn-brand-solid" id="fix-standard-btn">Fix to Standard (2 Year)</button>
                </div>
 
                <div class="pt-12 border-top-tertiary">
                   <p class="meta-text mb-8">Suggest alternative for Section 2:</p>
                   <div class="flex flex-col gap-8">
-                     <div class="card-surface p-10 cursor-pointer hover-bg-secondary fs-11">
+                     <button type="button" class="reset-btn card-surface p-10 cursor-pointer hover-bg-secondary fs-11 text-left" data-suggestion-text="The obligations shall survive termination but not exceed two (2) years.">
                         "The obligations shall survive termination but not exceed two (2) years."
-                     </div>
-                     <div class="card-surface p-10 cursor-pointer hover-bg-secondary fs-11">
+                     </button>
+                     <button type="button" class="reset-btn card-surface p-10 cursor-pointer hover-bg-secondary fs-11 text-left" data-suggestion-text="Standard NDA exclusion for public knowledge and prior disclosure.">
                         "Standard NDA exclusion for public knowledge and prior disclosure."
-                     </div>
+                     </button>
                   </div>
                </div>
                
                <div class="mt-12">
-                  <button class="btn-sm w-full btn-between-tertiary">
+                  <button class="btn-sm w-full btn-between-tertiary" id="ask-drafting-btn">
                      <span>Ask LexAI to draft...</span>
                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                   </button>
@@ -82,4 +82,70 @@ export function renderDrafting(container) {
       </div>
     </div>
     `;
+
+   bindDraftingActions(container);
+}
+
+function bindDraftingActions(container) {
+   const editor = container.querySelector('#draft-editor');
+   const saveBtn = container.querySelector('#save-draft-btn');
+
+   const savedDraft = localStorage.getItem('drafting_saved_html');
+   const insertedClause = localStorage.getItem('drafting_insert_clause');
+
+   if (savedDraft) {
+      editor.innerHTML = savedDraft;
+   }
+
+   if (insertedClause) {
+      editor.insertAdjacentHTML('beforeend', `<p class="mt-20">${insertedClause}</p>`);
+      localStorage.removeItem('drafting_insert_clause');
+      window.showToast('Clause inserted into the draft.');
+   }
+
+   saveBtn?.addEventListener('click', () => {
+      localStorage.setItem('drafting_saved_html', editor.innerHTML);
+      window.showToast('Draft saved locally in this preview.');
+   });
+
+   container.querySelectorAll('[data-format]').forEach(button => {
+      button.addEventListener('click', () => {
+         editor.focus();
+         document.execCommand(button.dataset.format, false);
+      });
+   });
+
+   container.querySelector('#draft-block-style')?.addEventListener('change', event => {
+      editor.focus();
+      const value = event.target.value;
+      if (value === 'Heading 1') document.execCommand('formatBlock', false, 'h1');
+      else if (value === 'Heading 2') document.execCommand('formatBlock', false, 'h2');
+      else document.execCommand('formatBlock', false, 'p');
+   });
+
+   container.querySelector('#insert-link-btn')?.addEventListener('click', () => {
+      editor.focus();
+      document.execCommand('createLink', false, 'https://example.com');
+      window.showToast('Example link inserted. Replace it with your final URL.');
+   });
+
+   container.querySelector('#fix-standard-btn')?.addEventListener('click', () => {
+      editor.innerHTML = editor.innerHTML.replace(
+         'for a period of five (5) years from the date of disclosure.',
+         'for a period of two (2) years from the date of disclosure.',
+      );
+      window.showToast('Confidentiality term updated to 2 years.');
+   });
+
+   container.querySelectorAll('[data-suggestion-text]').forEach(button => {
+      button.addEventListener('click', () => {
+         editor.insertAdjacentHTML('beforeend', `<p class="mt-20">${button.dataset.suggestionText}</p>`);
+         window.showToast('Suggestion inserted into the draft.');
+      });
+   });
+
+   container.querySelector('#ask-drafting-btn')?.addEventListener('click', () => {
+      sessionStorage.setItem('ask_prefill', 'Draft a balanced confidentiality clause for this agreement.');
+      window.navigateTo('ask');
+   });
 }

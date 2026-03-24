@@ -19,7 +19,7 @@ Last updated: 2026-03-24
 
 | Metric | Before | Current |
 | --- | ---: | ---: |
-| Inline `style="..."` attrs | 450 | 178 |
+| Inline `style="..."` attrs | 450 | 63 |
 | Inline hover handlers | 14 | 0 |
 | High-debt key pages (`upload`, `summary`, `risk-report`, `ask`, `annotations`) | 125 | 4 |
 
@@ -34,13 +34,13 @@ Last updated: 2026-03-24
 | Page | Inline style count |
 | --- | ---: |
 | `src/pages/team.js` | 21 |
-| `src/pages/export.js` | 19 |
 | `src/pages/analytics.js` | 18 |
-| `src/pages/vault.js` | 17 |
-| `src/pages/compare.js` | 17 |
+| `src/pages/compliance.js` | 11 |
+| `src/pages/settings.js` | 8 |
+| `src/pages/key-dates.js` | 8 |
 
 ## Suggested Next Slice
 
-- migrate `compare` and `clause-breakdown` to the shared page-tab helper
-- clean `dashboard` and `vault` row interactions into semantic buttons
-- replace remaining inline action toasts in `settings` with bound event listeners
+- finish the remaining static text-heavy screens: `team` and `analytics`
+- replace the last inline style pockets in `compliance`, `settings`, and `key-dates`
+- add browser-based verification once a JS runtime is available locally

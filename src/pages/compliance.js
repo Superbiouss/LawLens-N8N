@@ -85,9 +85,17 @@ export function renderCompliance(container) {
           </div>
         </div>
 
-        <button class="btn-primary btn-full mb-12">Run re-check</button>
-        <button class="btn-full" onclick="navigateTo('export')">Generate compliance report ↗</button>
+        <button class="btn-primary btn-full mb-12" id="run-compliance-check-btn">Run re-check</button>
+        <button class="btn-full" id="generate-compliance-report-btn">Generate compliance report ↗</button>
       </div>
     </div>
   `;
+
+  container.querySelector('#run-compliance-check-btn')?.addEventListener('click', () => {
+    window.showToast('Compliance re-check queued in the UI preview.');
+  });
+
+  container.querySelector('#generate-compliance-report-btn')?.addEventListener('click', () => {
+    window.navigateTo('export');
+  });
 }

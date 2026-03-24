@@ -9,7 +9,7 @@ export function renderTeam(container) {
       <div>
         <div class="flex justify-between items-center mb-16">
           <p class="section-label" style="margin:0;">Members</p>
-          <button class="btn-sm">+ Invite member</button>
+          <button class="btn-sm" id="team-invite-btn">+ Invite member</button>
         </div>
 
         <div class="card mb-24" style="padding:0;overflow:hidden;">
@@ -49,7 +49,7 @@ export function renderTeam(container) {
                 </div>
                 <div class="flex items-center gap-12">
                    <div class="meta-text">Assigned to <strong>${r.assigned}</strong></div>
-                   <button class="btn-sm">View ↗</button>
+                   <button class="btn-sm" data-team-view-doc="${r.doc}">View ↗</button>
                 </div>
              </div>
            `).join('')}
@@ -94,4 +94,14 @@ export function renderTeam(container) {
       </div>
     </div>
   `;
+
+  container.querySelector('#team-invite-btn')?.addEventListener('click', () => {
+    window.showToast('Invite flow would send an email from the backend.');
+  });
+
+  container.querySelectorAll('[data-team-view-doc]').forEach(button => {
+    button.addEventListener('click', () => {
+      window.navigateTo('annotations');
+    });
+  });
 }
