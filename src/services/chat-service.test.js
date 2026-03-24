@@ -9,12 +9,14 @@ import {
 
 describe('chat-service', () => {
   it('builds clean chat history from rendered messages', () => {
-    expect(buildChatHistory([
-      { role: 'assistant', html: '<strong>Hello</strong>' },
-      { role: 'user', html: 'What is the risk?' },
-      { role: 'assistant', html: 'Thinking...', pending: true },
-      { role: 'ai', html: '<em>Fallback</em>' },
-    ])).toEqual([
+    expect(
+      buildChatHistory([
+        { role: 'assistant', html: '<strong>Hello</strong>' },
+        { role: 'user', html: 'What is the risk?' },
+        { role: 'assistant', html: 'Thinking...', pending: true },
+        { role: 'ai', html: '<em>Fallback</em>' },
+      ]),
+    ).toEqual([
       { role: 'assistant', content: 'Hello' },
       { role: 'user', content: 'What is the risk?' },
       { role: 'assistant', content: 'Fallback' },
@@ -38,30 +40,38 @@ describe('chat-service', () => {
   });
 
   it('formats assistant text safely for chat bubbles', () => {
-    expect(formatAssistantMessage('<b>Hello</b>\nWorld')).toBe('&lt;b&gt;Hello&lt;/b&gt;<br/>World');
+    expect(formatAssistantMessage('<b>Hello</b>\nWorld')).toBe(
+      '&lt;b&gt;Hello&lt;/b&gt;<br/>World',
+    );
   });
 
   it('escapes humanized error messages before rendering', () => {
-    expect(formatAgentError(new Error('<script>alert(1)</script>'))).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+    expect(formatAgentError(new Error('<script>alert(1)</script>'))).toContain(
+      '&lt;script&gt;alert(1)&lt;/script&gt;',
+    );
   });
 
   it('returns consistent agent status copy', () => {
-    expect(getAgentStatusMeta({
-      webhookUrl: 'https://example.com/webhook',
-      enabled: true,
-      includeDocumentContext: true,
-      authToken: '',
-    })).toMatchObject({
+    expect(
+      getAgentStatusMeta({
+        webhookUrl: 'https://example.com/webhook',
+        enabled: true,
+        includeDocumentContext: true,
+        authToken: '',
+      }),
+    ).toMatchObject({
       connected: true,
       tone: 'connected',
     });
 
-    expect(getAgentStatusMeta({
-      webhookUrl: '',
-      enabled: false,
-      includeDocumentContext: true,
-      authToken: '',
-    })).toMatchObject({
+    expect(
+      getAgentStatusMeta({
+        webhookUrl: '',
+        enabled: false,
+        includeDocumentContext: true,
+        authToken: '',
+      }),
+    ).toMatchObject({
       connected: false,
       tone: 'disconnected',
     });

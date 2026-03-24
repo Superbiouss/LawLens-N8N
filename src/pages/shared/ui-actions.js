@@ -18,13 +18,17 @@ export async function copyText(text, successMessage = 'Copied to clipboard!') {
 
     window.showToast(successMessage);
     return true;
-  } catch (error) {
+  } catch {
     window.showToast('Copy failed in this browser preview.');
     return false;
   }
 }
 
-export function downloadTextFile(filename, content, mime = 'text/plain;charset=utf-8') {
+export function downloadTextFile(
+  filename,
+  content,
+  mime = 'text/plain;charset=utf-8',
+) {
   const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

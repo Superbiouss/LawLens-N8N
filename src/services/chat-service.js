@@ -1,4 +1,9 @@
-import { askN8nAgent, canUseN8nAgent, getN8nAgentConfig, humanizeN8nAgentError } from './n8n-agent.js';
+import {
+  askN8nAgent,
+  canUseN8nAgent,
+  getN8nAgentConfig,
+  humanizeN8nAgentError,
+} from './n8n-agent.js';
 import { escapeHtml, formatMultilineHtml, stripHtml } from './text-utils.js';
 
 export function createUserChatMessage(question) {
@@ -18,12 +23,12 @@ export function createPendingAssistantMessage(label = 'Thinking...') {
 
 export function buildChatHistory(messages, limit = 12) {
   return messages
-    .filter(message => !message.pending)
-    .map(message => ({
-      role: message.role === 'ai' ? 'assistant' : (message.role || 'user'),
+    .filter((message) => !message.pending)
+    .map((message) => ({
+      role: message.role === 'ai' ? 'assistant' : message.role || 'user',
       content: stripHtml(message.html || message.content || ''),
     }))
-    .filter(message => message.content.trim())
+    .filter((message) => message.content.trim())
     .slice(-limit);
 }
 
@@ -31,7 +36,10 @@ export function formatAssistantMessage(text) {
   return formatMultilineHtml(text);
 }
 
-export function formatAgentError(error, intro = "I couldn't reach the configured AI agent.") {
+export function formatAgentError(
+  error,
+  intro = "I couldn't reach the configured AI agent.",
+) {
   return `${intro}<div class="disclaimer-callout mt-16"><strong>Reason:</strong> ${escapeHtml(humanizeN8nAgentError(error))}</div>`;
 }
 

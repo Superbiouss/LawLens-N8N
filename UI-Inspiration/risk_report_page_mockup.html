@@ -1,133 +1,570 @@
-
 <style>
-*{box-sizing:border-box}
-.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
-.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
-.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
-.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
-.bc .cur{color:var(--color-text-primary);font-weight:500}
-.nav-strip{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;padding:0 20px}
-.ntab{font-size:12px;padding:9px 12px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
-.ntab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
-.ntab:hover:not(.active){color:var(--color-text-secondary)}
-.body{display:grid;grid-template-columns:1fr 260px;gap:0}
-.main{padding:20px;border-right:0.5px solid var(--color-border-tertiary)}
-.side{padding:16px;background:var(--color-background-primary)}
-.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+  * {
+    box-sizing: border-box;
+  }
+  .pg {
+    background: var(--color-background-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+  .bar {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .logo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-info);
+  }
+  .bc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+  .bc .cur {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+  .nav-strip {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    padding: 0 20px;
+  }
+  .ntab {
+    font-size: 12px;
+    padding: 9px 12px;
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    border-bottom: 2px solid transparent;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .ntab.active {
+    color: var(--color-text-primary);
+    font-weight: 500;
+    border-bottom-color: var(--color-text-primary);
+  }
+  .ntab:hover:not(.active) {
+    color: var(--color-text-secondary);
+  }
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 0;
+  }
+  .main {
+    padding: 20px;
+    border-right: 0.5px solid var(--color-border-tertiary);
+  }
+  .side {
+    padding: 16px;
+    background: var(--color-background-primary);
+  }
+  .sl {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 0 0 8px;
+  }
 
-.score-band{display:flex;align-items:stretch;gap:12px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-left:4px solid #E24B4A;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0;padding:14px 16px;margin-bottom:16px}
-.score-left{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-right:14px;border-right:0.5px solid var(--color-border-tertiary);min-width:72px}
-.score-num{font-size:28px;font-weight:500;color:var(--color-text-danger);line-height:1}
-.score-denom{font-size:12px;color:var(--color-text-tertiary)}
-.score-label{font-size:11px;font-weight:500;color:var(--color-text-danger);margin-top:4px}
-.score-right{flex:1;padding-left:14px}
-.score-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px}
-.score-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin:0 0 10px}
-.meter-track{height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;margin-bottom:4px}
-.meter-bar{height:100%;border-radius:3px;background:#E24B4A;width:72%}
-.meter-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-tertiary)}
+  .score-band {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-left: 4px solid #e24b4a;
+    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .score-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-right: 14px;
+    border-right: 0.5px solid var(--color-border-tertiary);
+    min-width: 72px;
+  }
+  .score-num {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--color-text-danger);
+    line-height: 1;
+  }
+  .score-denom {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+  .score-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-text-danger);
+    margin-top: 4px;
+  }
+  .score-right {
+    flex: 1;
+    padding-left: 14px;
+  }
+  .score-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 4px;
+  }
+  .score-desc {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 10px;
+  }
+  .meter-track {
+    height: 6px;
+    background: var(--color-background-secondary);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+  .meter-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: #e24b4a;
+    width: 72%;
+  }
+  .meter-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
 
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
-.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
-.stat-n{font-size:20px;font-weight:500;line-height:1}
-.stat-l{font-size:10px;color:var(--color-text-tertiary);margin-top:3px}
-.stat-n.danger{color:var(--color-text-danger)}
-.stat-n.warn{color:var(--color-text-warning)}
-.stat-n.ok{color:var(--color-text-success)}
-.stat-n.neutral{color:var(--color-text-primary)}
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .stat {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 12px;
+  }
+  .stat-n {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .stat-l {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-top: 3px;
+  }
+  .stat-n.danger {
+    color: var(--color-text-danger);
+  }
+  .stat-n.warn {
+    color: var(--color-text-warning);
+  }
+  .stat-n.ok {
+    color: var(--color-text-success);
+  }
+  .stat-n.neutral {
+    color: var(--color-text-primary);
+  }
 
-.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap}
-.fpill{font-size:11px;padding:3px 10px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);background:var(--color-background-primary);cursor:pointer;user-select:none;transition:all .15s}
-.fpill.active{font-weight:500;background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+  .section-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .fpill {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    background: var(--color-background-primary);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .fpill.active {
+    font-weight: 500;
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+  }
 
-.flag-card{border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:opacity .15s}
-.flag-card:hover{opacity:.9}
-.flag-card.critical{border:0.5px solid var(--color-border-danger);background:var(--color-background-primary)}
-.flag-card.medium{border:0.5px solid var(--color-border-warning);background:var(--color-background-primary)}
-.flag-card.low{border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary)}
-.flag-card.missing{border:0.5px dashed var(--color-border-secondary);background:var(--color-background-primary)}
-.fc-head{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
-.severity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.severity-dot.critical{background:var(--color-text-danger)}
-.severity-dot.medium{background:var(--color-text-warning)}
-.severity-dot.low{background:var(--color-border-secondary)}
-.severity-dot.missing{background:var(--color-text-tertiary)}
-.fc-title{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
-.fc-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap}
-.fc-tag.critical{background:var(--color-background-danger);color:var(--color-text-danger)}
-.fc-tag.medium{background:var(--color-background-warning);color:var(--color-text-warning)}
-.fc-tag.low{background:var(--color-background-secondary);color:var(--color-text-secondary)}
-.fc-tag.missing{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
-.fc-clause-ref{font-size:10px;color:var(--color-text-tertiary);margin-left:auto;margin-right:6px}
-.fc-body{padding:10px 14px}
-.fc-problem{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin:0 0 8px}
-.fc-impact{display:flex;gap:6px;align-items:flex-start;margin-bottom:8px}
-.fc-impact-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);padding-top:1px;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
-.fc-impact-text{font-size:12px;color:var(--color-text-danger);line-height:1.5}
-.fc-impact-text.warn{color:var(--color-text-warning)}
-.fc-impact-text.neutral{color:var(--color-text-secondary)}
-.fc-suggest{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;margin-top:6px}
-.fc-suggest-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.fc-suggest-text{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
-.fc-actions{display:flex;gap:6px;margin-top:8px}
-.fc-actions button{font-size:11px;padding:4px 10px}
+  .flag-card {
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .flag-card:hover {
+    opacity: 0.9;
+  }
+  .flag-card.critical {
+    border: 0.5px solid var(--color-border-danger);
+    background: var(--color-background-primary);
+  }
+  .flag-card.medium {
+    border: 0.5px solid var(--color-border-warning);
+    background: var(--color-background-primary);
+  }
+  .flag-card.low {
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+  }
+  .flag-card.missing {
+    border: 0.5px dashed var(--color-border-secondary);
+    background: var(--color-background-primary);
+  }
+  .fc-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .severity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .severity-dot.critical {
+    background: var(--color-text-danger);
+  }
+  .severity-dot.medium {
+    background: var(--color-text-warning);
+  }
+  .severity-dot.low {
+    background: var(--color-border-secondary);
+  }
+  .severity-dot.missing {
+    background: var(--color-text-tertiary);
+  }
+  .fc-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    flex: 1;
+  }
+  .fc-tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .fc-tag.critical {
+    background: var(--color-background-danger);
+    color: var(--color-text-danger);
+  }
+  .fc-tag.medium {
+    background: var(--color-background-warning);
+    color: var(--color-text-warning);
+  }
+  .fc-tag.low {
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+  }
+  .fc-tag.missing {
+    background: var(--color-background-secondary);
+    color: var(--color-text-tertiary);
+  }
+  .fc-clause-ref {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-left: auto;
+    margin-right: 6px;
+  }
+  .fc-body {
+    padding: 10px 14px;
+  }
+  .fc-problem {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 8px;
+  }
+  .fc-impact {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .fc-impact-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    padding-top: 1px;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .fc-impact-text {
+    font-size: 12px;
+    color: var(--color-text-danger);
+    line-height: 1.5;
+  }
+  .fc-impact-text.warn {
+    color: var(--color-text-warning);
+  }
+  .fc-impact-text.neutral {
+    color: var(--color-text-secondary);
+  }
+  .fc-suggest {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 8px 10px;
+    margin-top: 6px;
+  }
+  .fc-suggest-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+  .fc-suggest-text {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+  .fc-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .fc-actions button {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
 
-.party-balance{display:flex;gap:4px;align-items:stretch;margin-bottom:16px}
-.pb-party{flex:1;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center}
-.pb-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
-.pb-bar-wrap{height:60px;display:flex;align-items:flex-end;justify-content:center}
-.pb-bar{width:32px;border-radius:3px 3px 0 0}
-.pb-n{font-size:11px;font-weight:500;margin-top:4px}
-.pb-divider{display:flex;align-items:center;padding:0 4px;font-size:18px;color:var(--color-text-tertiary);align-self:center}
+  .party-balance {
+    display: flex;
+    gap: 4px;
+    align-items: stretch;
+    margin-bottom: 16px;
+  }
+  .pb-party {
+    flex: 1;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px;
+    text-align: center;
+  }
+  .pb-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+  }
+  .pb-bar-wrap {
+    height: 60px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .pb-bar {
+    width: 32px;
+    border-radius: 3px 3px 0 0;
+  }
+  .pb-n {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .pb-divider {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    font-size: 18px;
+    color: var(--color-text-tertiary);
+    align-self: center;
+  }
 
-.risk-dim{margin-bottom:10px}
-.rd-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.rd-label{font-size:11px;color:var(--color-text-secondary);width:100px;flex-shrink:0}
-.rd-track{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
-.rd-fill{height:100%;border-radius:3px}
-.rd-val{font-size:11px;font-weight:500;width:28px;text-align:right;flex-shrink:0}
+  .risk-dim {
+    margin-bottom: 10px;
+  }
+  .rd-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  .rd-label {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    width: 100px;
+    flex-shrink: 0;
+  }
+  .rd-track {
+    flex: 1;
+    height: 5px;
+    background: var(--color-background-secondary);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .rd-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .rd-val {
+    font-size: 11px;
+    font-weight: 500;
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
 
-.verdict-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px}
-.verdict-q{font-size:11px;color:var(--color-text-tertiary);margin:0 0 3px}
-.verdict-a{font-size:13px;font-weight:500}
-.verdict-a.danger{color:var(--color-text-danger)}
-.verdict-a.warn{color:var(--color-text-warning)}
-.verdict-a.ok{color:var(--color-text-success)}
+  .verdict-card {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  .verdict-q {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    margin: 0 0 3px;
+  }
+  .verdict-a {
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .verdict-a.danger {
+    color: var(--color-text-danger);
+  }
+  .verdict-a.warn {
+    color: var(--color-text-warning);
+  }
+  .verdict-a.ok {
+    color: var(--color-text-success);
+  }
 
-.ask-bar{display:flex;gap:8px;padding:10px 20px;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary)}
-.ask-bar input{flex:1;font-size:12px}
-.ask-bar button{font-size:12px;padding:0 14px}
+  .ask-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--color-background-primary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+  }
+  .ask-bar input {
+    flex: 1;
+    font-size: 12px;
+  }
+  .ask-bar button {
+    font-size: 12px;
+    padding: 0 14px;
+  }
 </style>
 
 <div class="pg">
   <div class="bar">
-    <div style="display:flex;align-items:center;gap:16px">
-      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+    <div style="display: flex; align-items: center; gap: 16px">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        LexAI
+      </div>
       <div class="bc">
-        <span>Vault</span><span>›</span>
-        <span>Acme Corp NDA v3.pdf</span><span>›</span>
+        <span>Vault</span><span>›</span> <span>Acme Corp NDA v3.pdf</span
+        ><span>›</span>
         <span class="cur">Risk report</span>
       </div>
     </div>
-    <div style="display:flex;gap:6px">
-      <button style="font-size:12px;padding:4px 12px" onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Compare versions ↗</button>
-      <button style="font-size:12px;padding:4px 12px">Export report ↗</button>
+    <div style="display: flex; gap: 6px">
+      <button
+        style="font-size: 12px; padding: 4px 12px"
+        onclick="
+          sendPrompt(
+            'What should the Compare Versions page do in a legal document summarizer?',
+          )
+        "
+      >
+        Compare versions ↗
+      </button>
+      <button style="font-size: 12px; padding: 4px 12px">
+        Export report ↗
+      </button>
     </div>
   </div>
 
   <div class="nav-strip">
-    <div class="ntab" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Summary</div>
-    <div class="ntab" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Clause breakdown</div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Summary page show in a legal document summarizer?',
+        )
+      "
+    >
+      Summary
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Clause Breakdown page show in a legal document summarizer?',
+        )
+      "
+    >
+      Clause breakdown
+    </div>
     <div class="ntab active">Risk report</div>
-    <div class="ntab" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">Key dates</div>
-    <div class="ntab" onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask the doc</div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Key Dates timeline page look like in a legal document summarizer?',
+        )
+      "
+    >
+      Key dates
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Ask the Document page do in a legal document summarizer?',
+        )
+      "
+    >
+      Ask the doc
+    </div>
   </div>
 
   <div class="body">
     <div class="main">
-
       <div class="score-band">
         <div class="score-left">
           <div class="score-num">7.2</div>
@@ -135,26 +572,64 @@
           <div class="score-label">High risk</div>
         </div>
         <div class="score-right">
-          <p class="score-title">This document carries significant risk for the Receiving Party</p>
-          <p class="score-desc">3 critical issues, 2 items needing review, and 4 standard protections are missing. The terms are heavily weighted in Acme Corp's favour. Do not sign without negotiation.</p>
+          <p class="score-title">
+            This document carries significant risk for the Receiving Party
+          </p>
+          <p class="score-desc">
+            3 critical issues, 2 items needing review, and 4 standard
+            protections are missing. The terms are heavily weighted in Acme
+            Corp's favour. Do not sign without negotiation.
+          </p>
           <div class="meter-track"><div class="meter-bar"></div></div>
-          <div class="meter-labels"><span>Low</span><span>Medium</span><span>High</span></div>
+          <div class="meter-labels">
+            <span>Low</span><span>Medium</span><span>High</span>
+          </div>
         </div>
       </div>
 
       <div class="stats-row">
-        <div class="stat"><div class="stat-n danger">3</div><div class="stat-l">Critical flags</div></div>
-        <div class="stat"><div class="stat-n warn">2</div><div class="stat-l">Review items</div></div>
-        <div class="stat"><div class="stat-n neutral">4</div><div class="stat-l">Missing clauses</div></div>
-        <div class="stat"><div class="stat-n ok">3</div><div class="stat-l">Clear clauses</div></div>
+        <div class="stat">
+          <div class="stat-n danger">3</div>
+          <div class="stat-l">Critical flags</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n warn">2</div>
+          <div class="stat-l">Review items</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n neutral">4</div>
+          <div class="stat-l">Missing clauses</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n ok">3</div>
+          <div class="stat-l">Clear clauses</div>
+        </div>
       </div>
 
       <div class="section-row">
-        <p class="sl" style="margin:0">Issues found</p>
+        <p class="sl" style="margin: 0">Issues found</p>
         <div class="filter-row">
           <div class="fpill active" onclick="setF(this)">All (9)</div>
-          <div class="fpill" onclick="setF(this)" style="color:var(--color-text-danger);border-color:var(--color-border-danger)">Critical (3)</div>
-          <div class="fpill" onclick="setF(this)" style="color:var(--color-text-warning);border-color:var(--color-border-warning)">Review (2)</div>
+          <div
+            class="fpill"
+            onclick="setF(this)"
+            style="
+              color: var(--color-text-danger);
+              border-color: var(--color-border-danger);
+            "
+          >
+            Critical (3)
+          </div>
+          <div
+            class="fpill"
+            onclick="setF(this)"
+            style="
+              color: var(--color-text-warning);
+              border-color: var(--color-border-warning);
+            "
+          >
+            Review (2)
+          </div>
           <div class="fpill" onclick="setF(this)">Missing (4)</div>
         </div>
       </div>
@@ -167,18 +642,46 @@
           <span class="fc-tag critical">Critical</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem">The NDA imposes confidentiality obligations with no end date. Unlike standard NDAs which expire after 2–5 years, this binds you permanently — even if the partnership never materialises or ends years from now.</p>
+          <p class="fc-problem">
+            The NDA imposes confidentiality obligations with no end date. Unlike
+            standard NDAs which expire after 2–5 years, this binds you
+            permanently — even if the partnership never materialises or ends
+            years from now.
+          </p>
           <div class="fc-impact">
             <span class="fc-impact-label">Impact</span>
-            <span class="fc-impact-text">Perpetual legal exposure with no exit mechanism, even after the business relationship ends.</span>
+            <span class="fc-impact-text"
+              >Perpetual legal exposure with no exit mechanism, even after the
+              business relationship ends.</span
+            >
           </div>
           <div class="fc-suggest">
             <div class="fc-suggest-label">Suggested fix</div>
-            <div class="fc-suggest-text">Replace "unlimited period of time" with "a period of 3 years from the date of disclosure." This is industry standard and rarely contested.</div>
+            <div class="fc-suggest-text">
+              Replace "unlimited period of time" with "a period of 3 years from
+              the date of disclosure." This is industry standard and rarely
+              contested.
+            </div>
           </div>
           <div class="fc-actions">
-            <button onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">View clause ↗</button>
-            <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add note ↗</button>
+            <button
+              onclick="
+                sendPrompt(
+                  'What should the Clause Breakdown page show in a legal document summarizer?',
+                )
+              "
+            >
+              View clause ↗
+            </button>
+            <button
+              onclick="
+                sendPrompt(
+                  'What should the Annotation Studio look like in a legal document summarizer?',
+                )
+              "
+            >
+              Add note ↗
+            </button>
           </div>
         </div>
       </div>
@@ -186,23 +689,54 @@
       <div class="flag-card critical">
         <div class="fc-head">
           <div class="severity-dot critical"></div>
-          <span class="fc-title">$500,000 liquidated damages — no harm required</span>
+          <span class="fc-title"
+            >$500,000 liquidated damages — no harm required</span
+          >
           <span class="fc-clause-ref">Clause 3</span>
           <span class="fc-tag critical">Critical</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem">The penalty clause sets a fixed $500,000 per-breach fee regardless of what harm, if any, Acme Corp actually suffers. In practice, a single accidental disclosure — even a forwarded email — could trigger this clause.</p>
+          <p class="fc-problem">
+            The penalty clause sets a fixed $500,000 per-breach fee regardless
+            of what harm, if any, Acme Corp actually suffers. In practice, a
+            single accidental disclosure — even a forwarded email — could
+            trigger this clause.
+          </p>
           <div class="fc-impact">
             <span class="fc-impact-label">Impact</span>
-            <span class="fc-impact-text">Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.</span>
+            <span class="fc-impact-text"
+              >Disproportionate financial liability uncoupled from actual
+              damages. Courts in some jurisdictions may invalidate it, but you'd
+              still face litigation costs.</span
+            >
           </div>
           <div class="fc-suggest">
             <div class="fc-suggest-label">Suggested fix</div>
-            <div class="fc-suggest-text">Push to remove the liquidated damages clause entirely, or cap it at actual documented losses. Add a gross negligence/wilful misconduct threshold before it triggers.</div>
+            <div class="fc-suggest-text">
+              Push to remove the liquidated damages clause entirely, or cap it
+              at actual documented losses. Add a gross negligence/wilful
+              misconduct threshold before it triggers.
+            </div>
           </div>
           <div class="fc-actions">
-            <button onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">View clause ↗</button>
-            <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add note ↗</button>
+            <button
+              onclick="
+                sendPrompt(
+                  'What should the Clause Breakdown page show in a legal document summarizer?',
+                )
+              "
+            >
+              View clause ↗
+            </button>
+            <button
+              onclick="
+                sendPrompt(
+                  'What should the Annotation Studio look like in a legal document summarizer?',
+                )
+              "
+            >
+              Add note ↗
+            </button>
           </div>
         </div>
       </div>
@@ -210,23 +744,53 @@
       <div class="flag-card critical">
         <div class="fc-head">
           <div class="severity-dot critical"></div>
-          <span class="fc-title">Unilateral assignment — no consent required</span>
+          <span class="fc-title"
+            >Unilateral assignment — no consent required</span
+          >
           <span class="fc-clause-ref">Clause 4</span>
           <span class="fc-tag critical">Critical</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem">Acme Corp can transfer this agreement to any successor entity — including a competitor — without notifying or obtaining consent from you. Your obligations follow regardless of who now holds the other side of the contract.</p>
+          <p class="fc-problem">
+            Acme Corp can transfer this agreement to any successor entity —
+            including a competitor — without notifying or obtaining consent from
+            you. Your obligations follow regardless of who now holds the other
+            side of the contract.
+          </p>
           <div class="fc-impact">
             <span class="fc-impact-label">Impact</span>
-            <span class="fc-impact-text">You could end up contractually bound to an unknown third party you never agreed to deal with.</span>
+            <span class="fc-impact-text"
+              >You could end up contractually bound to an unknown third party
+              you never agreed to deal with.</span
+            >
           </div>
           <div class="fc-suggest">
             <div class="fc-suggest-label">Suggested fix</div>
-            <div class="fc-suggest-text">Add "…provided that the Receiving Party's prior written consent is obtained, not to be unreasonably withheld." Both parties should have equal assignment rights.</div>
+            <div class="fc-suggest-text">
+              Add "…provided that the Receiving Party's prior written consent is
+              obtained, not to be unreasonably withheld." Both parties should
+              have equal assignment rights.
+            </div>
           </div>
           <div class="fc-actions">
-            <button onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">View clause ↗</button>
-            <button onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Add note ↗</button>
+            <button
+              onclick="
+                sendPrompt(
+                  'What should the Clause Breakdown page show in a legal document summarizer?',
+                )
+              "
+            >
+              View clause ↗
+            </button>
+            <button
+              onclick="
+                sendPrompt(
+                  'What should the Annotation Studio look like in a legal document summarizer?',
+                )
+              "
+            >
+              Add note ↗
+            </button>
           </div>
         </div>
       </div>
@@ -239,14 +803,25 @@
           <span class="fc-tag medium">Review</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem">Use of confidential information is limited to "evaluating a potential business partnership." This excludes any internal planning, due diligence work, or integration scoping that commonly follows exploratory conversations.</p>
+          <p class="fc-problem">
+            Use of confidential information is limited to "evaluating a
+            potential business partnership." This excludes any internal
+            planning, due diligence work, or integration scoping that commonly
+            follows exploratory conversations.
+          </p>
           <div class="fc-impact">
             <span class="fc-impact-label">Impact</span>
-            <span class="fc-impact-text warn">Routine business activity could technically constitute a breach if it goes beyond "evaluation."</span>
+            <span class="fc-impact-text warn"
+              >Routine business activity could technically constitute a breach
+              if it goes beyond "evaluation."</span
+            >
           </div>
           <div class="fc-suggest">
             <div class="fc-suggest-label">Suggested fix</div>
-            <div class="fc-suggest-text">Broaden to "evaluating, planning, and implementing a potential business relationship between the parties."</div>
+            <div class="fc-suggest-text">
+              Broaden to "evaluating, planning, and implementing a potential
+              business relationship between the parties."
+            </div>
           </div>
         </div>
       </div>
@@ -259,27 +834,44 @@
           <span class="fc-tag medium">Review</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem">All disputes must be litigated exclusively in Delaware courts. If you are based outside the US, this creates a significant logistical and financial burden to defend any claim.</p>
+          <p class="fc-problem">
+            All disputes must be litigated exclusively in Delaware courts. If
+            you are based outside the US, this creates a significant logistical
+            and financial burden to defend any claim.
+          </p>
           <div class="fc-impact">
             <span class="fc-impact-label">Impact</span>
-            <span class="fc-impact-text warn">Cross-border litigation expense. Practical deterrent against you raising any counter-claim.</span>
+            <span class="fc-impact-text warn"
+              >Cross-border litigation expense. Practical deterrent against you
+              raising any counter-claim.</span
+            >
           </div>
           <div class="fc-suggest">
             <div class="fc-suggest-label">Suggested fix</div>
-            <div class="fc-suggest-text">Propose mutual jurisdiction in the defendant's home country, or ICC arbitration as a neutral alternative.</div>
+            <div class="fc-suggest-text">
+              Propose mutual jurisdiction in the defendant's home country, or
+              ICC arbitration as a neutral alternative.
+            </div>
           </div>
         </div>
       </div>
 
-      <p class="sl" style="margin-top:4px">Missing standard clauses</p>
+      <p class="sl" style="margin-top: 4px">Missing standard clauses</p>
       <div class="flag-card missing">
         <div class="fc-head">
           <div class="severity-dot missing"></div>
-          <span class="fc-title">No return or destruction of materials clause</span>
+          <span class="fc-title"
+            >No return or destruction of materials clause</span
+          >
           <span class="fc-tag missing">Missing</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem" style="margin:0">Without this, there is no mechanism to formally end the exchange of confidential materials. Standard NDAs require the Receiving Party to return or certifiably destroy all copies on request or at termination.</p>
+          <p class="fc-problem" style="margin: 0">
+            Without this, there is no mechanism to formally end the exchange of
+            confidential materials. Standard NDAs require the Receiving Party to
+            return or certifiably destroy all copies on request or at
+            termination.
+          </p>
         </div>
       </div>
       <div class="flag-card missing">
@@ -289,7 +881,12 @@
           <span class="fc-tag missing">Missing</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem" style="margin:0">Without a residual knowledge clause, your employees could theoretically be restricted from using knowledge retained in unaided memory — a standard protection in tech and professional services NDAs.</p>
+          <p class="fc-problem" style="margin: 0">
+            Without a residual knowledge clause, your employees could
+            theoretically be restricted from using knowledge retained in unaided
+            memory — a standard protection in tech and professional services
+            NDAs.
+          </p>
         </div>
       </div>
       <div class="flag-card missing">
@@ -299,7 +896,10 @@
           <span class="fc-tag missing">Missing</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem" style="margin:0">Acme Corp bears no equivalent liability cap. The $500K liquidated damages clause only runs one way — against you.</p>
+          <p class="fc-problem" style="margin: 0">
+            Acme Corp bears no equivalent liability cap. The $500K liquidated
+            damages clause only runs one way — against you.
+          </p>
         </div>
       </div>
       <div class="flag-card missing">
@@ -309,10 +909,13 @@
           <span class="fc-tag missing">Missing</span>
         </div>
         <div class="fc-body">
-          <p class="fc-problem" style="margin:0">No mandatory dispute resolution step before either party can file a lawsuit. This removes a cost-saving buffer and puts you immediately on the hook for litigation if a disagreement arises.</p>
+          <p class="fc-problem" style="margin: 0">
+            No mandatory dispute resolution step before either party can file a
+            lawsuit. This removes a cost-saving buffer and puts you immediately
+            on the hook for litigation if a disagreement arises.
+          </p>
         </div>
       </div>
-
     </div>
 
     <div class="side">
@@ -330,18 +933,32 @@
         <div class="verdict-a danger">Favours Acme Corp</div>
       </div>
 
-      <p class="sl" style="margin-top:4px">Clause balance</p>
+      <p class="sl" style="margin-top: 4px">Clause balance</p>
       <div class="party-balance">
         <div class="pb-party">
           <div class="pb-name">Acme Corp</div>
-          <div class="pb-bar-wrap"><div class="pb-bar" style="height:52px;background:var(--color-text-danger)"></div></div>
-          <div class="pb-n" style="color:var(--color-text-danger)">8 favourable</div>
+          <div class="pb-bar-wrap">
+            <div
+              class="pb-bar"
+              style="height: 52px; background: var(--color-text-danger)"
+            ></div>
+          </div>
+          <div class="pb-n" style="color: var(--color-text-danger)">
+            8 favourable
+          </div>
         </div>
         <div class="pb-divider">vs</div>
         <div class="pb-party">
           <div class="pb-name">John Doe</div>
-          <div class="pb-bar-wrap"><div class="pb-bar" style="height:17px;background:var(--color-border-secondary)"></div></div>
-          <div class="pb-n" style="color:var(--color-text-tertiary)">3 favourable</div>
+          <div class="pb-bar-wrap">
+            <div
+              class="pb-bar"
+              style="height: 17px; background: var(--color-border-secondary)"
+            ></div>
+          </div>
+          <div class="pb-n" style="color: var(--color-text-tertiary)">
+            3 favourable
+          </div>
         </div>
       </div>
 
@@ -349,68 +966,158 @@
       <div class="risk-dim">
         <div class="rd-row">
           <span class="rd-label">Financial</span>
-          <div class="rd-track"><div class="rd-fill" style="width:90%;background:var(--color-text-danger)"></div></div>
-          <span class="rd-val" style="color:var(--color-text-danger)">9</span>
+          <div class="rd-track">
+            <div
+              class="rd-fill"
+              style="width: 90%; background: var(--color-text-danger)"
+            ></div>
+          </div>
+          <span class="rd-val" style="color: var(--color-text-danger)">9</span>
         </div>
         <div class="rd-row">
           <span class="rd-label">Term &amp; exit</span>
-          <div class="rd-track"><div class="rd-fill" style="width:80%;background:var(--color-text-danger)"></div></div>
-          <span class="rd-val" style="color:var(--color-text-danger)">8</span>
+          <div class="rd-track">
+            <div
+              class="rd-fill"
+              style="width: 80%; background: var(--color-text-danger)"
+            ></div>
+          </div>
+          <span class="rd-val" style="color: var(--color-text-danger)">8</span>
         </div>
         <div class="rd-row">
           <span class="rd-label">Jurisdiction</span>
-          <div class="rd-track"><div class="rd-fill" style="width:60%;background:var(--color-text-warning)"></div></div>
-          <span class="rd-val" style="color:var(--color-text-warning)">6</span>
+          <div class="rd-track">
+            <div
+              class="rd-fill"
+              style="width: 60%; background: var(--color-text-warning)"
+            ></div>
+          </div>
+          <span class="rd-val" style="color: var(--color-text-warning)">6</span>
         </div>
         <div class="rd-row">
           <span class="rd-label">Scope / purpose</span>
-          <div class="rd-track"><div class="rd-fill" style="width:60%;background:var(--color-text-warning)"></div></div>
-          <span class="rd-val" style="color:var(--color-text-warning)">6</span>
+          <div class="rd-track">
+            <div
+              class="rd-fill"
+              style="width: 60%; background: var(--color-text-warning)"
+            ></div>
+          </div>
+          <span class="rd-val" style="color: var(--color-text-warning)">6</span>
         </div>
         <div class="rd-row">
           <span class="rd-label">Assignment</span>
-          <div class="rd-track"><div class="rd-fill" style="width:80%;background:var(--color-text-danger)"></div></div>
-          <span class="rd-val" style="color:var(--color-text-danger)">8</span>
+          <div class="rd-track">
+            <div
+              class="rd-fill"
+              style="width: 80%; background: var(--color-text-danger)"
+            ></div>
+          </div>
+          <span class="rd-val" style="color: var(--color-text-danger)">8</span>
         </div>
         <div class="rd-row">
           <span class="rd-label">Boilerplate</span>
-          <div class="rd-track"><div class="rd-fill" style="width:20%;background:var(--color-text-success)"></div></div>
-          <span class="rd-val" style="color:var(--color-text-success)">2</span>
+          <div class="rd-track">
+            <div
+              class="rd-fill"
+              style="width: 20%; background: var(--color-text-success)"
+            ></div>
+          </div>
+          <span class="rd-val" style="color: var(--color-text-success)">2</span>
         </div>
       </div>
 
       <p class="sl">Compare with similar docs</p>
-      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0">
-          <span style="color:var(--color-text-tertiary)">Avg. NDA risk score</span>
-          <span style="font-weight:500;color:var(--color-text-primary)">4.1 / 10</span>
+      <div
+        style="
+          background: var(--color-background-secondary);
+          border-radius: var(--border-radius-md);
+          padding: 10px 12px;
+          margin-bottom: 12px;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            padding: 3px 0;
+          "
+        >
+          <span style="color: var(--color-text-tertiary)"
+            >Avg. NDA risk score</span
+          >
+          <span style="font-weight: 500; color: var(--color-text-primary)"
+            >4.1 / 10</span
+          >
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0">
-          <span style="color:var(--color-text-tertiary)">This document</span>
-          <span style="font-weight:500;color:var(--color-text-danger)">7.2 / 10</span>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            padding: 3px 0;
+          "
+        >
+          <span style="color: var(--color-text-tertiary)">This document</span>
+          <span style="font-weight: 500; color: var(--color-text-danger)"
+            >7.2 / 10</span
+          >
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0">
-          <span style="color:var(--color-text-tertiary)">Riskier than</span>
-          <span style="font-weight:500;color:var(--color-text-danger)">89% of NDAs</span>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            padding: 3px 0;
+          "
+        >
+          <span style="color: var(--color-text-tertiary)">Riskier than</span>
+          <span style="font-weight: 500; color: var(--color-text-danger)"
+            >89% of NDAs</span
+          >
         </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <button style="width:100%;font-size:11px;padding:6px" onclick="sendPrompt('What should the Compare Versions page do in a legal document summarizer?')">Compare with another version ↗</button>
-        <button style="width:100%;font-size:11px;padding:6px">Download risk report PDF ↗</button>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <button
+          style="width: 100%; font-size: 11px; padding: 6px"
+          onclick="
+            sendPrompt(
+              'What should the Compare Versions page do in a legal document summarizer?',
+            )
+          "
+        >
+          Compare with another version ↗
+        </button>
+        <button style="width: 100%; font-size: 11px; padding: 6px">
+          Download risk report PDF ↗
+        </button>
       </div>
     </div>
   </div>
 
   <div class="ask-bar">
-    <input type="text" placeholder="e.g. 'Is the $500K damages clause enforceable in India?'" />
-    <button onclick="sendPrompt('What should the Ask the Document page do in a legal document summarizer?')">Ask ↗</button>
+    <input
+      type="text"
+      placeholder="e.g. 'Is the $500K damages clause enforceable in India?'"
+    />
+    <button
+      onclick="
+        sendPrompt(
+          'What should the Ask the Document page do in a legal document summarizer?',
+        )
+      "
+    >
+      Ask ↗
+    </button>
   </div>
 </div>
 
 <script>
-function setF(el){
-  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-}
+  function setF(el) {
+    document
+      .querySelectorAll('.fpill')
+      .forEach((p) => p.classList.remove('active'));
+    el.classList.add('active');
+  }
 </script>

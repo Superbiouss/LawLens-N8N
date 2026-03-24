@@ -11,12 +11,14 @@ import {
 
 describe('n8n-agent-utils', () => {
   it('sanitizes config values', () => {
-    expect(sanitizeN8nAgentConfig({
-      webhookUrl: ' https://example.com/webhook ',
-      authToken: ' secret-token ',
-      enabled: 1,
-      includeDocumentContext: false,
-    })).toEqual({
+    expect(
+      sanitizeN8nAgentConfig({
+        webhookUrl: ' https://example.com/webhook ',
+        authToken: ' secret-token ',
+        enabled: 1,
+        includeDocumentContext: false,
+      }),
+    ).toEqual({
       webhookUrl: 'https://example.com/webhook',
       authToken: 'secret-token',
       enabled: true,
@@ -25,15 +27,19 @@ describe('n8n-agent-utils', () => {
   });
 
   it('validates only http and https webhook URLs', () => {
-    expect(validateN8nAgentConfig({
-      webhookUrl: 'ftp://example.com/webhook',
-      enabled: true,
-    }).valid).toBe(false);
+    expect(
+      validateN8nAgentConfig({
+        webhookUrl: 'ftp://example.com/webhook',
+        enabled: true,
+      }).valid,
+    ).toBe(false);
 
-    expect(validateN8nAgentConfig({
-      webhookUrl: 'http://localhost:5678/webhook/test',
-      enabled: true,
-    }).valid).toBe(true);
+    expect(
+      validateN8nAgentConfig({
+        webhookUrl: 'http://localhost:5678/webhook/test',
+        enabled: true,
+      }).valid,
+    ).toBe(true);
   });
 
   it('builds deterministic conversation IDs when helpers are injected', () => {
@@ -46,21 +52,23 @@ describe('n8n-agent-utils', () => {
   });
 
   it('builds sanitized webhook payloads', () => {
-    expect(buildN8nRequest({
-      message: '  Summarize this clause  ',
-      history: [
-        { role: 'user', content: '  First message  ' },
-        { role: 'ai', content: '  Assistant reply  ' },
-        { role: 'user', content: '   ' },
-      ],
-      context: {
-        route: 'ask',
-        documentName: 'Acme NDA.pdf',
-        ignored: undefined,
-      },
-      conversationId: 'lexai-abc',
-      timestamp: '2026-03-24T00:00:00.000Z',
-    })).toEqual({
+    expect(
+      buildN8nRequest({
+        message: '  Summarize this clause  ',
+        history: [
+          { role: 'user', content: '  First message  ' },
+          { role: 'ai', content: '  Assistant reply  ' },
+          { role: 'user', content: '   ' },
+        ],
+        context: {
+          route: 'ask',
+          documentName: 'Acme NDA.pdf',
+          ignored: undefined,
+        },
+        conversationId: 'lexai-abc',
+        timestamp: '2026-03-24T00:00:00.000Z',
+      }),
+    ).toEqual({
       message: 'Summarize this clause',
       history: [
         { role: 'user', content: 'First message' },
@@ -77,37 +85,45 @@ describe('n8n-agent-utils', () => {
   });
 
   it('extracts replies from nested webhook payloads', () => {
-    expect(extractN8nReply({
-      data: {
-        choices: [
-          {
-            message: {
-              content: 'Reply from choices',
-            },
-          },
-        ],
-      },
-    })).toBe('Reply from choices');
-
-    expect(extractN8nReply([
-      {
-        result: {
-          output: [
+    expect(
+      extractN8nReply({
+        data: {
+          choices: [
             {
-              content: [
-                {
-                  text: 'Reply from nested output',
-                },
-              ],
+              message: {
+                content: 'Reply from choices',
+              },
             },
           ],
         },
-      },
-    ])).toBe('Reply from nested output');
+      }),
+    ).toBe('Reply from choices');
+
+    expect(
+      extractN8nReply([
+        {
+          result: {
+            output: [
+              {
+                content: [
+                  {
+                    text: 'Reply from nested output',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ]),
+    ).toBe('Reply from nested output');
   });
 
   it('humanizes known agent errors', () => {
-    expect(humanizeN8nAgentError(new Error('N8N_WEBHOOK_TIMEOUT'))).toContain('timed out');
-    expect(humanizeN8nAgentError(new Error('N8N_WEBHOOK_HTTP_502'))).toContain('HTTP 502');
+    expect(humanizeN8nAgentError(new Error('N8N_WEBHOOK_TIMEOUT'))).toContain(
+      'timed out',
+    );
+    expect(humanizeN8nAgentError(new Error('N8N_WEBHOOK_HTTP_502'))).toContain(
+      'HTTP 502',
+    );
   });
 });

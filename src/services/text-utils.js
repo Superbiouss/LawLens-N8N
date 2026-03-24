@@ -10,7 +10,10 @@ export function escapeHtml(value) {
 export function stripHtml(value = '') {
   const input = String(value);
 
-  if (typeof document !== 'undefined' && typeof document.createElement === 'function') {
+  if (
+    typeof document !== 'undefined' &&
+    typeof document.createElement === 'function'
+  ) {
     const div = document.createElement('div');
     div.innerHTML = input;
     return div.textContent || div.innerText || '';

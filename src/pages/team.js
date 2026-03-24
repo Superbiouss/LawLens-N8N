@@ -1,5 +1,5 @@
 export function renderTeam(container) {
-    container.innerHTML = `
+  container.innerHTML = `
     <div class="mb-24">
       <h1 class="page-title">Team workspace</h1>
       <p class="body-text mt-4">Collaborate on document reviews and manage team permissions.</p>
@@ -14,11 +14,37 @@ export function renderTeam(container) {
 
         <div class="card mb-24" style="padding:0;overflow:hidden;">
           ${[
-            { name: 'John Doe', role: 'Owner', email: 'john@startup.com', initial: 'JD', status: 'Active' },
-            { name: 'Anand S.', role: 'Expert Reviewer', email: 'anand@startup.com', initial: 'AS', status: 'Active' },
-            { name: 'Sarah J.', role: 'General Counsel', email: 'sarah@legalservices.com', initial: 'SJ', status: 'Active' },
-            { name: 'Mike T.', role: 'Reviewer', email: 'mike@startup.com', initial: 'MT', status: 'Invited' },
-        ].map((m, i, arr) => `
+            {
+              name: 'John Doe',
+              role: 'Owner',
+              email: 'john@startup.com',
+              initial: 'JD',
+              status: 'Active',
+            },
+            {
+              name: 'Anand S.',
+              role: 'Expert Reviewer',
+              email: 'anand@startup.com',
+              initial: 'AS',
+              status: 'Active',
+            },
+            {
+              name: 'Sarah J.',
+              role: 'General Counsel',
+              email: 'sarah@legalservices.com',
+              initial: 'SJ',
+              status: 'Active',
+            },
+            {
+              name: 'Mike T.',
+              role: 'Reviewer',
+              email: 'mike@startup.com',
+              initial: 'MT',
+              status: 'Invited',
+            },
+          ]
+            .map(
+              (m, i, arr) => `
             <div class="flex items-center justify-between p-16" style="${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
               <div class="flex items-center gap-12">
                 <div class="chat-avatar user" style="width:32px;height:32px;background:var(--color-background-secondary);">${m.initial}</div>
@@ -33,15 +59,27 @@ export function renderTeam(container) {
                 <span style="color:var(--color-text-tertiary);cursor:pointer;padding:0 8px;">•••</span>
               </div>
             </div>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </div>
 
         <p class="section-label">Review queue</p>
         <div class="card" style="padding:0;overflow:hidden;">
            ${[
-            { doc: 'Acme Corp NDA v3.pdf', assigned: 'Anand S.', status: 'in-progress' },
-            { doc: 'Freelance Agreement.docx', assigned: 'Sarah J.', status: 'pending' },
-        ].map((r, i, arr) => `
+             {
+               doc: 'Acme Corp NDA v3.pdf',
+               assigned: 'Anand S.',
+               status: 'in-progress',
+             },
+             {
+               doc: 'Freelance Agreement.docx',
+               assigned: 'Sarah J.',
+               status: 'pending',
+             },
+           ]
+             .map(
+               (r, i, arr) => `
              <div class="flex items-center justify-between p-16" style="${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
                 <div class="flex items-center gap-10">
                   <div class="severity-dot ${r.status === 'in-progress' ? 'review' : 'missing'}"></div>
@@ -52,7 +90,9 @@ export function renderTeam(container) {
                    <button class="btn-sm" data-team-view-doc="${r.doc}">View ↗</button>
                 </div>
              </div>
-           `).join('')}
+           `,
+             )
+             .join('')}
         </div>
       </div>
 
@@ -99,7 +139,7 @@ export function renderTeam(container) {
     window.showToast('Invite flow would send an email from the backend.');
   });
 
-  container.querySelectorAll('[data-team-view-doc]').forEach(button => {
+  container.querySelectorAll('[data-team-view-doc]').forEach((button) => {
     button.addEventListener('click', () => {
       window.navigateTo('annotations');
     });

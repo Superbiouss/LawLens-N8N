@@ -1,5 +1,13 @@
-import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
-import { renderAgentStatusCard, renderChatMessage, renderPromptChips } from './shared/chat-ui.js';
+import {
+  bindRouteTabs,
+  DOCUMENT_TABS,
+  renderPageTabs,
+} from './shared/page-tabs.js';
+import {
+  renderAgentStatusCard,
+  renderChatMessage,
+  renderPromptChips,
+} from './shared/chat-ui.js';
 import {
   createPendingAssistantMessage,
   createUserChatMessage,
@@ -16,10 +24,7 @@ const SUGGESTED_QUESTIONS = [
   'Can I assign this?',
 ];
 
-const HISTORY_ITEMS = [
-  'Can I assign this?',
-  'What are the red flags?',
-];
+const HISTORY_ITEMS = ['Can I assign this?', 'What are the red flags?'];
 
 const ASK_RESPONSES = [
   {
@@ -135,34 +140,41 @@ function renderMessages(messages) {
     </div>
   `;
 
-  const remaining = messages.slice(1).map(message => renderChatMessage(message)).join('');
+  const remaining = messages
+    .slice(1)
+    .map((message) => renderChatMessage(message))
+    .join('');
   return `${intro}${remaining}`;
 }
 
 function renderHistoryItems() {
-  return HISTORY_ITEMS.map(item => `
+  return HISTORY_ITEMS.map(
+    (item) => `
     <button type="button" class="reset-btn meta-text history-link" data-question="${item}">
       ${item}
     </button>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function bindAskInteractions(container, state, render) {
-  container.querySelectorAll('.context-clause-card').forEach(button => {
+  container.querySelectorAll('.context-clause-card').forEach((button) => {
     button.addEventListener('click', () => {
       window.navigateTo(button.dataset.navTarget);
     });
   });
 
-  container.querySelector('#open-agent-settings-btn')?.addEventListener('click', () => {
-    sessionStorage.setItem('settings_tab_prefill', 'api');
-    window.navigateTo('settings');
-  });
+  container
+    .querySelector('#open-agent-settings-btn')
+    ?.addEventListener('click', () => {
+      sessionStorage.setItem('settings_tab_prefill', 'api');
+      window.navigateTo('settings');
+    });
 
   const input = container.querySelector('#ask-input');
   const prefetchedQuestion = sessionStorage.getItem('ask_prefill');
 
-  container.querySelectorAll('[data-question]').forEach(button => {
+  container.querySelectorAll('[data-question]').forEach((button) => {
     button.addEventListener('click', () => {
       input.value = button.dataset.question;
       input.focus();
@@ -191,7 +203,10 @@ function bindAskInteractions(container, state, render) {
     } catch (error) {
       state.messages[state.messages.length - 1] = {
         role: 'assistant',
-        html: formatAgentError(error, "I couldn't reach the configured AI agent. Check the webhook settings and try again."),
+        html: formatAgentError(
+          error,
+          "I couldn't reach the configured AI agent. Check the webhook settings and try again.",
+        ),
       };
     } finally {
       state.sending = false;
@@ -203,7 +218,7 @@ function bindAskInteractions(container, state, render) {
     submit();
   });
 
-  input?.addEventListener('keydown', event => {
+  input?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       submit();
@@ -235,6 +250,8 @@ async function getAgentReply(question, messages) {
 }
 
 function resolveFallbackAnswer(question) {
-  return ASK_RESPONSES.find(item => item.test.test(question))?.response
-    || 'The n8n webhook is not configured yet, so this screen is using the built-in fallback answerer. Add your webhook in Settings > API Keys to route questions to your external LLM agent.';
+  return (
+    ASK_RESPONSES.find((item) => item.test.test(question))?.response ||
+    'The n8n webhook is not configured yet, so this screen is using the built-in fallback answerer. Add your webhook in Settings > API Keys to route questions to your external LLM agent.'
+  );
 }

@@ -1,4 +1,8 @@
-import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+import {
+  bindRouteTabs,
+  DOCUMENT_TABS,
+  renderPageTabs,
+} from './shared/page-tabs.js';
 import { downloadTextFile } from './shared/ui-actions.js';
 
 const RISK_ISSUES = [
@@ -8,7 +12,8 @@ const RISK_ISSUES = [
     clause: 'Clause 1',
     badge: 'Critical',
     body: 'The NDA imposes confidentiality obligations with no end date. Unlike standard NDAs which expire after 2-5 years, this binds you permanently - even if the partnership never materialises or ends years from now.',
-    impact: 'Perpetual legal exposure with no exit mechanism, even after the business relationship ends.',
+    impact:
+      'Perpetual legal exposure with no exit mechanism, even after the business relationship ends.',
     fix: 'Replace "unlimited period of time" with "a period of 3 years from the date of disclosure." This is industry standard and rarely contested.',
   },
   {
@@ -17,7 +22,8 @@ const RISK_ISSUES = [
     clause: 'Clause 3',
     badge: 'Critical',
     body: 'The penalty clause sets a fixed $500,000 per-breach fee regardless of what harm, if any, Acme Corp actually suffers. In practice, a single accidental disclosure - even a forwarded email - could trigger this clause.',
-    impact: "Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.",
+    impact:
+      "Disproportionate financial liability uncoupled from actual damages. Courts in some jurisdictions may invalidate it, but you'd still face litigation costs.",
     fix: 'Push to remove the liquidated damages clause entirely, or cap it at actual documented losses. Add a gross negligence/wilful misconduct threshold before it triggers.',
   },
   {
@@ -26,7 +32,8 @@ const RISK_ISSUES = [
     clause: 'Clause 4',
     badge: 'Critical',
     body: 'Acme Corp can transfer this agreement to any successor entity - including a competitor - without notifying or obtaining consent from you. Your obligations follow regardless of who now holds the other side of the contract.',
-    impact: 'You could end up contractually bound to an unknown third party you never agreed to deal with.',
+    impact:
+      'You could end up contractually bound to an unknown third party you never agreed to deal with.',
     fix: `Add "…provided that the Receiving Party's prior written consent is obtained, not to be unreasonably withheld." Both parties should have equal assignment rights.`,
   },
   {
@@ -186,7 +193,8 @@ export function renderRiskReport(container) {
 }
 
 function renderIssueCards() {
-  return RISK_ISSUES.map(issue => `
+  return RISK_ISSUES.map(
+    (issue) => `
     <div class="flag-card ${issue.tone}">
       <div class="flag-head">
         <div class="severity-dot ${issue.tone}"></div>
@@ -196,90 +204,122 @@ function renderIssueCards() {
       </div>
       <div class="flag-body">
         <p class="body-text mb-12">${issue.body}</p>
-        ${issue.impact ? `
+        ${
+          issue.impact
+            ? `
           <div class="flex items-start gap-8 mb-12">
             <span class="micro-label pt-2">Impact</span>
             <span class="fs-12 text-${issue.tone === 'critical' ? 'danger' : 'warning'} lh-15">${issue.impact}</span>
           </div>
-        ` : ''}
+        `
+            : ''
+        }
         <div class="card-surface mt-8 mb-12">
           <div class="micro-label mb-4">Suggested fix</div>
           <div class="body-text fs-12">${issue.fix}</div>
         </div>
-        ${issue.tone === 'critical' ? `
+        ${
+          issue.tone === 'critical'
+            ? `
           <div class="flex gap-8">
             <button class="btn-sm" data-nav-target="clause-breakdown">View clause ↗</button>
             <button class="btn-sm" data-nav-target="annotations">Add note ↗</button>
           </div>
-        ` : ''}
+        `
+            : ''
+        }
       </div>
     </div>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function renderMissingCards() {
-  return MISSING_CLAUSES.map(item => `
+  return MISSING_CLAUSES.map(
+    (item) => `
     <div class="flag-card missing">
       <div class="flag-head risk-missing-head">
         <div class="severity-dot missing"></div>
         <span class="flag-title">${item.title}</span>
         <span class="badge badge-neutral">Missing</span>
       </div>
-      ${item.body ? `
+      ${
+        item.body
+          ? `
         <div class="flag-body p-14">
           <p class="body-text m-0">${item.body}</p>
         </div>
-      ` : ''}
+      `
+          : ''
+      }
     </div>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function renderRiskDimensions() {
-  return RISK_DIMENSIONS.map(dimension => `
+  return RISK_DIMENSIONS.map(
+    (dimension) => `
     <div class="flex items-center gap-8">
       <span class="meta-text risk-dimension-label">${dimension.label}</span>
       <div class="progress-track risk-dimension-track"><div class="progress-bar" style="width:${dimension.pct}%;background:var(--color-text-${dimension.color});"></div></div>
       <span class="risk-dimension-score text-${dimension.color}">${dimension.score}</span>
     </div>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function bindRiskActions(container) {
-  container.querySelectorAll('[data-filter]').forEach(button => {
+  container.querySelectorAll('[data-filter]').forEach((button) => {
     button.addEventListener('click', () => {
-      container.querySelectorAll('[data-filter]').forEach(item => item.classList.remove('active'));
+      container
+        .querySelectorAll('[data-filter]')
+        .forEach((item) => item.classList.remove('active'));
       button.classList.add('active');
       applyRiskFilter(container, button.dataset.filter);
     });
   });
 
-  container.querySelectorAll('.btn-sm[data-nav-target], .btn-full[data-nav-target]').forEach(button => {
-    button.addEventListener('click', () => {
-      window.navigateTo(button.dataset.navTarget);
+  container
+    .querySelectorAll('.btn-sm[data-nav-target], .btn-full[data-nav-target]')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        window.navigateTo(button.dataset.navTarget);
+      });
     });
-  });
 
-  container.querySelector('#download-risk-report-btn')?.addEventListener('click', () => {
-    downloadTextFile('risk-report.txt', [
-      'LexAI Risk Report Preview',
-      '',
-      'Overall risk: 7.2 / 10',
-      'Critical issues: 3',
-      'Review items: 2',
-      'Missing clauses: 4',
-      '',
-      ...RISK_ISSUES.map(issue => `- ${issue.title}: ${issue.fix}`),
-    ].join('\n'));
-  });
+  container
+    .querySelector('#download-risk-report-btn')
+    ?.addEventListener('click', () => {
+      downloadTextFile(
+        'risk-report.txt',
+        [
+          'LexAI Risk Report Preview',
+          '',
+          'Overall risk: 7.2 / 10',
+          'Critical issues: 3',
+          'Review items: 2',
+          'Missing clauses: 4',
+          '',
+          ...RISK_ISSUES.map((issue) => `- ${issue.title}: ${issue.fix}`),
+        ].join('\n'),
+      );
+    });
 }
 
 function applyRiskFilter(container, filter) {
-  container.querySelectorAll('#risk-issues .flag-card').forEach(card => {
-    card.classList.toggle('hidden', filter !== 'all' && !card.classList.contains(filter));
+  container.querySelectorAll('#risk-issues .flag-card').forEach((card) => {
+    card.classList.toggle(
+      'hidden',
+      filter !== 'all' && !card.classList.contains(filter),
+    );
   });
 
   const missingSection = container.querySelector('#risk-missing-section');
   if (missingSection) {
-    missingSection.classList.toggle('hidden', !['all', 'missing'].includes(filter));
+    missingSection.classList.toggle(
+      'hidden',
+      !['all', 'missing'].includes(filter),
+    );
   }
 }

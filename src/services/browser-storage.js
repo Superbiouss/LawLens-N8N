@@ -9,7 +9,7 @@ export function readJSON(storage, key, fallback = {}) {
     const raw = storage.getItem(key);
     if (!raw) return fallback;
     return JSON.parse(raw);
-  } catch (error) {
+  } catch {
     return fallback;
   }
 }
@@ -20,7 +20,7 @@ export function writeJSON(storage, key, value) {
   try {
     storage.setItem(key, JSON.stringify(value));
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -31,7 +31,7 @@ export function readString(storage, key, fallback = '') {
   try {
     const value = storage.getItem(key);
     return value == null ? fallback : value;
-  } catch (error) {
+  } catch {
     return fallback;
   }
 }
@@ -42,7 +42,7 @@ export function writeString(storage, key, value) {
   try {
     storage.setItem(key, String(value));
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -53,7 +53,7 @@ export function removeKey(storage, key) {
   try {
     storage.removeItem(key);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

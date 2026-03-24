@@ -1,145 +1,666 @@
-
 <style>
-*{box-sizing:border-box}
-.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
-.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
-.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
-.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
-.bc .cur{color:var(--color-text-primary);font-weight:500}
-.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
-.nav-strip{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;padding:0 20px}
-.ntab{font-size:12px;padding:9px 12px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
-.ntab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
-.ntab:hover:not(.active){color:var(--color-text-secondary)}
+  * {
+    box-sizing: border-box;
+  }
+  .pg {
+    background: var(--color-background-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+  .bar {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .logo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-info);
+  }
+  .bc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+  .bc .cur {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+  .sl {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 0 0 8px;
+  }
+  .nav-strip {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    padding: 0 20px;
+  }
+  .ntab {
+    font-size: 12px;
+    padding: 9px 12px;
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    border-bottom: 2px solid transparent;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .ntab.active {
+    color: var(--color-text-primary);
+    font-weight: 500;
+    border-bottom-color: var(--color-text-primary);
+  }
+  .ntab:hover:not(.active) {
+    color: var(--color-text-secondary);
+  }
 
-.layout{display:grid;grid-template-columns:1fr 1fr;min-height:600px;gap:0}
-.col{padding:20px 24px;border-right:0.5px solid var(--color-border-tertiary)}
-.col:last-child{border-right:none}
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 600px;
+    gap: 0;
+  }
+  .col {
+    padding: 20px 24px;
+    border-right: 0.5px solid var(--color-border-tertiary);
+  }
+  .col:last-child {
+    border-right: none;
+  }
 
-.col-title{font-size:16px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px}
-.col-sub{font-size:12px;color:var(--color-text-tertiary);margin:0 0 18px}
+  .col-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 4px;
+  }
+  .col-sub {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin: 0 0 18px;
+  }
 
-.format-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;display:flex;align-items:flex-start;gap:12px}
-.format-card:hover{border-color:var(--color-border-secondary)}
-.format-card.selected{border:1.5px solid var(--color-border-info);background:var(--color-background-info)}
-.fc-icon{width:36px;height:36px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:500}
-.fc-icon.pdf{background:#FCEBEB;color:#A32D2D}
-.fc-icon.docx{background:#E6F1FB;color:#0C447C}
-.fc-icon.csv{background:#EAF3DE;color:#27500A}
-.fc-icon.json{background:#F1EFE8;color:#5F5E5A}
-.fc-icon.share{background:#EEEDFE;color:#3C3489}
-.format-card.selected .fc-icon.pdf{background:rgba(226,75,74,.15)}
-.format-card.selected .fc-icon.docx{background:rgba(55,138,221,.15)}
-.fc-body{flex:1}
-.fc-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
-.fc-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
-.format-card.selected .fc-name{color:var(--color-text-info)}
-.format-card.selected .fc-desc{color:var(--color-text-info);opacity:.8}
-.fc-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:2px;transition:all .15s;display:flex;align-items:center;justify-content:center}
-.format-card.selected .fc-check{background:var(--color-text-info);border-color:var(--color-text-info)}
-.fc-check svg{width:8px;height:8px;stroke:#fff;display:none}
-.format-card.selected .fc-check svg{display:block}
+  .format-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .format-card:hover {
+    border-color: var(--color-border-secondary);
+  }
+  .format-card.selected {
+    border: 1.5px solid var(--color-border-info);
+    background: var(--color-background-info);
+  }
+  .fc-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .fc-icon.pdf {
+    background: #fcebeb;
+    color: #a32d2d;
+  }
+  .fc-icon.docx {
+    background: #e6f1fb;
+    color: #0c447c;
+  }
+  .fc-icon.csv {
+    background: #eaf3de;
+    color: #27500a;
+  }
+  .fc-icon.json {
+    background: #f1efe8;
+    color: #5f5e5a;
+  }
+  .fc-icon.share {
+    background: #eeedfe;
+    color: #3c3489;
+  }
+  .format-card.selected .fc-icon.pdf {
+    background: rgba(226, 75, 74, 0.15);
+  }
+  .format-card.selected .fc-icon.docx {
+    background: rgba(55, 138, 221, 0.15);
+  }
+  .fc-body {
+    flex: 1;
+  }
+  .fc-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 2px;
+  }
+  .fc-desc {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+  .format-card.selected .fc-name {
+    color: var(--color-text-info);
+  }
+  .format-card.selected .fc-desc {
+    color: var(--color-text-info);
+    opacity: 0.8;
+  }
+  .fc-check {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-border-secondary);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .format-card.selected .fc-check {
+    background: var(--color-text-info);
+    border-color: var(--color-text-info);
+  }
+  .fc-check svg {
+    width: 8px;
+    height: 8px;
+    stroke: #fff;
+    display: none;
+  }
+  .format-card.selected .fc-check svg {
+    display: block;
+  }
 
-.include-section{margin:16px 0}
-.include-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
-.include-row:last-child{border-bottom:none}
-.ir-label{font-size:12px;color:var(--color-text-primary)}
-.ir-sub{font-size:10px;color:var(--color-text-tertiary)}
-.toggle{width:32px;height:18px;border-radius:9px;background:var(--color-border-secondary);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
-.toggle.on{background:var(--color-text-success)}
-.toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s}
-.toggle.on::after{transform:translateX(14px)}
+  .include-section {
+    margin: 16px 0;
+  }
+  .include-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .include-row:last-child {
+    border-bottom: none;
+  }
+  .ir-label {
+    font-size: 12px;
+    color: var(--color-text-primary);
+  }
+  .ir-sub {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .toggle {
+    width: 32px;
+    height: 18px;
+    border-radius: 9px;
+    background: var(--color-border-secondary);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on {
+    background: var(--color-text-success);
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after {
+    transform: translateX(14px);
+  }
 
-.preview-wrap{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:16px;margin-bottom:16px;min-height:200px}
-.preview-doc{background:var(--color-background-primary);border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);padding:16px}
-.preview-header{border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:10px;margin-bottom:10px}
-.preview-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px}
-.preview-meta{font-size:10px;color:var(--color-text-tertiary)}
-.preview-risk-row{display:flex;align-items:center;gap:8px;margin:8px 0 0}
-.pr-label{font-size:10px;color:var(--color-text-tertiary)}
-.pr-pill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;background:var(--color-background-danger);color:var(--color-text-danger)}
-.pr-score{font-size:10px;color:var(--color-text-tertiary)}
-.preview-summary{font-size:11px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:10px}
-.preview-section{margin-bottom:8px}
-.ps-title{font-size:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:4px}
-.ps-flag{display:flex;gap:5px;align-items:flex-start;background:var(--color-background-danger);border-radius:4px;padding:5px 7px;margin-bottom:3px}
-.ps-flag-dot{width:4px;height:4px;border-radius:50%;background:var(--color-text-danger);flex-shrink:0;margin-top:4px}
-.ps-flag-text{font-size:10px;color:var(--color-text-danger);line-height:1.4}
-.preview-footer{border-top:0.5px solid var(--color-border-tertiary);padding-top:8px;margin-top:8px;font-size:9px;color:var(--color-text-tertiary);text-align:center}
+  .preview-wrap {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    border: 0.5px solid var(--color-border-tertiary);
+    padding: 16px;
+    margin-bottom: 16px;
+    min-height: 200px;
+  }
+  .preview-doc {
+    background: var(--color-background-primary);
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    padding: 16px;
+  }
+  .preview-header {
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  .preview-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 2px;
+  }
+  .preview-meta {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .preview-risk-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 0;
+  }
+  .pr-label {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .pr-pill {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--color-background-danger);
+    color: var(--color-text-danger);
+  }
+  .pr-score {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .preview-summary {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .preview-section {
+    margin-bottom: 8px;
+  }
+  .ps-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 4px;
+  }
+  .ps-flag {
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+    background: var(--color-background-danger);
+    border-radius: 4px;
+    padding: 5px 7px;
+    margin-bottom: 3px;
+  }
+  .ps-flag-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-text-danger);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .ps-flag-text {
+    font-size: 10px;
+    color: var(--color-text-danger);
+    line-height: 1.4;
+  }
+  .preview-footer {
+    border-top: 0.5px solid var(--color-border-tertiary);
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 9px;
+    color: var(--color-text-tertiary);
+    text-align: center;
+  }
 
-.share-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:8px}
-.share-card-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px}
+  .share-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .share-card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 10px;
+  }
 
-.link-row{display:flex;gap:6px;align-items:center;margin-bottom:8px}
-.link-input{flex:1;font-size:11px;font-family:var(--font-mono);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:7px 10px;color:var(--color-text-secondary);height:32px}
-.link-row button{font-size:11px;padding:0 12px;height:32px;white-space:nowrap}
+  .link-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .link-input {
+    flex: 1;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 7px 10px;
+    color: var(--color-text-secondary);
+    height: 32px;
+  }
+  .link-row button {
+    font-size: 11px;
+    padding: 0 12px;
+    height: 32px;
+    white-space: nowrap;
+  }
 
-.permission-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
-.permission-row:last-child{border-bottom:none}
-.perm-label{font-size:12px;color:var(--color-text-primary)}
-.perm-select{font-size:11px;padding:3px 6px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary)}
+  .permission-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .permission-row:last-child {
+    border-bottom: none;
+  }
+  .perm-label {
+    font-size: 12px;
+    color: var(--color-text-primary);
+  }
+  .perm-select {
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary);
+  }
 
-.recipient-row{display:flex;gap:6px;margin-bottom:8px}
-.recipient-input{flex:1;font-size:12px;height:32px}
-.recipient-row button{font-size:11px;padding:0 12px;height:32px}
-.recipient-tag{display:inline-flex;align-items:center;gap:5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--color-text-secondary);margin-bottom:5px;margin-right:4px}
-.recipient-tag svg{width:10px;height:10px;stroke:var(--color-text-tertiary);cursor:pointer}
+  .recipient-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .recipient-input {
+    flex: 1;
+    font-size: 12px;
+    height: 32px;
+  }
+  .recipient-row button {
+    font-size: 11px;
+    padding: 0 12px;
+    height: 32px;
+  }
+  .recipient-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 999px;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    margin-bottom: 5px;
+    margin-right: 4px;
+  }
+  .recipient-tag svg {
+    width: 10px;
+    height: 10px;
+    stroke: var(--color-text-tertiary);
+    cursor: pointer;
+  }
 
-.integration-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
-.integration-item:last-child{border-bottom:none}
-.integration-item:hover .int-name{color:var(--color-text-info)}
-.int-icon{width:28px;height:28px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
-.int-body{flex:1}
-.int-name{font-size:12px;font-weight:500;color:var(--color-text-primary);transition:color .15s}
-.int-desc{font-size:10px;color:var(--color-text-tertiary)}
-.int-status{font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;white-space:nowrap}
-.int-status.connected{background:var(--color-background-success);color:var(--color-text-success)}
-.int-status.connect{background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+  .integration-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    cursor: pointer;
+  }
+  .integration-item:last-child {
+    border-bottom: none;
+  }
+  .integration-item:hover .int-name {
+    color: var(--color-text-info);
+  }
+  .int-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .int-body {
+    flex: 1;
+  }
+  .int-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    transition: color 0.15s;
+  }
+  .int-desc {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .int-status {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .int-status.connected {
+    background: var(--color-background-success);
+    color: var(--color-text-success);
+  }
+  .int-status.connect {
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+  }
 
-.history-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px}
-.history-item:last-child{border-bottom:none}
-.hi-icon{width:20px;height:20px;border-radius:4px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hi-icon svg{width:11px;height:11px;stroke:var(--color-text-tertiary)}
-.hi-label{flex:1;color:var(--color-text-secondary)}
-.hi-time{color:var(--color-text-tertiary)}
-.hi-arrow{color:var(--color-text-tertiary);font-size:12px;cursor:pointer;transition:color .15s}
-.hi-arrow:hover{color:var(--color-text-info)}
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    font-size: 11px;
+  }
+  .history-item:last-child {
+    border-bottom: none;
+  }
+  .hi-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background: var(--color-background-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .hi-icon svg {
+    width: 11px;
+    height: 11px;
+    stroke: var(--color-text-tertiary);
+  }
+  .hi-label {
+    flex: 1;
+    color: var(--color-text-secondary);
+  }
+  .hi-time {
+    color: var(--color-text-tertiary);
+  }
+  .hi-arrow {
+    color: var(--color-text-tertiary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .hi-arrow:hover {
+    color: var(--color-text-info);
+  }
 
-.export-btn{width:100%;padding:10px;font-size:13px;font-weight:500;margin-top:12px;border-radius:var(--border-radius-md);cursor:pointer;border:none;background:var(--color-text-primary);color:var(--color-background-primary);transition:opacity .15s}
-.export-btn:hover{opacity:.85}
-.export-btn:active{opacity:.7}
+  .export-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 12px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    border: none;
+    background: var(--color-text-primary);
+    color: var(--color-background-primary);
+    transition: opacity 0.15s;
+  }
+  .export-btn:hover {
+    opacity: 0.85;
+  }
+  .export-btn:active {
+    opacity: 0.7;
+  }
 
-@keyframes checkmark{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}
-.success-toast{display:none;align-items:center;gap:8px;background:var(--color-background-success);border:0.5px solid var(--color-border-success);border-radius:var(--border-radius-md);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--color-text-success)}
-.success-toast.show{display:flex}
+  @keyframes checkmark {
+    from {
+      stroke-dashoffset: 20;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .success-toast {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-background-success);
+    border: 0.5px solid var(--color-border-success);
+    border-radius: var(--border-radius-md);
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--color-text-success);
+  }
+  .success-toast.show {
+    display: flex;
+  }
 </style>
 
 <div class="pg">
   <div class="bar">
-    <div style="display:flex;align-items:center;gap:16px">
-      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+    <div style="display: flex; align-items: center; gap: 16px">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        LexAI
+      </div>
       <div class="bc">
-        <span>Vault</span><span>›</span>
-        <span>Acme Corp NDA v3.pdf</span><span>›</span>
+        <span>Vault</span><span>›</span> <span>Acme Corp NDA v3.pdf</span
+        ><span>›</span>
         <span class="cur">Export &amp; share</span>
       </div>
     </div>
-    <div style="display:flex;gap:6px">
-      <button style="font-size:12px;padding:4px 12px" onclick="sendPrompt('What should the Document Vault look like in a legal document summarizer?')">Back to vault ↗</button>
+    <div style="display: flex; gap: 6px">
+      <button
+        style="font-size: 12px; padding: 4px 12px"
+        onclick="
+          sendPrompt(
+            'What should the Document Vault look like in a legal document summarizer?',
+          )
+        "
+      >
+        Back to vault ↗
+      </button>
     </div>
   </div>
 
   <div class="nav-strip">
-    <div class="ntab" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Summary</div>
-    <div class="ntab" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Clause breakdown</div>
-    <div class="ntab" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report</div>
-    <div class="ntab" onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Annotations</div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Summary page show in a legal document summarizer?',
+        )
+      "
+    >
+      Summary
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Clause Breakdown page show in a legal document summarizer?',
+        )
+      "
+    >
+      Clause breakdown
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Risk Report page show in a legal document summarizer?',
+        )
+      "
+    >
+      Risk report
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Annotation Studio look like in a legal document summarizer?',
+        )
+      "
+    >
+      Annotations
+    </div>
     <div class="ntab active">Export &amp; share</div>
   </div>
 
   <div class="layout">
-
     <div class="col">
       <p class="col-title">Export</p>
       <p class="col-sub">Choose a format and what to include in the export.</p>
@@ -149,83 +670,178 @@
         <div class="fc-icon pdf">PDF</div>
         <div class="fc-body">
           <div class="fc-name">Summary report PDF</div>
-          <div class="fc-desc">Clean, client-ready summary with risk score, red flags, obligations, and key dates. Best for sharing with stakeholders.</div>
+          <div class="fc-desc">
+            Clean, client-ready summary with risk score, red flags, obligations,
+            and key dates. Best for sharing with stakeholders.
+          </div>
         </div>
-        <div class="fc-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+        <div class="fc-check">
+          <svg
+            viewBox="0 0 8 8"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M1 4l2 2 4-4" />
+          </svg>
+        </div>
       </div>
 
       <div class="format-card" onclick="selectFormat(this)">
         <div class="fc-icon docx">DOC</div>
         <div class="fc-body">
           <div class="fc-name">Annotated Word document</div>
-          <div class="fc-desc">Original contract with AI highlights and your annotations embedded as Word comments. Ready for redlining in Microsoft Word or Google Docs.</div>
+          <div class="fc-desc">
+            Original contract with AI highlights and your annotations embedded
+            as Word comments. Ready for redlining in Microsoft Word or Google
+            Docs.
+          </div>
         </div>
-        <div class="fc-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+        <div class="fc-check">
+          <svg
+            viewBox="0 0 8 8"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M1 4l2 2 4-4" />
+          </svg>
+        </div>
       </div>
 
       <div class="format-card" onclick="selectFormat(this)">
-        <div class="fc-icon pdf" style="background:#FAECE7;color:#712B13">RED</div>
+        <div class="fc-icon pdf" style="background: #faece7; color: #712b13">
+          RED
+        </div>
         <div class="fc-body">
           <div class="fc-name">Redline PDF</div>
-          <div class="fc-desc">Side-by-side diff of two versions with tracked changes highlighted. Ideal for sending back to counterparty's counsel.</div>
+          <div class="fc-desc">
+            Side-by-side diff of two versions with tracked changes highlighted.
+            Ideal for sending back to counterparty's counsel.
+          </div>
         </div>
-        <div class="fc-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+        <div class="fc-check">
+          <svg
+            viewBox="0 0 8 8"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M1 4l2 2 4-4" />
+          </svg>
+        </div>
       </div>
 
       <div class="format-card" onclick="selectFormat(this)">
         <div class="fc-icon csv">CSV</div>
         <div class="fc-body">
           <div class="fc-name">Clause data CSV</div>
-          <div class="fc-desc">All clauses, risk scores, and flags as a spreadsheet. Useful for bulk contract tracking or importing into other systems.</div>
+          <div class="fc-desc">
+            All clauses, risk scores, and flags as a spreadsheet. Useful for
+            bulk contract tracking or importing into other systems.
+          </div>
         </div>
-        <div class="fc-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+        <div class="fc-check">
+          <svg
+            viewBox="0 0 8 8"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M1 4l2 2 4-4" />
+          </svg>
+        </div>
       </div>
 
       <div class="format-card" onclick="selectFormat(this)">
         <div class="fc-icon json">JSON</div>
         <div class="fc-body">
           <div class="fc-name">Full analysis JSON</div>
-          <div class="fc-desc">Complete machine-readable output — all clauses, parties, dates, risk scores, and flags. For API integrations and custom workflows.</div>
+          <div class="fc-desc">
+            Complete machine-readable output — all clauses, parties, dates, risk
+            scores, and flags. For API integrations and custom workflows.
+          </div>
         </div>
-        <div class="fc-check"><svg viewBox="0 0 8 8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2 2 4-4"/></svg></div>
+        <div class="fc-check">
+          <svg
+            viewBox="0 0 8 8"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M1 4l2 2 4-4" />
+          </svg>
+        </div>
       </div>
 
       <div class="include-section">
         <div class="sl">Include in export</div>
         <div class="include-row">
-          <div><div class="ir-label">Executive summary</div><div class="ir-sub">Plain-English overview paragraph</div></div>
+          <div>
+            <div class="ir-label">Executive summary</div>
+            <div class="ir-sub">Plain-English overview paragraph</div>
+          </div>
           <div class="toggle on" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">Risk score &amp; rating</div><div class="ir-sub">Score, level, and risk rationale</div></div>
+          <div>
+            <div class="ir-label">Risk score &amp; rating</div>
+            <div class="ir-sub">Score, level, and risk rationale</div>
+          </div>
           <div class="toggle on" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">Red flags</div><div class="ir-sub">All critical and review items</div></div>
+          <div>
+            <div class="ir-label">Red flags</div>
+            <div class="ir-sub">All critical and review items</div>
+          </div>
           <div class="toggle on" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">Clause breakdown</div><div class="ir-sub">Each clause with plain-English summary</div></div>
+          <div>
+            <div class="ir-label">Clause breakdown</div>
+            <div class="ir-sub">Each clause with plain-English summary</div>
+          </div>
           <div class="toggle on" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">Key dates &amp; deadlines</div><div class="ir-sub">All extracted dates and obligations</div></div>
+          <div>
+            <div class="ir-label">Key dates &amp; deadlines</div>
+            <div class="ir-sub">All extracted dates and obligations</div>
+          </div>
           <div class="toggle on" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">My annotations &amp; notes</div><div class="ir-sub">Personal highlights and comments</div></div>
+          <div>
+            <div class="ir-label">My annotations &amp; notes</div>
+            <div class="ir-sub">Personal highlights and comments</div>
+          </div>
           <div class="toggle" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">Negotiation suggestions</div><div class="ir-sub">AI-generated redline language</div></div>
+          <div>
+            <div class="ir-label">Negotiation suggestions</div>
+            <div class="ir-sub">AI-generated redline language</div>
+          </div>
           <div class="toggle" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">Compliance checklist</div><div class="ir-sub">Jurisdiction-specific requirements</div></div>
+          <div>
+            <div class="ir-label">Compliance checklist</div>
+            <div class="ir-sub">Jurisdiction-specific requirements</div>
+          </div>
           <div class="toggle" onclick="this.classList.toggle('on')"></div>
         </div>
         <div class="include-row">
-          <div><div class="ir-label">AI disclaimer footer</div><div class="ir-sub">Not legal advice notice</div></div>
+          <div>
+            <div class="ir-label">AI disclaimer footer</div>
+            <div class="ir-sub">Not legal advice notice</div>
+          </div>
           <div class="toggle on" onclick="this.classList.toggle('on')"></div>
         </div>
       </div>
@@ -234,7 +850,9 @@
       <div class="preview-wrap">
         <div class="preview-doc">
           <div class="preview-header">
-            <div class="preview-title">Acme Corp — Non-Disclosure Agreement v3</div>
+            <div class="preview-title">
+              Acme Corp — Non-Disclosure Agreement v3
+            </div>
             <div class="preview-meta">NDA · Analyzed 22 Apr 2025 · LexAI</div>
             <div class="preview-risk-row">
               <span class="pr-label">Risk</span>
@@ -242,27 +860,70 @@
               <span class="pr-score">7.2 / 10</span>
             </div>
           </div>
-          <div class="preview-summary">This NDA heavily favours Acme Corp. It imposes an unlimited confidentiality term, a $500,000 per-incident damages clause regardless of actual harm, and unilateral assignment rights. Do not sign without negotiation on all three points.</div>
+          <div class="preview-summary">
+            This NDA heavily favours Acme Corp. It imposes an unlimited
+            confidentiality term, a $500,000 per-incident damages clause
+            regardless of actual harm, and unilateral assignment rights. Do not
+            sign without negotiation on all three points.
+          </div>
           <div class="preview-section">
             <div class="ps-title">Red flags (3)</div>
-            <div class="ps-flag"><div class="ps-flag-dot"></div><div class="ps-flag-text">Unlimited confidentiality term — no sunset clause</div></div>
-            <div class="ps-flag"><div class="ps-flag-dot"></div><div class="ps-flag-text">$500K liquidated damages regardless of harm</div></div>
-            <div class="ps-flag"><div class="ps-flag-dot"></div><div class="ps-flag-text">Unilateral assignment without consent</div></div>
+            <div class="ps-flag">
+              <div class="ps-flag-dot"></div>
+              <div class="ps-flag-text">
+                Unlimited confidentiality term — no sunset clause
+              </div>
+            </div>
+            <div class="ps-flag">
+              <div class="ps-flag-dot"></div>
+              <div class="ps-flag-text">
+                $500K liquidated damages regardless of harm
+              </div>
+            </div>
+            <div class="ps-flag">
+              <div class="ps-flag-dot"></div>
+              <div class="ps-flag-text">
+                Unilateral assignment without consent
+              </div>
+            </div>
           </div>
-          <div class="preview-footer">Generated by LexAI · This analysis is AI-generated and does not constitute legal advice.</div>
+          <div class="preview-footer">
+            Generated by LexAI · This analysis is AI-generated and does not
+            constitute legal advice.
+          </div>
         </div>
       </div>
 
-      <button class="export-btn" onclick="triggerExport()">Download summary report PDF</button>
+      <button class="export-btn" onclick="triggerExport()">
+        Download summary report PDF
+      </button>
       <div class="success-toast" id="export-toast">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3 3 7-7" stroke-dasharray="20" stroke-dashoffset="20" style="animation:checkmark .3s ease forwards"/></svg>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          stroke="var(--color-text-success)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M2 7l3 3 7-7"
+            stroke-dasharray="20"
+            stroke-dashoffset="20"
+            style="animation: checkmark 0.3s ease forwards"
+          />
+        </svg>
         Acme_NDA_v3_Summary.pdf downloaded successfully.
       </div>
     </div>
 
     <div class="col">
       <p class="col-title">Share</p>
-      <p class="col-sub">Send this analysis to colleagues, counsel, or counterparties.</p>
+      <p class="col-sub">
+        Send this analysis to colleagues, counsel, or counterparties.
+      </p>
 
       <div class="share-card">
         <p class="share-card-title">Share link</p>
@@ -309,21 +970,76 @@
       <div class="share-card">
         <p class="share-card-title">Email to recipients</p>
         <div class="recipient-row">
-          <input type="email" class="recipient-input" placeholder="Add email address…" id="email-input" />
+          <input
+            type="email"
+            class="recipient-input"
+            placeholder="Add email address…"
+            id="email-input"
+          />
           <button onclick="addRecipient()">Add</button>
         </div>
         <div id="recipient-tags">
-          <span class="recipient-tag">priya.sharma@firm.com <svg viewBox="0 0 10 10" fill="none" stroke-width="1.5" stroke-linecap="round" onclick="this.closest('.recipient-tag').remove()"><path d="M2 2l6 6M8 2l-6 6"/></svg></span>
-          <span class="recipient-tag">counsel@legalpartners.in <svg viewBox="0 0 10 10" fill="none" stroke-width="1.5" stroke-linecap="round" onclick="this.closest('.recipient-tag').remove()"><path d="M2 2l6 6M8 2l-6 6"/></svg></span>
+          <span class="recipient-tag"
+            >priya.sharma@firm.com
+            <svg
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              onclick="this.closest('.recipient-tag').remove()"
+            >
+              <path d="M2 2l6 6M8 2l-6 6" /></svg
+          ></span>
+          <span class="recipient-tag"
+            >counsel@legalpartners.in
+            <svg
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              onclick="this.closest('.recipient-tag').remove()"
+            >
+              <path d="M2 2l6 6M8 2l-6 6" /></svg
+          ></span>
         </div>
-        <div style="margin-top:8px">
-          <textarea style="width:100%;height:56px;font-size:12px;resize:none;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);padding:8px 10px;line-height:1.5" placeholder="Add a message (optional)…"></textarea>
+        <div style="margin-top: 8px">
+          <textarea
+            style="
+              width: 100%;
+              height: 56px;
+              font-size: 12px;
+              resize: none;
+              border-radius: var(--border-radius-md);
+              border: 0.5px solid var(--color-border-tertiary);
+              background: var(--color-background-primary);
+              color: var(--color-text-primary);
+              padding: 8px 10px;
+              line-height: 1.5;
+            "
+            placeholder="Add a message (optional)…"
+          ></textarea>
         </div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <button style="flex:1;font-size:12px;padding:7px" onclick="triggerSend()">Send analysis ↗</button>
+        <div style="display: flex; gap: 6px; margin-top: 8px">
+          <button
+            style="flex: 1; font-size: 12px; padding: 7px"
+            onclick="triggerSend()"
+          >
+            Send analysis ↗
+          </button>
         </div>
-        <div class="success-toast" id="send-toast" style="margin-top:8px">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3 3 7-7"/></svg>
+        <div class="success-toast" id="send-toast" style="margin-top: 8px">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            stroke="var(--color-text-success)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M2 7l3 3 7-7" />
+          </svg>
           Sent to 2 recipients.
         </div>
       </div>
@@ -332,27 +1048,42 @@
         <p class="share-card-title">Send to integration</p>
         <div class="integration-item">
           <div class="int-icon">N</div>
-          <div class="int-body"><div class="int-name">Notion</div><div class="int-desc">Push summary to a Notion database page</div></div>
+          <div class="int-body">
+            <div class="int-name">Notion</div>
+            <div class="int-desc">Push summary to a Notion database page</div>
+          </div>
           <span class="int-status connected">Connected</span>
         </div>
         <div class="integration-item">
           <div class="int-icon">S</div>
-          <div class="int-body"><div class="int-name">Slack</div><div class="int-desc">Post risk report to a channel or DM</div></div>
+          <div class="int-body">
+            <div class="int-name">Slack</div>
+            <div class="int-desc">Post risk report to a channel or DM</div>
+          </div>
           <span class="int-status connected">Connected</span>
         </div>
         <div class="integration-item">
           <div class="int-icon">G</div>
-          <div class="int-body"><div class="int-name">Google Drive</div><div class="int-desc">Save export to a Drive folder</div></div>
+          <div class="int-body">
+            <div class="int-name">Google Drive</div>
+            <div class="int-desc">Save export to a Drive folder</div>
+          </div>
           <span class="int-status connect">Connect ↗</span>
         </div>
         <div class="integration-item">
           <div class="int-icon">D</div>
-          <div class="int-body"><div class="int-name">DocuSign</div><div class="int-desc">Send original document for e-signature</div></div>
+          <div class="int-body">
+            <div class="int-name">DocuSign</div>
+            <div class="int-desc">Send original document for e-signature</div>
+          </div>
           <span class="int-status connect">Connect ↗</span>
         </div>
         <div class="integration-item">
           <div class="int-icon">J</div>
-          <div class="int-body"><div class="int-name">Jira / Linear</div><div class="int-desc">Create issues from each red flag</div></div>
+          <div class="int-body">
+            <div class="int-name">Jira / Linear</div>
+            <div class="int-desc">Create issues from each red flag</div>
+          </div>
           <span class="int-status connect">Connect ↗</span>
         </div>
       </div>
@@ -360,70 +1091,111 @@
       <div class="share-card">
         <p class="share-card-title">Export history</p>
         <div class="history-item">
-          <div class="hi-icon"><svg viewBox="0 0 11 11" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M2 1h7v9H2zM4 4h3M4 6h3M4 8h2"/></svg></div>
+          <div class="hi-icon">
+            <svg
+              viewBox="0 0 11 11"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M2 1h7v9H2zM4 4h3M4 6h3M4 8h2" />
+            </svg>
+          </div>
           <span class="hi-label">Summary PDF downloaded</span>
           <span class="hi-time">2 min ago</span>
           <span class="hi-arrow">↓</span>
         </div>
         <div class="history-item">
-          <div class="hi-icon"><svg viewBox="0 0 11 11" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M9 2L2 9M5 2h4v4"/></svg></div>
+          <div class="hi-icon">
+            <svg
+              viewBox="0 0 11 11"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M9 2L2 9M5 2h4v4" />
+            </svg>
+          </div>
           <span class="hi-label">Link shared with priya.sharma@…</span>
           <span class="hi-time">Yesterday</span>
           <span class="hi-arrow">→</span>
         </div>
         <div class="history-item">
-          <div class="hi-icon"><svg viewBox="0 0 11 11" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M2 1h7v9H2zM4 4h3M4 6h3M4 8h2"/></svg></div>
+          <div class="hi-icon">
+            <svg
+              viewBox="0 0 11 11"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M2 1h7v9H2zM4 4h3M4 6h3M4 8h2" />
+            </svg>
+          </div>
           <span class="hi-label">Redline PDF exported</span>
           <span class="hi-time">2 days ago</span>
           <span class="hi-arrow">↓</span>
         </div>
         <div class="history-item">
-          <div class="hi-icon"><svg viewBox="0 0 11 11" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M9 2L2 9M5 2h4v4"/></svg></div>
+          <div class="hi-icon">
+            <svg
+              viewBox="0 0 11 11"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M9 2L2 9M5 2h4v4" />
+            </svg>
+          </div>
           <span class="hi-label">Pushed to Notion workspace</span>
           <span class="hi-time">2 days ago</span>
           <span class="hi-arrow">→</span>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-function selectFormat(el){
-  document.querySelectorAll('.format-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  var name=el.querySelector('.fc-name').textContent;
-  var btn=document.querySelector('.export-btn');
-  if(name.includes('Word'))btn.textContent='Download annotated Word document';
-  else if(name.includes('Redline'))btn.textContent='Download redline PDF';
-  else if(name.includes('CSV'))btn.textContent='Download clause data CSV';
-  else if(name.includes('JSON'))btn.textContent='Download full analysis JSON';
-  else btn.textContent='Download summary report PDF';
-}
-function triggerExport(){
-  var toast=document.getElementById('export-toast');
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),3500);
-}
-function triggerSend(){
-  var toast=document.getElementById('send-toast');
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),3000);
-}
-function copyLink(){
-  var btn=event.target;
-  btn.textContent='Copied!';
-  setTimeout(()=>btn.textContent='Copy link',2000);
-}
-function addRecipient(){
-  var inp=document.getElementById('email-input');
-  var val=inp.value.trim();
-  if(!val||!val.includes('@'))return;
-  var tag=document.createElement('span');
-  tag.className='recipient-tag';
-  tag.innerHTML=val+' <svg viewBox="0 0 10 10" fill="none" stroke-width="1.5" stroke-linecap="round" onclick="this.closest(\'.recipient-tag\').remove()"><path d="M2 2l6 6M8 2l-6 6"/></svg>';
-  document.getElementById('recipient-tags').appendChild(tag);
-  inp.value='';
-}
+  function selectFormat(el) {
+    document
+      .querySelectorAll('.format-card')
+      .forEach((c) => c.classList.remove('selected'));
+    el.classList.add('selected');
+    var name = el.querySelector('.fc-name').textContent;
+    var btn = document.querySelector('.export-btn');
+    if (name.includes('Word'))
+      btn.textContent = 'Download annotated Word document';
+    else if (name.includes('Redline')) btn.textContent = 'Download redline PDF';
+    else if (name.includes('CSV')) btn.textContent = 'Download clause data CSV';
+    else if (name.includes('JSON'))
+      btn.textContent = 'Download full analysis JSON';
+    else btn.textContent = 'Download summary report PDF';
+  }
+  function triggerExport() {
+    var toast = document.getElementById('export-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+  function triggerSend() {
+    var toast = document.getElementById('send-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+  function copyLink() {
+    var btn = event.target;
+    btn.textContent = 'Copied!';
+    setTimeout(() => (btn.textContent = 'Copy link'), 2000);
+  }
+  function addRecipient() {
+    var inp = document.getElementById('email-input');
+    var val = inp.value.trim();
+    if (!val || !val.includes('@')) return;
+    var tag = document.createElement('span');
+    tag.className = 'recipient-tag';
+    tag.innerHTML =
+      val +
+      ' <svg viewBox="0 0 10 10" fill="none" stroke-width="1.5" stroke-linecap="round" onclick="this.closest(\'.recipient-tag\').remove()"><path d="M2 2l6 6M8 2l-6 6"/></svg>';
+    document.getElementById('recipient-tags').appendChild(tag);
+    inp.value = '';
+  }
 </script>

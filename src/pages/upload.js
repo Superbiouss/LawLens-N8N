@@ -78,7 +78,9 @@ function renderUploadTabs() {
 
   return `
     <div class="seg-tabs mb-16" id="upload-tabs">
-      ${tabs.map(tab => `
+      ${tabs
+        .map(
+          (tab) => `
         <button
           type="button"
           class="reset-btn seg-tab${tab.active ? ' active' : ''}"
@@ -87,7 +89,9 @@ function renderUploadTabs() {
         >
           ${tab.label}
         </button>
-      `).join('')}
+      `,
+        )
+        .join('')}
     </div>
   `;
 }
@@ -125,10 +129,20 @@ function renderUploadPanels() {
 }
 
 function renderDocumentTypes() {
-  return ['Auto-detect', 'NDA', 'Employment', 'Lease', 'SaaS / MSA', 'Terms of service', 'Other']
-    .map((label, index) => `
+  return [
+    'Auto-detect',
+    'NDA',
+    'Employment',
+    'Lease',
+    'SaaS / MSA',
+    'Terms of service',
+    'Other',
+  ]
+    .map(
+      (label, index) => `
       <button type="button" class="reset-btn pill${index === 0 ? ' active' : ''}" data-dtype>${label}</button>
-    `)
+    `,
+    )
     .join('');
 }
 
@@ -145,12 +159,16 @@ function renderDepthCards() {
       title: 'Full analysis',
       copy: 'Every clause, obligations, timeline. ~30 sec.',
     },
-  ].map(option => `
+  ]
+    .map(
+      (option) => `
     <button type="button" class="reset-btn card depth-card${option.selected ? ' selected' : ''}" id="${option.id}">
       <p class="fs-13 fw-500 text-primary mb-4">${option.title}</p>
       <p class="fs-11 text-tertiary m-0">${option.copy}</p>
     </button>
-  `).join('');
+  `,
+    )
+    .join('');
 }
 
 function renderUploadSidebar() {
@@ -166,12 +184,16 @@ function renderUploadSidebar() {
     <div class="card mb-16">
       <p class="fs-12 fw-500 text-secondary mb-12">What you'll get</p>
       <div class="check-list">
-        ${checklist.map(item => `
+        ${checklist
+          .map(
+            (item) => `
           <div class="check-list-item">
             <div class="check-list-dot"></div>
             <span class="fs-12 text-secondary lh-15">${item}</span>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
 
@@ -188,18 +210,19 @@ function renderUploadSidebar() {
 }
 
 function bindUploadTabs(container) {
-  container.querySelectorAll('.seg-tab').forEach(tab => {
+  container.querySelectorAll('.seg-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
-      container.querySelectorAll('.seg-tab').forEach(item => {
+      container.querySelectorAll('.seg-tab').forEach((item) => {
         item.classList.remove('active');
         item.removeAttribute('aria-current');
       });
       tab.classList.add('active');
       tab.setAttribute('aria-current', 'page');
 
-      ['upload', 'paste', 'url'].forEach(panelId => {
+      ['upload', 'paste', 'url'].forEach((panelId) => {
         const panel = container.querySelector(`#panel-${panelId}`);
-        if (panel) panel.classList.toggle('hidden', panelId !== tab.dataset.tab);
+        if (panel)
+          panel.classList.toggle('hidden', panelId !== tab.dataset.tab);
       });
 
       if (window.updateTabIndicator) {
@@ -210,18 +233,22 @@ function bindUploadTabs(container) {
 }
 
 function bindDocumentTypes(container) {
-  container.querySelectorAll('[data-dtype]').forEach(pill => {
+  container.querySelectorAll('[data-dtype]').forEach((pill) => {
     pill.addEventListener('click', () => {
-      container.querySelectorAll('[data-dtype]').forEach(item => item.classList.remove('active'));
+      container
+        .querySelectorAll('[data-dtype]')
+        .forEach((item) => item.classList.remove('active'));
       pill.classList.add('active');
     });
   });
 }
 
 function bindDepthCards(container) {
-  container.querySelectorAll('.depth-card').forEach(card => {
+  container.querySelectorAll('.depth-card').forEach((card) => {
     card.addEventListener('click', () => {
-      container.querySelectorAll('.depth-card').forEach(item => item.classList.remove('selected'));
+      container
+        .querySelectorAll('.depth-card')
+        .forEach((item) => item.classList.remove('selected'));
       card.classList.add('selected');
     });
   });
@@ -231,27 +258,29 @@ function bindDropzone(container) {
   const dropzone = container.querySelector('#dropzone');
 
   const selectFile = () => {
-    container.querySelector('#dropzone-title').textContent = 'contract_nda_v3.pdf';
-    container.querySelector('#dropzone-sub').textContent = '142 KB - ready to analyze';
+    container.querySelector('#dropzone-title').textContent =
+      'contract_nda_v3.pdf';
+    container.querySelector('#dropzone-sub').textContent =
+      '142 KB - ready to analyze';
     dropzone.classList.add('has-file');
     container.querySelector('#analyze-btn').disabled = false;
   };
 
   dropzone.addEventListener('click', selectFile);
-  dropzone.addEventListener('keydown', event => {
+  dropzone.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       selectFile();
     }
   });
-  dropzone.addEventListener('dragover', event => {
+  dropzone.addEventListener('dragover', (event) => {
     event.preventDefault();
     dropzone.classList.add('drag');
   });
   dropzone.addEventListener('dragleave', () => {
     dropzone.classList.remove('drag');
   });
-  dropzone.addEventListener('drop', event => {
+  dropzone.addEventListener('drop', (event) => {
     event.preventDefault();
     selectFile();
   });
@@ -296,14 +325,16 @@ function bindAlternateSources(container) {
 }
 
 function resetUploadPreview(container) {
-  container.querySelector('#dropzone-title').textContent = 'Drop your document here';
-  container.querySelector('#dropzone-sub').textContent = 'or click to browse files';
+  container.querySelector('#dropzone-title').textContent =
+    'Drop your document here';
+  container.querySelector('#dropzone-sub').textContent =
+    'or click to browse files';
   container.querySelector('#dropzone').classList.remove('has-file');
   container.querySelector('#analyze-btn').disabled = true;
 }
 
 function bindRecentDocs(container) {
-  container.querySelectorAll('[data-nav-target]').forEach(button => {
+  container.querySelectorAll('[data-nav-target]').forEach((button) => {
     button.addEventListener('click', () => {
       window.navigateTo(button.dataset.navTarget);
     });
@@ -373,12 +404,29 @@ function startAnalysis(container) {
 
 function renderRecentDocs() {
   const docs = [
-    { name: 'Acme Corp - NDA v3.pdf', ago: '2 days ago', risk: 'high', page: 'summary' },
-    { name: 'Freelance Services Agreement - Jan 2025.docx', ago: '5 days ago', risk: 'medium', page: 'summary' },
-    { name: 'Office Lease - Mumbai - 2025.pdf', ago: 'Last week', risk: 'low', page: 'summary' },
+    {
+      name: 'Acme Corp - NDA v3.pdf',
+      ago: '2 days ago',
+      risk: 'high',
+      page: 'summary',
+    },
+    {
+      name: 'Freelance Services Agreement - Jan 2025.docx',
+      ago: '5 days ago',
+      risk: 'medium',
+      page: 'summary',
+    },
+    {
+      name: 'Office Lease - Mumbai - 2025.pdf',
+      ago: 'Last week',
+      risk: 'low',
+      page: 'summary',
+    },
   ];
 
-  return docs.map(doc => `
+  return docs
+    .map(
+      (doc) => `
     <button type="button" class="reset-btn flex items-center gap-10 recent-doc-row" data-nav-target="${doc.page}">
       <div class="recent-doc-icon">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
@@ -387,5 +435,7 @@ function renderRecentDocs() {
       <div class="fs-11 text-tertiary">${doc.ago}</div>
       <span class="badge badge-${doc.risk === 'high' ? 'danger' : doc.risk === 'medium' ? 'warning' : 'success'}">${doc.risk.charAt(0).toUpperCase() + doc.risk.slice(1)} risk</span>
     </button>
-  `).join('');
+  `,
+    )
+    .join('');
 }

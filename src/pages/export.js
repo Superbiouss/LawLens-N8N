@@ -51,7 +51,8 @@ export function renderExport(container) {
 
         <p class="section-label">Recent exports</p>
         <div class="card export-history-shell">
-          ${RECENT_EXPORTS.map((item, index, arr) => `
+          ${RECENT_EXPORTS.map(
+            (item, index, arr) => `
             <div class="flex items-center justify-between p-12 ${index < arr.length - 1 ? 'border-top-tertiary export-history-row' : ''}">
               <div class="flex items-center gap-10">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
@@ -62,7 +63,8 @@ export function renderExport(container) {
               </div>
               <button class="btn-sm export-redownload-btn" data-redownload-name="${item.name}">Re-download</button>
             </div>
-          `).join('')}
+          `,
+          ).join('')}
         </div>
       </div>
 
@@ -104,7 +106,7 @@ export function renderExport(container) {
 }
 
 function bindExportActions(container) {
-  container.querySelectorAll('[data-export-file]').forEach(button => {
+  container.querySelectorAll('[data-export-file]').forEach((button) => {
     button.addEventListener('click', () => {
       const isPdf = button.dataset.exportFile === 'analysis-pdf';
       downloadTextFile(
@@ -116,19 +118,34 @@ function bindExportActions(container) {
     });
   });
 
-  container.querySelector('#copy-share-link-btn')?.addEventListener('click', () => {
-    copyText(container.querySelector('#share-link-input').value, 'Share link copied.');
-  });
+  container
+    .querySelector('#copy-share-link-btn')
+    ?.addEventListener('click', () => {
+      copyText(
+        container.querySelector('#share-link-input').value,
+        'Share link copied.',
+      );
+    });
 
-  container.querySelector('#allow-comments-toggle')?.addEventListener('click', event => {
-    event.currentTarget.classList.toggle('on');
-    event.currentTarget.setAttribute('aria-pressed', String(event.currentTarget.classList.contains('on')));
-    window.showToast(`Comments ${event.currentTarget.classList.contains('on') ? 'enabled' : 'disabled'} on shared link.`);
-  });
+  container
+    .querySelector('#allow-comments-toggle')
+    ?.addEventListener('click', (event) => {
+      event.currentTarget.classList.toggle('on');
+      event.currentTarget.setAttribute(
+        'aria-pressed',
+        String(event.currentTarget.classList.contains('on')),
+      );
+      window.showToast(
+        `Comments ${event.currentTarget.classList.contains('on') ? 'enabled' : 'disabled'} on shared link.`,
+      );
+    });
 
-  container.querySelectorAll('[data-redownload-name]').forEach(button => {
+  container.querySelectorAll('[data-redownload-name]').forEach((button) => {
     button.addEventListener('click', () => {
-      downloadTextFile(button.dataset.redownloadName.replace(/\.(pdf|docx)$/i, '.txt'), `Preview export for ${button.dataset.redownloadName}`);
+      downloadTextFile(
+        button.dataset.redownloadName.replace(/\.(pdf|docx)$/i, '.txt'),
+        `Preview export for ${button.dataset.redownloadName}`,
+      );
     });
   });
 }

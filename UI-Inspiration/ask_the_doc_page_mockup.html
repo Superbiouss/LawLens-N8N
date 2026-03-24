@@ -1,134 +1,630 @@
-
 <style>
-*{box-sizing:border-box}
-.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
-.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
-.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
-.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
-.bc .cur{color:var(--color-text-primary);font-weight:500}
-.nav-strip{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;padding:0 20px}
-.ntab{font-size:12px;padding:9px 12px;cursor:pointer;color:var(--color-text-tertiary);border-bottom:2px solid transparent;user-select:none;transition:all .15s}
-.ntab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
-.ntab:hover:not(.active){color:var(--color-text-secondary)}
-.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+  * {
+    box-sizing: border-box;
+  }
+  .pg {
+    background: var(--color-background-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+  .bar {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .logo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-info);
+  }
+  .bc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+  .bc .cur {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+  .nav-strip {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    padding: 0 20px;
+  }
+  .ntab {
+    font-size: 12px;
+    padding: 9px 12px;
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    border-bottom: 2px solid transparent;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .ntab.active {
+    color: var(--color-text-primary);
+    font-weight: 500;
+    border-bottom-color: var(--color-text-primary);
+  }
+  .ntab:hover:not(.active) {
+    color: var(--color-text-secondary);
+  }
+  .sl {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 0 0 8px;
+  }
 
-.layout{display:grid;grid-template-columns:200px 1fr 240px;min-height:580px}
+  .layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 240px;
+    min-height: 580px;
+  }
 
-.left-rail{border-right:0.5px solid var(--color-border-tertiary);padding:12px 0;background:var(--color-background-primary)}
-.rail-section{padding:0 12px;margin-bottom:16px}
-.suggested-q{padding:7px 10px;border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);cursor:pointer;transition:background .15s;border:0.5px solid transparent;line-height:1.4;margin-bottom:4px}
-.suggested-q:hover{background:var(--color-background-secondary);border-color:var(--color-border-tertiary);color:var(--color-text-primary)}
-.suggested-q.category{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);cursor:default;padding:10px 10px 4px;border:none}
-.suggested-q.category:hover{background:none;border-color:transparent}
+  .left-rail {
+    border-right: 0.5px solid var(--color-border-tertiary);
+    padding: 12px 0;
+    background: var(--color-background-primary);
+  }
+  .rail-section {
+    padding: 0 12px;
+    margin-bottom: 16px;
+  }
+  .suggested-q {
+    padding: 7px 10px;
+    border-radius: var(--border-radius-md);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 0.5px solid transparent;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .suggested-q:hover {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-tertiary);
+    color: var(--color-text-primary);
+  }
+  .suggested-q.category {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    cursor: default;
+    padding: 10px 10px 4px;
+    border: none;
+  }
+  .suggested-q.category:hover {
+    background: none;
+    border-color: transparent;
+  }
 
-.chat-col{display:flex;flex-direction:column;background:var(--color-background-tertiary)}
-.chat-messages{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
-.doc-context-pill{display:flex;align-items:center;gap:8px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:999px;padding:5px 12px;font-size:12px;color:var(--color-text-secondary);margin:0 auto 4px;width:fit-content}
-.dcp-dot{width:6px;height:6px;border-radius:50%;background:var(--color-text-success)}
+  .chat-col {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background-tertiary);
+  }
+  .chat-messages {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+  }
+  .doc-context-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin: 0 auto 4px;
+    width: fit-content;
+  }
+  .dcp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-text-success);
+  }
 
-.msg{display:flex;flex-direction:column;max-width:90%}
-.msg.user{align-self:flex-end;align-items:flex-end}
-.msg.ai{align-self:flex-start;align-items:flex-start}
-.msg-bubble{padding:10px 14px;border-radius:var(--border-radius-lg);font-size:13px;line-height:1.6}
-.msg.user .msg-bubble{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);border-radius:var(--border-radius-lg) var(--border-radius-lg) 4px var(--border-radius-lg)}
-.msg.ai .msg-bubble{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);border-radius:4px var(--border-radius-lg) var(--border-radius-lg) var(--border-radius-lg)}
-.msg-time{font-size:10px;color:var(--color-text-tertiary);margin-top:3px;padding:0 2px}
+  .msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 90%;
+  }
+  .msg.user {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+  .msg.ai {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: var(--border-radius-lg);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .msg.user .msg-bubble {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-primary);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 4px
+      var(--border-radius-lg);
+  }
+  .msg.ai .msg-bubble {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    border-radius: 4px var(--border-radius-lg) var(--border-radius-lg)
+      var(--border-radius-lg);
+  }
+  .msg-time {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-top: 3px;
+    padding: 0 2px;
+  }
 
-.citation{display:inline-flex;align-items:center;gap:3px;background:var(--color-background-info);color:var(--color-text-info);border:0.5px solid var(--color-border-info);border-radius:4px;font-size:10px;font-weight:500;padding:1px 6px;cursor:pointer;vertical-align:baseline;margin:0 2px;transition:opacity .15s}
-.citation:hover{opacity:.8}
+  .citation {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--color-background-info);
+    color: var(--color-text-info);
+    border: 0.5px solid var(--color-border-info);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 1px 6px;
+    cursor: pointer;
+    vertical-align: baseline;
+    margin: 0 2px;
+    transition: opacity 0.15s;
+  }
+  .citation:hover {
+    opacity: 0.8;
+  }
 
-.source-block{margin-top:8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-left:2px solid var(--color-border-info);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:8px 10px}
-.sb-label{font-size:10px;font-weight:500;color:var(--color-text-info);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.sb-text{font-size:11px;font-family:var(--font-mono);color:var(--color-text-secondary);line-height:1.5}
+  .source-block {
+    margin-top: 8px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-left: 2px solid var(--color-border-info);
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    padding: 8px 10px;
+  }
+  .sb-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-text-info);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+  .sb-text {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
 
-.flag-inline{display:flex;gap:6px;align-items:flex-start;background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:7px 10px;margin-top:8px}
-.fi-text{font-size:12px;color:var(--color-text-danger);line-height:1.5}
-.flag-inline svg{width:12px;height:12px;stroke:var(--color-text-danger);flex-shrink:0;margin-top:2px}
+  .flag-inline {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    background: var(--color-background-danger);
+    border: 0.5px solid var(--color-border-danger);
+    border-radius: var(--border-radius-md);
+    padding: 7px 10px;
+    margin-top: 8px;
+  }
+  .fi-text {
+    font-size: 12px;
+    color: var(--color-text-danger);
+    line-height: 1.5;
+  }
+  .flag-inline svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--color-text-danger);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
 
-.followups{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.fup{font-size:11px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);cursor:pointer;background:var(--color-background-primary);transition:all .15s}
-.fup:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+  .followups {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .fup {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-secondary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    background: var(--color-background-primary);
+    transition: all 0.15s;
+  }
+  .fup:hover {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+  }
 
-.typing-indicator{display:flex;align-items:center;gap:4px;padding:10px 14px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:4px var(--border-radius-lg) var(--border-radius-lg) var(--border-radius-lg);width:fit-content}
-.typing-dot{width:5px;height:5px;border-radius:50%;background:var(--color-text-tertiary)}
-@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
-.typing-dot:nth-child(1){animation:blink 1.2s .0s infinite}
-.typing-dot:nth-child(2){animation:blink 1.2s .2s infinite}
-.typing-dot:nth-child(3){animation:blink 1.2s .4s infinite}
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 14px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 4px var(--border-radius-lg) var(--border-radius-lg)
+      var(--border-radius-lg);
+    width: fit-content;
+  }
+  .typing-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-text-tertiary);
+  }
+  @keyframes blink {
+    0%,
+    80%,
+    100% {
+      opacity: 0.2;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+  .typing-dot:nth-child(1) {
+    animation: blink 1.2s 0s infinite;
+  }
+  .typing-dot:nth-child(2) {
+    animation: blink 1.2s 0.2s infinite;
+  }
+  .typing-dot:nth-child(3) {
+    animation: blink 1.2s 0.4s infinite;
+  }
 
-.chat-input-area{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);padding:12px 16px}
-.quick-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.qchip{font-size:11px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;background:var(--color-background-primary);transition:all .15s;white-space:nowrap}
-.qchip:hover{border-color:var(--color-border-secondary);color:var(--color-text-primary)}
-.input-row{display:flex;gap:8px;align-items:center}
-.input-row input{flex:1;font-size:13px}
-.input-row button{padding:0 16px;font-size:13px}
-.mode-toggle{display:flex;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:2px;margin-bottom:10px;width:fit-content}
-.mt-btn{font-size:11px;padding:3px 10px;border-radius:5px;cursor:pointer;color:var(--color-text-secondary);user-select:none;transition:all .15s}
-.mt-btn.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border:0.5px solid var(--color-border-tertiary)}
+  .chat-input-area {
+    background: var(--color-background-primary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+    padding: 12px 16px;
+  }
+  .quick-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .qchip {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    background: var(--color-background-primary);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .qchip:hover {
+    border-color: var(--color-border-secondary);
+    color: var(--color-text-primary);
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .input-row input {
+    flex: 1;
+    font-size: 13px;
+  }
+  .input-row button {
+    padding: 0 16px;
+    font-size: 13px;
+  }
+  .mode-toggle {
+    display: flex;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 2px;
+    margin-bottom: 10px;
+    width: fit-content;
+  }
+  .mt-btn {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .mt-btn.active {
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-weight: 500;
+    border: 0.5px solid var(--color-border-tertiary);
+  }
 
-.right-rail{border-left:0.5px solid var(--color-border-tertiary);padding:14px;background:var(--color-background-primary)}
-.doc-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:12px}
-.dc-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px}
-.dc-meta{font-size:10px;color:var(--color-text-tertiary)}
-.dc-risk{display:flex;align-items:center;gap:6px;margin-top:6px}
-.dc-risk-label{font-size:10px;color:var(--color-text-tertiary)}
-.dc-risk-pill{font-size:10px;font-weight:500;padding:1px 7px;border-radius:999px;background:var(--color-background-danger);color:var(--color-text-danger)}
+  .right-rail {
+    border-left: 0.5px solid var(--color-border-tertiary);
+    padding: 14px;
+    background: var(--color-background-primary);
+  }
+  .doc-card {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  .dc-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 2px;
+  }
+  .dc-meta {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .dc-risk {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .dc-risk-label {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .dc-risk-pill {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--color-background-danger);
+    color: var(--color-text-danger);
+  }
 
-.history-item{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;margin-bottom:2px}
-.history-item:hover{background:var(--color-background-secondary)}
-.hi-icon{width:18px;height:18px;border-radius:50%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.hi-q{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+  .history-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+  }
+  .history-item:hover {
+    background: var(--color-background-secondary);
+  }
+  .hi-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .hi-q {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
 
-.capability-item{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
-.capability-item:last-child{border-bottom:none}
-.cap-dot{width:5px;height:5px;border-radius:50%;background:var(--color-text-success);flex-shrink:0;margin-top:5px}
-.cap-text{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+  .capability-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 5px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .capability-item:last-child {
+    border-bottom: none;
+  }
+  .cap-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-text-success);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .cap-text {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
 </style>
 
 <div class="pg">
   <div class="bar">
-    <div style="display:flex;align-items:center;gap:16px">
-      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+    <div style="display: flex; align-items: center; gap: 16px">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        LexAI
+      </div>
       <div class="bc">
-        <span>Vault</span><span>›</span>
-        <span>Acme Corp NDA v3.pdf</span><span>›</span>
+        <span>Vault</span><span>›</span> <span>Acme Corp NDA v3.pdf</span
+        ><span>›</span>
         <span class="cur">Ask the doc</span>
       </div>
     </div>
-    <div style="display:flex;gap:6px">
-      <button style="font-size:12px;padding:4px 12px" onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Save answer ↗</button>
-      <button style="font-size:12px;padding:4px 12px">Clear chat</button>
+    <div style="display: flex; gap: 6px">
+      <button
+        style="font-size: 12px; padding: 4px 12px"
+        onclick="
+          sendPrompt(
+            'What should the Annotation Studio look like in a legal document summarizer?',
+          )
+        "
+      >
+        Save answer ↗
+      </button>
+      <button style="font-size: 12px; padding: 4px 12px">Clear chat</button>
     </div>
   </div>
 
   <div class="nav-strip">
-    <div class="ntab" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">Summary</div>
-    <div class="ntab" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">Clause breakdown</div>
-    <div class="ntab" onclick="sendPrompt('What should the Risk Report page show in a legal document summarizer?')">Risk report</div>
-    <div class="ntab" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">Key dates</div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Summary page show in a legal document summarizer?',
+        )
+      "
+    >
+      Summary
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Clause Breakdown page show in a legal document summarizer?',
+        )
+      "
+    >
+      Clause breakdown
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Risk Report page show in a legal document summarizer?',
+        )
+      "
+    >
+      Risk report
+    </div>
+    <div
+      class="ntab"
+      onclick="
+        sendPrompt(
+          'What should the Key Dates timeline page look like in a legal document summarizer?',
+        )
+      "
+    >
+      Key dates
+    </div>
     <div class="ntab active">Ask the doc</div>
   </div>
 
   <div class="layout">
-
     <div class="left-rail">
       <div class="rail-section">
         <div class="sl">Suggested questions</div>
         <div class="suggested-q category">Obligations</div>
-        <div class="suggested-q" onclick="injectQ('What exactly am I not allowed to do under this NDA?')">What am I not allowed to do?</div>
-        <div class="suggested-q" onclick="injectQ('Who bears the most obligations in this contract?')">Who bears the most obligations?</div>
+        <div
+          class="suggested-q"
+          onclick="
+            injectQ('What exactly am I not allowed to do under this NDA?')
+          "
+        >
+          What am I not allowed to do?
+        </div>
+        <div
+          class="suggested-q"
+          onclick="injectQ('Who bears the most obligations in this contract?')"
+        >
+          Who bears the most obligations?
+        </div>
         <div class="suggested-q category">Risk</div>
-        <div class="suggested-q" onclick="injectQ('What is the worst-case scenario if I breach this NDA?')">Worst case if I breach this?</div>
-        <div class="suggested-q" onclick="injectQ('Is the $500,000 damages clause legally enforceable in India?')">Is the damages clause enforceable?</div>
-        <div class="suggested-q" onclick="injectQ('What clauses put me at the most risk?')">What puts me at most risk?</div>
+        <div
+          class="suggested-q"
+          onclick="
+            injectQ('What is the worst-case scenario if I breach this NDA?')
+          "
+        >
+          Worst case if I breach this?
+        </div>
+        <div
+          class="suggested-q"
+          onclick="
+            injectQ(
+              'Is the $500,000 damages clause legally enforceable in India?',
+            )
+          "
+        >
+          Is the damages clause enforceable?
+        </div>
+        <div
+          class="suggested-q"
+          onclick="injectQ('What clauses put me at the most risk?')"
+        >
+          What puts me at most risk?
+        </div>
         <div class="suggested-q category">Negotiation</div>
-        <div class="suggested-q" onclick="injectQ('Which clauses should I prioritise negotiating?')">What should I negotiate first?</div>
-        <div class="suggested-q" onclick="injectQ('Give me suggested redline language for the confidentiality term clause.')">Give me redline language</div>
+        <div
+          class="suggested-q"
+          onclick="injectQ('Which clauses should I prioritise negotiating?')"
+        >
+          What should I negotiate first?
+        </div>
+        <div
+          class="suggested-q"
+          onclick="
+            injectQ(
+              'Give me suggested redline language for the confidentiality term clause.',
+            )
+          "
+        >
+          Give me redline language
+        </div>
         <div class="suggested-q category">Understanding</div>
-        <div class="suggested-q" onclick="injectQ('What does liquidated damages mean in plain English?')">What does liquidated damages mean?</div>
-        <div class="suggested-q" onclick="injectQ('Can Acme Corp share my information with third parties?')">Can Acme share my info?</div>
+        <div
+          class="suggested-q"
+          onclick="
+            injectQ('What does liquidated damages mean in plain English?')
+          "
+        >
+          What does liquidated damages mean?
+        </div>
+        <div
+          class="suggested-q"
+          onclick="
+            injectQ('Can Acme Corp share my information with third parties?')
+          "
+        >
+          Can Acme share my info?
+        </div>
       </div>
     </div>
 
@@ -140,76 +636,203 @@
         </div>
 
         <div class="msg user">
-          <div class="msg-bubble">Can I exit this NDA early? What happens after the business relationship ends?</div>
+          <div class="msg-bubble">
+            Can I exit this NDA early? What happens after the business
+            relationship ends?
+          </div>
           <div class="msg-time">2:14 pm</div>
         </div>
 
         <div class="msg ai">
           <div class="msg-bubble">
-            Based on this NDA, <strong style="font-weight:500;color:var(--color-text-primary)">there is no early exit mechanism</strong> for you as the Receiving Party.
-            <br><br>
-            Clause 5 <span class="citation" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">§5 Term</span> states the agreement remains in effect <em>indefinitely</em> — and crucially, even after the business relationship between you and Acme Corp concludes, your confidentiality obligations continue without any end date.
+            Based on this NDA,
+            <strong style="font-weight: 500; color: var(--color-text-primary)"
+              >there is no early exit mechanism</strong
+            >
+            for you as the Receiving Party. <br /><br />
+            Clause 5
+            <span
+              class="citation"
+              onclick="
+                sendPrompt(
+                  'What should the Clause Breakdown page show in a legal document summarizer?',
+                )
+              "
+              >§5 Term</span
+            >
+            states the agreement remains in effect <em>indefinitely</em> — and
+            crucially, even after the business relationship between you and Acme
+            Corp concludes, your confidentiality obligations continue without
+            any end date.
             <div class="source-block">
               <div class="sb-label">Clause 1 — Confidentiality</div>
               <div class="sb-text">"…for an unlimited period of time."</div>
             </div>
             <div class="flag-inline">
-              <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5"><path d="M6 1v5M6 9v1"/></svg>
-              <span class="fi-text">This is a critical red flag. Standard NDAs expire after 2–5 years. With no sunset clause, you remain legally bound even if Acme Corp is later acquired by a competitor.</span>
+              <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5">
+                <path d="M6 1v5M6 9v1" />
+              </svg>
+              <span class="fi-text"
+                >This is a critical red flag. Standard NDAs expire after 2–5
+                years. With no sunset clause, you remain legally bound even if
+                Acme Corp is later acquired by a competitor.</span
+              >
             </div>
             <div class="followups">
-              <span class="fup" onclick="injectQ('How can I negotiate an exit clause into this NDA?')">How do I negotiate an exit? ↗</span>
-              <span class="fup" onclick="injectQ('What is a sunset clause and what should it say?')">What is a sunset clause? ↗</span>
+              <span
+                class="fup"
+                onclick="
+                  injectQ('How can I negotiate an exit clause into this NDA?')
+                "
+                >How do I negotiate an exit? ↗</span
+              >
+              <span
+                class="fup"
+                onclick="
+                  injectQ('What is a sunset clause and what should it say?')
+                "
+                >What is a sunset clause? ↗</span
+              >
             </div>
           </div>
           <div class="msg-time">2:14 pm · Answered from Clause 1, 5</div>
         </div>
 
         <div class="msg user">
-          <div class="msg-bubble">Give me the exact redline language I should propose for the confidentiality term.</div>
+          <div class="msg-bubble">
+            Give me the exact redline language I should propose for the
+            confidentiality term.
+          </div>
           <div class="msg-time">2:16 pm</div>
         </div>
 
         <div class="msg ai">
           <div class="msg-bubble">
             Here's proposed redline language you can use in your counter-draft:
-            <div class="source-block" style="border-left-color:var(--color-border-danger);margin-top:8px">
-              <div class="sb-label" style="color:var(--color-text-danger)">Current (Clause 1) — remove</div>
-              <div class="sb-text" style="text-decoration:line-through;color:var(--color-text-danger)">"…for an unlimited period of time."</div>
+            <div
+              class="source-block"
+              style="
+                border-left-color: var(--color-border-danger);
+                margin-top: 8px;
+              "
+            >
+              <div class="sb-label" style="color: var(--color-text-danger)">
+                Current (Clause 1) — remove
+              </div>
+              <div
+                class="sb-text"
+                style="
+                  text-decoration: line-through;
+                  color: var(--color-text-danger);
+                "
+              >
+                "…for an unlimited period of time."
+              </div>
             </div>
-            <div class="source-block" style="border-left-color:var(--color-border-success)">
-              <div class="sb-label" style="color:var(--color-text-success)">Proposed replacement — insert</div>
-              <div class="sb-text" style="color:var(--color-text-success)">"…for a period of <strong style="font-weight:500">three (3) years</strong> from the date of disclosure of such Confidential Information, provided that obligations with respect to trade secrets shall continue for so long as such information remains a trade secret under applicable law."</div>
+            <div
+              class="source-block"
+              style="border-left-color: var(--color-border-success)"
+            >
+              <div class="sb-label" style="color: var(--color-text-success)">
+                Proposed replacement — insert
+              </div>
+              <div class="sb-text" style="color: var(--color-text-success)">
+                "…for a period of
+                <strong style="font-weight: 500">three (3) years</strong> from
+                the date of disclosure of such Confidential Information,
+                provided that obligations with respect to trade secrets shall
+                continue for so long as such information remains a trade secret
+                under applicable law."
+              </div>
             </div>
-            This is the most commonly accepted compromise language: a fixed term for general confidential information, with trade secrets carved out under their natural legal protection period. Most corporate counsel will accept this without significant pushback.
+            This is the most commonly accepted compromise language: a fixed term
+            for general confidential information, with trade secrets carved out
+            under their natural legal protection period. Most corporate counsel
+            will accept this without significant pushback.
             <div class="followups">
-              <span class="fup" onclick="injectQ('Give me redline language for the penalties clause too.')">Redline for penalties clause ↗</span>
-              <span class="fup" onclick="injectQ('What if Acme Corp refuses to accept a 3 year term?')">What if they refuse? ↗</span>
+              <span
+                class="fup"
+                onclick="
+                  injectQ(
+                    'Give me redline language for the penalties clause too.',
+                  )
+                "
+                >Redline for penalties clause ↗</span
+              >
+              <span
+                class="fup"
+                onclick="
+                  injectQ('What if Acme Corp refuses to accept a 3 year term?')
+                "
+                >What if they refuse? ↗</span
+              >
             </div>
           </div>
           <div class="msg-time">2:16 pm · Drafted from Clause 1</div>
         </div>
 
         <div class="msg user">
-          <div class="msg-bubble">Is the $500,000 damages clause enforceable if I'm based in India?</div>
+          <div class="msg-bubble">
+            Is the $500,000 damages clause enforceable if I'm based in India?
+          </div>
           <div class="msg-time">2:19 pm</div>
         </div>
 
         <div class="msg ai">
           <div class="msg-bubble">
             This is a jurisdiction-sensitive question. Here's the analysis:
-            <br><br>
-            <strong style="font-weight:500;color:var(--color-text-primary)">Under the contract's chosen law (Delaware, USA):</strong> Liquidated damages clauses are generally enforceable if the amount was a reasonable pre-estimate of harm at signing — but the phrase <span class="citation">§3</span> "regardless of actual harm" significantly weakens Acme's position. Delaware courts may refuse to enforce a penalty clause that is clearly punitive rather than compensatory.
-            <br><br>
-            <strong style="font-weight:500;color:var(--color-text-primary)">If you're based in India:</strong> Indian courts apply Section 74 of the Indian Contract Act, which limits recovery to <em>actual proven loss</em> regardless of what the contract says. A court in India would likely not award $500,000 unless Acme could prove that exact loss — making the clause largely unenforceable against you in Indian courts.
-            <br><br>
-            However, if Acme chose to sue in Delaware (as per Clause 5), you would need to defend yourself there — which carries significant practical cost regardless of the legal outcome.
-            <div class="flag-inline" style="background:var(--color-background-warning);border-color:var(--color-border-warning)">
-              <svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke="var(--color-text-warning)"><path d="M6 1v5M6 9v1"/></svg>
-              <span class="fi-text" style="color:var(--color-text-warning)">This analysis is AI-generated and not legal advice. Consult a qualified lawyer in both jurisdictions before relying on this for any decision.</span>
+            <br /><br />
+            <strong style="font-weight: 500; color: var(--color-text-primary)"
+              >Under the contract's chosen law (Delaware, USA):</strong
+            >
+            Liquidated damages clauses are generally enforceable if the amount
+            was a reasonable pre-estimate of harm at signing — but the phrase
+            <span class="citation">§3</span> "regardless of actual harm"
+            significantly weakens Acme's position. Delaware courts may refuse to
+            enforce a penalty clause that is clearly punitive rather than
+            compensatory. <br /><br />
+            <strong style="font-weight: 500; color: var(--color-text-primary)"
+              >If you're based in India:</strong
+            >
+            Indian courts apply Section 74 of the Indian Contract Act, which
+            limits recovery to <em>actual proven loss</em> regardless of what
+            the contract says. A court in India would likely not award $500,000
+            unless Acme could prove that exact loss — making the clause largely
+            unenforceable against you in Indian courts. <br /><br />
+            However, if Acme chose to sue in Delaware (as per Clause 5), you
+            would need to defend yourself there — which carries significant
+            practical cost regardless of the legal outcome.
+            <div
+              class="flag-inline"
+              style="
+                background: var(--color-background-warning);
+                border-color: var(--color-border-warning);
+              "
+            >
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke-width="1.5"
+                stroke="var(--color-text-warning)"
+              >
+                <path d="M6 1v5M6 9v1" />
+              </svg>
+              <span class="fi-text" style="color: var(--color-text-warning)"
+                >This analysis is AI-generated and not legal advice. Consult a
+                qualified lawyer in both jurisdictions before relying on this
+                for any decision.</span
+              >
             </div>
             <div class="followups">
-              <span class="fup" onclick="injectQ('How do I negotiate the jurisdiction clause to be more fair?')">Negotiate the jurisdiction clause ↗</span>
+              <span
+                class="fup"
+                onclick="
+                  injectQ(
+                    'How do I negotiate the jurisdiction clause to be more fair?',
+                  )
+                "
+                >Negotiate the jurisdiction clause ↗</span
+              >
             </div>
           </div>
           <div class="msg-time">2:19 pm · Answered from Clause 3, 5</div>
@@ -224,14 +847,44 @@
           <div class="mt-btn">Explain in simpler terms</div>
         </div>
         <div class="quick-chips">
-          <span class="qchip" onclick="injectQ('What are my obligations under this NDA?')">My obligations</span>
-          <span class="qchip" onclick="injectQ('What is the worst clause in this document for me?')">Worst clause for me</span>
-          <span class="qchip" onclick="injectQ('Summarise this NDA in 3 bullet points')">3-bullet summary</span>
-          <span class="qchip" onclick="injectQ('What rights does Acme Corp have that I do not?')">Acme vs my rights</span>
-          <span class="qchip" onclick="injectQ('What happens if I accidentally share confidential information?')">If I accidentally breach</span>
+          <span
+            class="qchip"
+            onclick="injectQ('What are my obligations under this NDA?')"
+            >My obligations</span
+          >
+          <span
+            class="qchip"
+            onclick="
+              injectQ('What is the worst clause in this document for me?')
+            "
+            >Worst clause for me</span
+          >
+          <span
+            class="qchip"
+            onclick="injectQ('Summarise this NDA in 3 bullet points')"
+            >3-bullet summary</span
+          >
+          <span
+            class="qchip"
+            onclick="injectQ('What rights does Acme Corp have that I do not?')"
+            >Acme vs my rights</span
+          >
+          <span
+            class="qchip"
+            onclick="
+              injectQ(
+                'What happens if I accidentally share confidential information?',
+              )
+            "
+            >If I accidentally breach</span
+          >
         </div>
         <div class="input-row">
-          <input type="text" id="q-input" placeholder="Ask anything about this document…" />
+          <input
+            type="text"
+            id="q-input"
+            placeholder="Ask anything about this document…"
+          />
           <button onclick="sendQ()">Send ↗</button>
         </div>
       </div>
@@ -249,52 +902,145 @@
       </div>
 
       <p class="sl">What you can ask</p>
-      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:14px">
-        <div class="capability-item"><div class="cap-dot"></div><span class="cap-text">Plain-English explanations of any clause</span></div>
-        <div class="capability-item"><div class="cap-dot"></div><span class="cap-text">Jurisdiction-specific enforceability</span></div>
-        <div class="capability-item"><div class="cap-dot"></div><span class="cap-text">Draft redline counter-proposals</span></div>
-        <div class="capability-item"><div class="cap-dot"></div><span class="cap-text">Obligation mapping by party</span></div>
-        <div class="capability-item"><div class="cap-dot"></div><span class="cap-text">Comparison against industry standard</span></div>
-        <div class="capability-item"><div class="cap-dot"></div><span class="cap-text">Scenario analysis ("what if I…")</span></div>
+      <div
+        style="
+          background: var(--color-background-secondary);
+          border-radius: var(--border-radius-md);
+          padding: 10px 12px;
+          margin-bottom: 14px;
+        "
+      >
+        <div class="capability-item">
+          <div class="cap-dot"></div>
+          <span class="cap-text">Plain-English explanations of any clause</span>
+        </div>
+        <div class="capability-item">
+          <div class="cap-dot"></div>
+          <span class="cap-text">Jurisdiction-specific enforceability</span>
+        </div>
+        <div class="capability-item">
+          <div class="cap-dot"></div>
+          <span class="cap-text">Draft redline counter-proposals</span>
+        </div>
+        <div class="capability-item">
+          <div class="cap-dot"></div>
+          <span class="cap-text">Obligation mapping by party</span>
+        </div>
+        <div class="capability-item">
+          <div class="cap-dot"></div>
+          <span class="cap-text">Comparison against industry standard</span>
+        </div>
+        <div class="capability-item">
+          <div class="cap-dot"></div>
+          <span class="cap-text">Scenario analysis ("what if I…")</span>
+        </div>
       </div>
 
       <p class="sl">This conversation</p>
       <div class="history-item">
-        <div class="hi-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><circle cx="5" cy="5" r="4"/></svg></div>
+        <div class="hi-icon">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="var(--color-text-tertiary)"
+            stroke-width="1.5"
+          >
+            <circle cx="5" cy="5" r="4" />
+          </svg>
+        </div>
         <div class="hi-q">Can I exit this NDA early?</div>
       </div>
       <div class="history-item">
-        <div class="hi-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><circle cx="5" cy="5" r="4"/></svg></div>
-        <div class="hi-q">Give me redline language for the confidentiality term</div>
+        <div class="hi-icon">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="var(--color-text-tertiary)"
+            stroke-width="1.5"
+          >
+            <circle cx="5" cy="5" r="4" />
+          </svg>
+        </div>
+        <div class="hi-q">
+          Give me redline language for the confidentiality term
+        </div>
       </div>
-      <div class="history-item" style="background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
-        <div class="hi-icon" style="background:var(--color-background-info);border-color:var(--color-border-info)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="var(--color-text-info)" stroke-width="1.5"><circle cx="5" cy="5" r="4"/></svg></div>
-        <div class="hi-q" style="color:var(--color-text-primary)">Is the $500K damages clause enforceable in India?</div>
+      <div
+        class="history-item"
+        style="
+          background: var(--color-background-secondary);
+          border-radius: var(--border-radius-md);
+        "
+      >
+        <div
+          class="hi-icon"
+          style="
+            background: var(--color-background-info);
+            border-color: var(--color-border-info);
+          "
+        >
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="var(--color-text-info)"
+            stroke-width="1.5"
+          >
+            <circle cx="5" cy="5" r="4" />
+          </svg>
+        </div>
+        <div class="hi-q" style="color: var(--color-text-primary)">
+          Is the $500K damages clause enforceable in India?
+        </div>
       </div>
 
-      <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px">
-        <button style="width:100%;font-size:11px;padding:6px">Export conversation ↗</button>
-        <button style="width:100%;font-size:11px;padding:6px" onclick="sendPrompt('What should the Annotation Studio look like in a legal document summarizer?')">Save to annotations ↗</button>
+      <div
+        style="
+          margin-top: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        "
+      >
+        <button style="width: 100%; font-size: 11px; padding: 6px">
+          Export conversation ↗
+        </button>
+        <button
+          style="width: 100%; font-size: 11px; padding: 6px"
+          onclick="
+            sendPrompt(
+              'What should the Annotation Studio look like in a legal document summarizer?',
+            )
+          "
+        >
+          Save to annotations ↗
+        </button>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-function injectQ(q){
-  var inp=document.getElementById('q-input');
-  inp.value=q;
-  inp.focus();
-}
-function sendQ(){
-  var inp=document.getElementById('q-input');
-  var q=inp.value.trim();
-  if(!q)return;
-  sendPrompt('In the context of this NDA legal document, answer this question: '+q);
-  inp.value='';
-}
-document.getElementById('q-input').addEventListener('keydown',function(e){
-  if(e.key==='Enter')sendQ();
-});
+  function injectQ(q) {
+    var inp = document.getElementById('q-input');
+    inp.value = q;
+    inp.focus();
+  }
+  function sendQ() {
+    var inp = document.getElementById('q-input');
+    var q = inp.value.trim();
+    if (!q) return;
+    sendPrompt(
+      'In the context of this NDA legal document, answer this question: ' + q,
+    );
+    inp.value = '';
+  }
+  document.getElementById('q-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') sendQ();
+  });
 </script>

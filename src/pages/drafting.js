@@ -1,5 +1,5 @@
 export function renderDrafting(container) {
-   container.innerHTML = `
+  container.innerHTML = `
     <div class="mb-24 flex justify-between items-center">
       <div>
         <h1 class="page-title">Drafting Assistant</h1>
@@ -83,69 +83,86 @@ export function renderDrafting(container) {
     </div>
     `;
 
-   bindDraftingActions(container);
+  bindDraftingActions(container);
 }
 
 function bindDraftingActions(container) {
-   const editor = container.querySelector('#draft-editor');
-   const saveBtn = container.querySelector('#save-draft-btn');
+  const editor = container.querySelector('#draft-editor');
+  const saveBtn = container.querySelector('#save-draft-btn');
 
-   const savedDraft = localStorage.getItem('drafting_saved_html');
-   const insertedClause = localStorage.getItem('drafting_insert_clause');
+  const savedDraft = localStorage.getItem('drafting_saved_html');
+  const insertedClause = localStorage.getItem('drafting_insert_clause');
 
-   if (savedDraft) {
-      editor.innerHTML = savedDraft;
-   }
+  if (savedDraft) {
+    editor.innerHTML = savedDraft;
+  }
 
-   if (insertedClause) {
-      editor.insertAdjacentHTML('beforeend', `<p class="mt-20">${insertedClause}</p>`);
-      localStorage.removeItem('drafting_insert_clause');
-      window.showToast('Clause inserted into the draft.');
-   }
+  if (insertedClause) {
+    editor.insertAdjacentHTML(
+      'beforeend',
+      `<p class="mt-20">${insertedClause}</p>`,
+    );
+    localStorage.removeItem('drafting_insert_clause');
+    window.showToast('Clause inserted into the draft.');
+  }
 
-   saveBtn?.addEventListener('click', () => {
-      localStorage.setItem('drafting_saved_html', editor.innerHTML);
-      window.showToast('Draft saved locally in this preview.');
-   });
+  saveBtn?.addEventListener('click', () => {
+    localStorage.setItem('drafting_saved_html', editor.innerHTML);
+    window.showToast('Draft saved locally in this preview.');
+  });
 
-   container.querySelectorAll('[data-format]').forEach(button => {
-      button.addEventListener('click', () => {
-         editor.focus();
-         document.execCommand(button.dataset.format, false);
-      });
-   });
+  container.querySelectorAll('[data-format]').forEach((button) => {
+    button.addEventListener('click', () => {
+      editor.focus();
+      document.execCommand(button.dataset.format, false);
+    });
+  });
 
-   container.querySelector('#draft-block-style')?.addEventListener('change', event => {
+  container
+    .querySelector('#draft-block-style')
+    ?.addEventListener('change', (event) => {
       editor.focus();
       const value = event.target.value;
-      if (value === 'Heading 1') document.execCommand('formatBlock', false, 'h1');
-      else if (value === 'Heading 2') document.execCommand('formatBlock', false, 'h2');
+      if (value === 'Heading 1')
+        document.execCommand('formatBlock', false, 'h1');
+      else if (value === 'Heading 2')
+        document.execCommand('formatBlock', false, 'h2');
       else document.execCommand('formatBlock', false, 'p');
-   });
+    });
 
-   container.querySelector('#insert-link-btn')?.addEventListener('click', () => {
-      editor.focus();
-      document.execCommand('createLink', false, 'https://example.com');
-      window.showToast('Example link inserted. Replace it with your final URL.');
-   });
+  container.querySelector('#insert-link-btn')?.addEventListener('click', () => {
+    editor.focus();
+    document.execCommand('createLink', false, 'https://example.com');
+    window.showToast('Example link inserted. Replace it with your final URL.');
+  });
 
-   container.querySelector('#fix-standard-btn')?.addEventListener('click', () => {
+  container
+    .querySelector('#fix-standard-btn')
+    ?.addEventListener('click', () => {
       editor.innerHTML = editor.innerHTML.replace(
-         'for a period of five (5) years from the date of disclosure.',
-         'for a period of two (2) years from the date of disclosure.',
+        'for a period of five (5) years from the date of disclosure.',
+        'for a period of two (2) years from the date of disclosure.',
       );
       window.showToast('Confidentiality term updated to 2 years.');
-   });
+    });
 
-   container.querySelectorAll('[data-suggestion-text]').forEach(button => {
-      button.addEventListener('click', () => {
-         editor.insertAdjacentHTML('beforeend', `<p class="mt-20">${button.dataset.suggestionText}</p>`);
-         window.showToast('Suggestion inserted into the draft.');
-      });
-   });
+  container.querySelectorAll('[data-suggestion-text]').forEach((button) => {
+    button.addEventListener('click', () => {
+      editor.insertAdjacentHTML(
+        'beforeend',
+        `<p class="mt-20">${button.dataset.suggestionText}</p>`,
+      );
+      window.showToast('Suggestion inserted into the draft.');
+    });
+  });
 
-   container.querySelector('#ask-drafting-btn')?.addEventListener('click', () => {
-      sessionStorage.setItem('ask_prefill', 'Draft a balanced confidentiality clause for this agreement.');
+  container
+    .querySelector('#ask-drafting-btn')
+    ?.addEventListener('click', () => {
+      sessionStorage.setItem(
+        'ask_prefill',
+        'Draft a balanced confidentiality clause for this agreement.',
+      );
       window.navigateTo('ask');
-   });
+    });
 }

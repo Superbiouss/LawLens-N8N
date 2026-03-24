@@ -1,9 +1,39 @@
 const VAULT_DOCS = [
-  { name: 'Acme Corp NDA v3.pdf', type: 'NDA', risk: '7.2', riskType: 'danger', date: '2 min ago' },
-  { name: 'Freelance Agreement.docx', type: 'Employment', risk: '4.5', riskType: 'warning', date: '3 days ago' },
-  { name: 'SaaS Terms - Spark.js.pdf', type: 'Commercial', risk: '2.1', riskType: 'success', date: '1 week ago' },
-  { name: 'Office Rental Mumbai.pdf', type: 'Lease', risk: '3.8', riskType: 'warning', date: '2 weeks ago' },
-  { name: 'Beta Program Terms.pdf', type: 'Commercial', risk: '6.4', riskType: 'danger', date: '1 month ago' },
+  {
+    name: 'Acme Corp NDA v3.pdf',
+    type: 'NDA',
+    risk: '7.2',
+    riskType: 'danger',
+    date: '2 min ago',
+  },
+  {
+    name: 'Freelance Agreement.docx',
+    type: 'Employment',
+    risk: '4.5',
+    riskType: 'warning',
+    date: '3 days ago',
+  },
+  {
+    name: 'SaaS Terms - Spark.js.pdf',
+    type: 'Commercial',
+    risk: '2.1',
+    riskType: 'success',
+    date: '1 week ago',
+  },
+  {
+    name: 'Office Rental Mumbai.pdf',
+    type: 'Lease',
+    risk: '3.8',
+    riskType: 'warning',
+    date: '2 weeks ago',
+  },
+  {
+    name: 'Beta Program Terms.pdf',
+    type: 'Commercial',
+    risk: '6.4',
+    riskType: 'danger',
+    date: '1 month ago',
+  },
 ];
 
 const CATEGORIES = [
@@ -23,9 +53,12 @@ export function renderVault(container) {
   };
 
   const render = () => {
-    const docs = VAULT_DOCS.filter(doc => {
-      const matchesQuery = doc.name.toLowerCase().includes(state.query.toLowerCase());
-      const matchesCategory = state.category === 'All documents' || doc.type === state.category;
+    const docs = VAULT_DOCS.filter((doc) => {
+      const matchesQuery = doc.name
+        .toLowerCase()
+        .includes(state.query.toLowerCase());
+      const matchesCategory =
+        state.category === 'All documents' || doc.type === state.category;
       return matchesQuery && matchesCategory;
     }).sort((a, b) => {
       if (state.sort === 'Name A-Z') return a.name.localeCompare(b.name);
@@ -45,12 +78,14 @@ export function renderVault(container) {
       <div class="vault-layout">
         <div>
           <div class="flex flex-col gap-2">
-            ${CATEGORIES.map(category => `
+            ${CATEGORIES.map(
+              (category) => `
               <button type="button" class="reset-btn nav-item vault-cat-item${category.key === state.category ? ' active' : ''}" data-vault-category="${category.key}">
                 <span>${category.key}</span>
                 <span class="meta-text ml-auto">${category.count}</span>
               </button>
-            `).join('')}
+            `,
+            ).join('')}
           </div>
 
           <div class="mt-24 p-12 card-surface vault-security-card">
@@ -98,7 +133,9 @@ function renderVaultTable(docs) {
           </tr>
         </thead>
         <tbody>
-          ${docs.map(doc => `
+          ${docs
+            .map(
+              (doc) => `
             <tr class="hover-bg-secondary vault-row" data-open-doc="${doc.name}">
               <td class="vault-cell">
                 <div class="flex items-center gap-10">
@@ -118,7 +155,9 @@ function renderVaultTable(docs) {
               <td class="vault-cell text-tertiary">${doc.date}</td>
               <td class="vault-cell text-tertiary vault-table-end">•••</td>
             </tr>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </tbody>
       </table>
     </div>
@@ -128,7 +167,9 @@ function renderVaultTable(docs) {
 function renderVaultGrid(docs) {
   return `
     <div class="grid vault-grid">
-      ${docs.map(doc => `
+      ${docs
+        .map(
+          (doc) => `
         <button type="button" class="reset-btn doc-card text-left" data-open-doc="${doc.name}">
           <div class="doc-card-body">
             <div class="flex justify-between items-center mb-12">
@@ -139,41 +180,49 @@ function renderVaultGrid(docs) {
             <p class="meta-text">${doc.date}</p>
           </div>
         </button>
-      `).join('')}
+      `,
+        )
+        .join('')}
     </div>
   `;
 }
 
 function bindVaultActions(container, state, render) {
-  container.querySelector('#vault-add-document-btn')?.addEventListener('click', () => {
-    window.navigateTo('upload');
-  });
+  container
+    .querySelector('#vault-add-document-btn')
+    ?.addEventListener('click', () => {
+      window.navigateTo('upload');
+    });
 
-  container.querySelector('#vault-search-input')?.addEventListener('input', event => {
-    state.query = event.target.value;
-    render();
-  });
+  container
+    .querySelector('#vault-search-input')
+    ?.addEventListener('input', (event) => {
+      state.query = event.target.value;
+      render();
+    });
 
-  container.querySelectorAll('[data-vault-category]').forEach(button => {
+  container.querySelectorAll('[data-vault-category]').forEach((button) => {
     button.addEventListener('click', () => {
       state.category = button.dataset.vaultCategory;
       render();
     });
   });
 
-  container.querySelectorAll('[data-vault-view]').forEach(button => {
+  container.querySelectorAll('[data-vault-view]').forEach((button) => {
     button.addEventListener('click', () => {
       state.view = button.dataset.vaultView;
       render();
     });
   });
 
-  container.querySelector('#vault-sort-select')?.addEventListener('change', event => {
-    state.sort = event.target.value;
-    render();
-  });
+  container
+    .querySelector('#vault-sort-select')
+    ?.addEventListener('change', (event) => {
+      state.sort = event.target.value;
+      render();
+    });
 
-  container.querySelectorAll('[data-open-doc]').forEach(button => {
+  container.querySelectorAll('[data-open-doc]').forEach((button) => {
     button.addEventListener('click', () => {
       window.navigateTo('summary');
     });

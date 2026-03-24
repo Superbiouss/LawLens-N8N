@@ -1,4 +1,8 @@
-import { renderAgentStatusCard, renderChatMessage, renderPromptChips } from './shared/chat-ui.js';
+import {
+  renderAgentStatusCard,
+  renderChatMessage,
+  renderPromptChips,
+} from './shared/chat-ui.js';
 import {
   createPendingAssistantMessage,
   createUserChatMessage,
@@ -17,15 +21,18 @@ const CHAT_STARTERS = [
 const CHAT_FALLBACKS = [
   {
     test: /nda|non-disclosure/i,
-    response: 'A strong NDA usually defines confidential information clearly, limits use to a stated purpose, adds standard exclusions, and sets a reasonable confidentiality survival period.',
+    response:
+      'A strong NDA usually defines confidential information clearly, limits use to a stated purpose, adds standard exclusions, and sets a reasonable confidentiality survival period.',
   },
   {
     test: /liquidated damages|penalty/i,
-    response: 'Liquidated damages are a pre-agreed estimate of loss for breach. They are strongest when the amount is commercially reasonable and not punitive.',
+    response:
+      'Liquidated damages are a pre-agreed estimate of loss for breach. They are strongest when the amount is commercially reasonable and not punitive.',
   },
   {
     test: /vendor|msa|service agreement/i,
-    response: 'For a vendor agreement, start with scope, service levels, data protection, IP ownership, limitation of liability, termination rights, and payment timing.',
+    response:
+      'For a vendor agreement, start with scope, service levels, data protection, IP ownership, limitation of liability, termination rights, and payment timing.',
   },
 ];
 
@@ -61,7 +68,10 @@ export function renderChat(container) {
                 </div>
               </div>
             </div>
-            ${state.messages.slice(1).map(message => renderChatMessage(message)).join('')}
+            ${state.messages
+              .slice(1)
+              .map((message) => renderChatMessage(message))
+              .join('')}
           </div>
 
           <div class="ask-bar p-16">
@@ -105,12 +115,14 @@ export function renderChat(container) {
 }
 
 function bindChatInteractions(container, state, render) {
-  container.querySelector('#open-chat-agent-settings-btn')?.addEventListener('click', () => {
-    sessionStorage.setItem('settings_tab_prefill', 'api');
-    window.navigateTo('settings');
-  });
+  container
+    .querySelector('#open-chat-agent-settings-btn')
+    ?.addEventListener('click', () => {
+      sessionStorage.setItem('settings_tab_prefill', 'api');
+      window.navigateTo('settings');
+    });
 
-  container.querySelectorAll('[data-chat-nav]').forEach(button => {
+  container.querySelectorAll('[data-chat-nav]').forEach((button) => {
     button.addEventListener('click', () => {
       window.navigateTo(button.dataset.chatNav);
     });
@@ -118,7 +130,7 @@ function bindChatInteractions(container, state, render) {
 
   const input = container.querySelector('#chat-input');
 
-  container.querySelectorAll('[data-chat-starter]').forEach(button => {
+  container.querySelectorAll('[data-chat-starter]').forEach((button) => {
     button.addEventListener('click', () => {
       input.value = button.dataset.chatStarter;
       input.focus();
@@ -156,7 +168,7 @@ function bindChatInteractions(container, state, render) {
   };
 
   container.querySelector('#chat-send-btn')?.addEventListener('click', submit);
-  input?.addEventListener('keydown', event => {
+  input?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       submit();
@@ -179,6 +191,8 @@ async function getChatReply(question, messages) {
 }
 
 function resolveChatFallback(question) {
-  return CHAT_FALLBACKS.find(item => item.test.test(question))?.response
-    || 'The Normal Chat webhook is not configured yet, so this screen is using the local fallback responder. Configure your n8n webhook in Settings > API Keys to use your external LLM agent here.';
+  return (
+    CHAT_FALLBACKS.find((item) => item.test.test(question))?.response ||
+    'The Normal Chat webhook is not configured yet, so this screen is using the local fallback responder. Configure your n8n webhook in Settings > API Keys to use your external LLM agent here.'
+  );
 }

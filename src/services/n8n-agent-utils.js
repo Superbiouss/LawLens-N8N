@@ -5,7 +5,17 @@ export const DEFAULT_N8N_AGENT_CONFIG = Object.freeze({
   includeDocumentContext: true,
 });
 
-const NESTED_REPLY_KEYS = ['data', 'result', 'response', 'message', 'output', 'content', 'choices', 'messages', 'items'];
+const NESTED_REPLY_KEYS = [
+  'data',
+  'result',
+  'response',
+  'message',
+  'output',
+  'content',
+  'choices',
+  'messages',
+  'items',
+];
 
 export function sanitizeN8nAgentConfig(config = {}) {
   return {
@@ -41,7 +51,7 @@ export function validateN8nAgentConfig(config = {}) {
     if (!['http:', 'https:'].includes(url.protocol)) {
       throw new Error('INVALID_PROTOCOL');
     }
-  } catch (error) {
+  } catch {
     return {
       valid: false,
       message: 'Add a valid http or https webhook URL.',
@@ -62,12 +72,13 @@ export function canUseN8nAgent(config = {}) {
 }
 
 export function normalizeConversationScope(scope = 'default') {
-  return String(scope || 'default')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    || 'default';
+  return (
+    String(scope || 'default')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'default'
+  );
 }
 
 export function buildConversationId(scope = 'default', options = {}) {
@@ -143,7 +154,9 @@ export function extractN8nReply(payload, depth = 0) {
       payload?.output?.[0]?.content?.[0]?.text,
     ];
 
-    const direct = directCandidates.find(value => typeof value === 'string' && value.trim());
+    const direct = directCandidates.find(
+      (value) => typeof value === 'string' && value.trim(),
+    );
     if (direct) return direct.trim();
 
     for (const key of NESTED_REPLY_KEYS) {
@@ -185,7 +198,10 @@ export function humanizeN8nAgentError(error) {
     return 'Webhook timed out before responding.';
   }
 
-  if (typeof error?.message === 'string' && error.message.startsWith('N8N_WEBHOOK_HTTP_')) {
+  if (
+    typeof error?.message === 'string' &&
+    error.message.startsWith('N8N_WEBHOOK_HTTP_')
+  ) {
     return `Webhook returned HTTP ${error.message.replace('N8N_WEBHOOK_HTTP_', '')}.`;
   }
 
@@ -200,17 +216,23 @@ function normalizeHistory(history) {
   if (!Array.isArray(history)) return [];
 
   return history
-    .map(item => ({
+    .map((item) => ({
       role: normalizeRole(item?.role),
       content: String(item?.content || '').trim(),
     }))
-    .filter(item => item.content);
+    .filter((item) => item.content);
 }
 
 function normalizeRole(role) {
-  const normalized = String(role || 'user').trim().toLowerCase();
+  const normalized = String(role || 'user')
+    .trim()
+    .toLowerCase();
 
-  if (normalized === 'assistant' || normalized === 'system' || normalized === 'user') {
+  if (
+    normalized === 'assistant' ||
+    normalized === 'system' ||
+    normalized === 'user'
+  ) {
     return normalized;
   }
 
@@ -236,7 +258,7 @@ function tryExtractN8nReply(payload, depth) {
 
   try {
     return extractN8nReply(payload, depth);
-  } catch (error) {
+  } catch {
     return '';
   }
 }

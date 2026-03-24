@@ -31,9 +31,12 @@ export function renderClauseLibrary(container) {
   };
 
   const render = () => {
-    const items = CLAUSE_LIBRARY.filter(item => {
-      const matchesQuery = `${item.title} ${item.text}`.toLowerCase().includes(state.query.toLowerCase());
-      const matchesCategory = state.category === 'All Categories' || item.cat === state.category;
+    const items = CLAUSE_LIBRARY.filter((item) => {
+      const matchesQuery = `${item.title} ${item.text}`
+        .toLowerCase()
+        .includes(state.query.toLowerCase());
+      const matchesCategory =
+        state.category === 'All Categories' || item.cat === state.category;
       return matchesQuery && matchesCategory;
     });
 
@@ -49,12 +52,14 @@ export function renderClauseLibrary(container) {
           <input type="text" id="clause-library-search" placeholder="Search clauses (e.g. 'limitation of liability')..." value="${state.query}" class="search-bar-input" />
         </div>
         <select id="clause-library-category" class="clause-library-select">
-          ${['All Categories', 'NDA', 'General', 'Consulting'].map(option => `<option ${option === state.category ? 'selected' : ''}>${option}</option>`).join('')}
+          ${['All Categories', 'NDA', 'General', 'Consulting'].map((option) => `<option ${option === state.category ? 'selected' : ''}>${option}</option>`).join('')}
         </select>
       </div>
 
       <div class="flex flex-col gap-16">
-        ${items.map((item, index) => `
+        ${items
+          .map(
+            (item, index) => `
           <div class="card">
             <div class="flex justify-between items-start mb-12">
               <div>
@@ -69,28 +74,34 @@ export function renderClauseLibrary(container) {
               <button class="btn-sm btn-primary" data-use-clause="${index}">Use in draft</button>
             </div>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     `;
 
-    container.querySelector('#clause-library-search')?.addEventListener('input', event => {
-      state.query = event.target.value;
-      render();
-    });
+    container
+      .querySelector('#clause-library-search')
+      ?.addEventListener('input', (event) => {
+        state.query = event.target.value;
+        render();
+      });
 
-    container.querySelector('#clause-library-category')?.addEventListener('change', event => {
-      state.category = event.target.value;
-      render();
-    });
+    container
+      .querySelector('#clause-library-category')
+      ?.addEventListener('change', (event) => {
+        state.category = event.target.value;
+        render();
+      });
 
-    container.querySelectorAll('[data-copy-clause]').forEach(button => {
+    container.querySelectorAll('[data-copy-clause]').forEach((button) => {
       button.addEventListener('click', () => {
         const clause = items[Number(button.dataset.copyClause)];
         copyText(clause.text, 'Clause copied.');
       });
     });
 
-    container.querySelectorAll('[data-use-clause]').forEach(button => {
+    container.querySelectorAll('[data-use-clause]').forEach((button) => {
       button.addEventListener('click', () => {
         const clause = items[Number(button.dataset.useClause)];
         localStorage.setItem('drafting_insert_clause', clause.text);

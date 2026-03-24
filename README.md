@@ -30,12 +30,14 @@ LexAI is a powerful, AI-driven legal document assistant designed to help legal p
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/Superbiouss/LexAi.git
    cd LexAi
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```

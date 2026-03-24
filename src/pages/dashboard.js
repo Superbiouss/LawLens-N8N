@@ -32,10 +32,30 @@ export function renderDashboard(container) {
         </div>
         <div class="flex flex-col gap-10">
           ${[
-            { name: 'Acme Corp NDA v3.pdf', type: 'NDA', status: 'Analysis Complete', risk: 'high', time: '2h ago' },
-            { name: 'Freelance Agreement.docx', type: 'Service', status: 'Extraction Pending', risk: 'medium', time: '5h ago' },
-            { name: 'Office Mumbai Lease.pdf', type: 'Lease', status: 'Compliant', risk: 'low', time: 'Yesterday' },
-          ].map(item => `
+            {
+              name: 'Acme Corp NDA v3.pdf',
+              type: 'NDA',
+              status: 'Analysis Complete',
+              risk: 'high',
+              time: '2h ago',
+            },
+            {
+              name: 'Freelance Agreement.docx',
+              type: 'Service',
+              status: 'Extraction Pending',
+              risk: 'medium',
+              time: '5h ago',
+            },
+            {
+              name: 'Office Mumbai Lease.pdf',
+              type: 'Lease',
+              status: 'Compliant',
+              risk: 'low',
+              time: 'Yesterday',
+            },
+          ]
+            .map(
+              (item) => `
             <button type="button" class="reset-btn card flex items-center gap-12 dashboard-activity-row" data-nav-target="summary">
               <div class="dashboard-doc-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
@@ -49,7 +69,9 @@ export function renderDashboard(container) {
                 <span class="micro-label dashboard-activity-time">${item.time}</span>
               </div>
             </button>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </div>
 
         <div class="mt-24">
@@ -90,7 +112,9 @@ export function renderDashboard(container) {
               { task: 'NDA Renewal', date: 'Mar 28', color: 'danger' },
               { task: 'Audit Report Due', date: 'Apr 02', color: 'warning' },
               { task: 'Board Resolution', date: 'Apr 15', color: 'info' },
-            ].map(item => `
+            ]
+              .map(
+                (item) => `
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-8">
                   <div class="dashboard-deadline-dot" style="background:var(--color-text-${item.color});"></div>
@@ -98,14 +122,16 @@ export function renderDashboard(container) {
                 </div>
                 <span class="meta-text">${item.date}</span>
               </div>
-            `).join('')}
+            `,
+              )
+              .join('')}
           </div>
         </div>
       </div>
     </div>
   `;
 
-  container.querySelectorAll('[data-nav-target]').forEach(button => {
+  container.querySelectorAll('[data-nav-target]').forEach((button) => {
     button.addEventListener('click', () => {
       window.navigateTo(button.dataset.navTarget);
     });

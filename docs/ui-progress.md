@@ -17,11 +17,11 @@ Last updated: 2026-03-24
 
 ## Before And After
 
-| Metric | Before | Current |
-| --- | ---: | ---: |
-| Inline `style="..."` attrs | 450 | 63 |
-| Inline hover handlers | 14 | 0 |
-| High-debt key pages (`upload`, `summary`, `risk-report`, `ask`, `annotations`) | 125 | 4 |
+| Metric                                                                         | Before | Current |
+| ------------------------------------------------------------------------------ | -----: | ------: |
+| Inline `style="..."` attrs                                                     |    450 |      63 |
+| Inline hover handlers                                                          |     14 |       0 |
+| High-debt key pages (`upload`, `summary`, `risk-report`, `ask`, `annotations`) |    125 |       4 |
 
 ## Shared Work Added
 
@@ -31,13 +31,13 @@ Last updated: 2026-03-24
 
 ## Remaining Highest-Debt Pages
 
-| Page | Inline style count |
-| --- | ---: |
-| `src/pages/team.js` | 21 |
-| `src/pages/analytics.js` | 18 |
-| `src/pages/compliance.js` | 11 |
-| `src/pages/settings.js` | 8 |
-| `src/pages/key-dates.js` | 8 |
+| Page                      | Inline style count |
+| ------------------------- | -----------------: |
+| `src/pages/team.js`       |                 21 |
+| `src/pages/analytics.js`  |                 18 |
+| `src/pages/compliance.js` |                 11 |
+| `src/pages/settings.js`   |                  8 |
+| `src/pages/key-dates.js`  |                  8 |
 
 ## Suggested Next Slice
 

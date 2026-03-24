@@ -1,4 +1,8 @@
-import { bindRouteTabs, REVIEW_TABS, renderPageTabs } from './shared/page-tabs.js';
+import {
+  bindRouteTabs,
+  REVIEW_TABS,
+  renderPageTabs,
+} from './shared/page-tabs.js';
 import { escapeHtml } from './shared/ui-actions.js';
 
 export function renderAnnotations(container) {
@@ -84,25 +88,31 @@ function bindAnnotationActions(container) {
   const list = container.querySelector('#annotation-list');
   const input = container.querySelector('#annotation-input');
 
-  container.querySelectorAll('.workspace-panel-header .btn-sm')[0]?.addEventListener('click', () => {
-    input.focus();
-    window.showToast('Start a new annotation below.');
-  });
+  container
+    .querySelectorAll('.workspace-panel-header .btn-sm')[0]
+    ?.addEventListener('click', () => {
+      input.focus();
+      window.showToast('Start a new annotation below.');
+    });
 
-  container.querySelectorAll('.workspace-panel-header .btn-sm')[1]?.addEventListener('click', () => {
-    const firstCard = list.querySelector('.card');
-    if (!firstCard) {
-      window.showToast('No open annotations to resolve.');
-      return;
-    }
-    firstCard.remove();
-    window.showToast('Annotation resolved.');
-  });
+  container
+    .querySelectorAll('.workspace-panel-header .btn-sm')[1]
+    ?.addEventListener('click', () => {
+      const firstCard = list.querySelector('.card');
+      if (!firstCard) {
+        window.showToast('No open annotations to resolve.');
+        return;
+      }
+      firstCard.remove();
+      window.showToast('Annotation resolved.');
+    });
 
-  container.querySelector('.annotation-action')?.addEventListener('click', () => {
-    input.value = 'Commenting on Clause 2 highlight...';
-    input.focus();
-  });
+  container
+    .querySelector('.annotation-action')
+    ?.addEventListener('click', () => {
+      input.value = 'Commenting on Clause 2 highlight...';
+      input.focus();
+    });
 
   const submit = () => {
     const value = input.value.trim();
@@ -111,7 +121,9 @@ function bindAnnotationActions(container) {
       return;
     }
 
-    list.insertAdjacentHTML('afterbegin', `
+    list.insertAdjacentHTML(
+      'afterbegin',
+      `
       <div class="card p-12">
         <div class="flex items-center gap-8 mb-8">
           <div class="chat-avatar user chat-avatar-sm">JD</div>
@@ -120,13 +132,16 @@ function bindAnnotationActions(container) {
         </div>
         <p class="fs-12 text-primary lh-15">${escapeHtml(value)}</p>
       </div>
-    `);
+    `,
+    );
     input.value = '';
     window.showToast('Annotation posted.');
   };
 
-  container.querySelector('#post-annotation-btn')?.addEventListener('click', submit);
-  input.addEventListener('keydown', event => {
+  container
+    .querySelector('#post-annotation-btn')
+    ?.addEventListener('click', submit);
+  input.addEventListener('keydown', (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
       event.preventDefault();
       submit();

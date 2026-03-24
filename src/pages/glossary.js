@@ -25,9 +25,12 @@ export function renderGlossary(container) {
   };
 
   const render = () => {
-    const visibleTerms = TERMS.filter(term =>
-      term.letter === state.activeLetter
-      && `${term.name} ${term.body}`.toLowerCase().includes(state.query.toLowerCase()),
+    const visibleTerms = TERMS.filter(
+      (term) =>
+        term.letter === state.activeLetter &&
+        `${term.name} ${term.body}`
+          .toLowerCase()
+          .includes(state.query.toLowerCase()),
     );
 
     container.innerHTML = `
@@ -44,47 +47,72 @@ export function renderGlossary(container) {
 
       <div class="glossary-layout">
         <div class="glossary-rail">
-          ${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(letter => `
+          ${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            .split('')
+            .map(
+              (letter) => `
             <button type="button" class="reset-btn meta-text text-center glossary-char ${letter === state.activeLetter ? 'active glossary-char-active' : ''}" data-glossary-letter="${letter}">
               ${letter}
             </button>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </div>
 
         <div class="flex flex-col gap-32">
           <div id="sect-${state.activeLetter}">
             <p class="section-label mb-16">${state.activeLetter}</p>
             <div class="flex flex-col gap-24">
-              ${visibleTerms.length > 0 ? visibleTerms.map(term => `
+              ${
+                visibleTerms.length > 0
+                  ? visibleTerms
+                      .map(
+                        (term) => `
                 <div>
                   <h3 class="glossary-term-title">${term.name}</h3>
                   <div class="card glossary-term-card">
                     <p class="definition-text">${term.body}</p>
-                    ${term.note ? `
+                    ${
+                      term.note
+                        ? `
                       <div class="card-surface mt-16">
                         <span class="micro-label mb-4">${term.name === 'Liquidated Damages' ? 'In your documents' : 'Note'}</span>
                         <p class="meta-text">${term.note}</p>
                       </div>
-                    ` : ''}
+                    `
+                        : ''
+                    }
                   </div>
                 </div>
-              `).join('') : '<div class="card"><p class="meta-text">No glossary terms match this search yet.</p></div>'}
+              `,
+                      )
+                      .join('')
+                  : '<div class="card"><p class="meta-text">No glossary terms match this search yet.</p></div>'
+              }
             </div>
           </div>
         </div>
       </div>
     `;
 
-    container.querySelector('#glossary-search-input')?.addEventListener('input', event => {
-      state.query = event.target.value;
-      render();
-    });
+    container
+      .querySelector('#glossary-search-input')
+      ?.addEventListener('input', (event) => {
+        state.query = event.target.value;
+        render();
+      });
 
-    container.querySelector('#glossary-search-btn')?.addEventListener('click', () => {
-      window.showToast(state.query ? `Filtered glossary for "${state.query}"` : 'Showing all terms for this letter.');
-    });
+    container
+      .querySelector('#glossary-search-btn')
+      ?.addEventListener('click', () => {
+        window.showToast(
+          state.query
+            ? `Filtered glossary for "${state.query}"`
+            : 'Showing all terms for this letter.',
+        );
+      });
 
-    container.querySelectorAll('[data-glossary-letter]').forEach(button => {
+    container.querySelectorAll('[data-glossary-letter]').forEach((button) => {
       button.addEventListener('click', () => {
         state.activeLetter = button.dataset.glossaryLetter;
         render();

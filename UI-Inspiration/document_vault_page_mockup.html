@@ -1,132 +1,590 @@
-
 <style>
-*{box-sizing:border-box}
-.pg{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
-.bar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:13px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:7px}
-.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--color-text-info)}
-.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-tertiary)}
-.bc .cur{color:var(--color-text-primary);font-weight:500}
-.sl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin:0 0 8px}
+  * {
+    box-sizing: border-box;
+  }
+  .pg {
+    background: var(--color-background-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+  .bar {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .logo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-info);
+  }
+  .bc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+  .bc .cur {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+  .sl {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 0 0 8px;
+  }
 
-.vault-body{display:grid;grid-template-columns:220px 1fr;min-height:580px}
+  .vault-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 580px;
+  }
 
-.left-rail{border-right:0.5px solid var(--color-border-tertiary);padding:14px 0;background:var(--color-background-primary)}
-.rail-section{padding:0 12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px}
-.rail-section:last-child{border-bottom:none;margin-bottom:0}
-.folder-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;border:0.5px solid transparent}
-.folder-item:hover{background:var(--color-background-secondary)}
-.folder-item.active{background:var(--color-background-secondary);border-color:var(--color-border-tertiary)}
-.fi-left{display:flex;align-items:center;gap:8px}
-.fi-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.fi-icon svg{width:12px;height:12px}
-.fi-name{font-size:12px;color:var(--color-text-primary)}
-.fi-count{font-size:10px;font-weight:500;color:var(--color-text-tertiary);background:var(--color-background-secondary);border-radius:999px;padding:1px 6px}
-.folder-item.active .fi-name{font-weight:500}
-.new-folder-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--border-radius-md);cursor:pointer;font-size:12px;color:var(--color-text-tertiary);transition:color .15s;margin-top:4px}
-.new-folder-btn:hover{color:var(--color-text-secondary)}
+  .left-rail {
+    border-right: 0.5px solid var(--color-border-tertiary);
+    padding: 14px 0;
+    background: var(--color-background-primary);
+  }
+  .rail-section {
+    padding: 0 12px 14px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    margin-bottom: 14px;
+  }
+  .rail-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  .folder-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 0.5px solid transparent;
+  }
+  .folder-item:hover {
+    background: var(--color-background-secondary);
+  }
+  .folder-item.active {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-tertiary);
+  }
+  .fi-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fi-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .fi-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+  .fi-name {
+    font-size: 12px;
+    color: var(--color-text-primary);
+  }
+  .fi-count {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    background: var(--color-background-secondary);
+    border-radius: 999px;
+    padding: 1px 6px;
+  }
+  .folder-item.active .fi-name {
+    font-weight: 500;
+  }
+  .new-folder-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    transition: color 0.15s;
+    margin-top: 4px;
+  }
+  .new-folder-btn:hover {
+    color: var(--color-text-secondary);
+  }
 
-.tag-row{display:flex;flex-wrap:wrap;gap:5px}
-.tag{font-size:11px;padding:3px 9px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
-.tag:hover{border-color:var(--color-border-secondary);color:var(--color-text-primary)}
-.tag.active{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);font-weight:500}
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag:hover {
+    border-color: var(--color-border-secondary);
+    color: var(--color-text-primary);
+  }
+  .tag.active {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-primary);
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
 
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.mini-stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px}
-.ms-n{font-size:16px;font-weight:500;color:var(--color-text-primary);line-height:1}
-.ms-l{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
-.ms-n.danger{color:var(--color-text-danger)}
-.ms-n.warn{color:var(--color-text-warning)}
-.ms-n.ok{color:var(--color-text-success)}
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .mini-stat {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 8px 10px;
+  }
+  .ms-n {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+  .ms-l {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-top: 2px;
+  }
+  .ms-n.danger {
+    color: var(--color-text-danger);
+  }
+  .ms-n.warn {
+    color: var(--color-text-warning);
+  }
+  .ms-n.ok {
+    color: var(--color-text-success);
+  }
 
-.main-area{padding:16px 20px}
-.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.search-wrap{position:relative;flex:1;min-width:160px}
-.search-wrap input{width:100%;font-size:12px;padding-left:28px}
-.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%)}
-.search-icon svg{width:12px;height:12px;stroke:var(--color-text-tertiary)}
-.sort-select{font-size:12px;padding:0 8px;height:36px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary)}
-.view-toggle{display:flex;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:2px}
-.vt{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:5px;cursor:pointer;transition:all .15s}
-.vt.active{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary)}
-.vt svg{width:13px;height:13px;stroke:var(--color-text-secondary)}
-.vt.active svg{stroke:var(--color-text-primary)}
-.filter-strip{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.fpill{font-size:11px;padding:4px 10px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;background:var(--color-background-primary);transition:all .15s;white-space:nowrap}
-.fpill.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
-.fpill:hover:not(.active){border-color:var(--color-border-secondary)}
+  .main-area {
+    padding: 16px 20px;
+  }
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 160px;
+  }
+  .search-wrap input {
+    width: 100%;
+    font-size: 12px;
+    padding-left: 28px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .search-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--color-text-tertiary);
+  }
+  .sort-select {
+    font-size: 12px;
+    padding: 0 8px;
+    height: 36px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary);
+  }
+  .view-toggle {
+    display: flex;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 2px;
+  }
+  .vt {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .vt.active {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+  }
+  .vt svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--color-text-secondary);
+  }
+  .vt.active svg {
+    stroke: var(--color-text-primary);
+  }
+  .filter-strip {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .fpill {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    background: var(--color-background-primary);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .fpill.active {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+    font-weight: 500;
+  }
+  .fpill:hover:not(.active) {
+    border-color: var(--color-border-secondary);
+  }
 
-.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.doc-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;transition:border-color .15s}
-.doc-card:hover{border-color:var(--color-border-secondary)}
-.doc-card.selected{border:1.5px solid var(--color-border-info)}
-.dc-thumb{height:72px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;position:relative}
-.dc-thumb svg{width:28px;height:28px;stroke:var(--color-text-tertiary);stroke-width:1}
-.dc-risk-stripe{position:absolute;top:0;left:0;right:0;height:3px}
-.dc-risk-stripe.high{background:var(--color-text-danger);opacity:.7}
-.dc-risk-stripe.med{background:var(--color-text-warning);opacity:.7}
-.dc-risk-stripe.low{background:var(--color-text-success);opacity:.7}
-.dc-type-badge{position:absolute;bottom:7px;right:8px;font-size:9px;font-weight:500;padding:2px 6px;border-radius:999px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary)}
-.dc-body{padding:10px 12px}
-.dc-name{font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.dc-meta{font-size:10px;color:var(--color-text-tertiary);margin-bottom:8px}
-.dc-footer{display:flex;align-items:center;justify-content:space-between}
-.risk-pill{font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px}
-.risk-pill.high{background:var(--color-background-danger);color:var(--color-text-danger)}
-.risk-pill.med{background:var(--color-background-warning);color:var(--color-text-warning)}
-.risk-pill.low{background:var(--color-background-success);color:var(--color-text-success)}
-.dc-score{font-size:10px;color:var(--color-text-tertiary)}
-.dc-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
-.doc-card:hover .dc-actions{opacity:1}
-.dc-action-btn{width:22px;height:22px;border-radius:4px;border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--color-background-primary);transition:background .15s}
-.dc-action-btn:hover{background:var(--color-background-secondary)}
-.dc-action-btn svg{width:11px;height:11px;stroke:var(--color-text-secondary)}
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .doc-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .doc-card:hover {
+    border-color: var(--color-border-secondary);
+  }
+  .doc-card.selected {
+    border: 1.5px solid var(--color-border-info);
+  }
+  .dc-thumb {
+    height: 72px;
+    background: var(--color-background-secondary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .dc-thumb svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--color-text-tertiary);
+    stroke-width: 1;
+  }
+  .dc-risk-stripe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+  .dc-risk-stripe.high {
+    background: var(--color-text-danger);
+    opacity: 0.7;
+  }
+  .dc-risk-stripe.med {
+    background: var(--color-text-warning);
+    opacity: 0.7;
+  }
+  .dc-risk-stripe.low {
+    background: var(--color-text-success);
+    opacity: 0.7;
+  }
+  .dc-type-badge {
+    position: absolute;
+    bottom: 7px;
+    right: 8px;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary);
+  }
+  .dc-body {
+    padding: 10px 12px;
+  }
+  .dc-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+  .dc-meta {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+  }
+  .dc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .risk-pill {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+  .risk-pill.high {
+    background: var(--color-background-danger);
+    color: var(--color-text-danger);
+  }
+  .risk-pill.med {
+    background: var(--color-background-warning);
+    color: var(--color-text-warning);
+  }
+  .risk-pill.low {
+    background: var(--color-background-success);
+    color: var(--color-text-success);
+  }
+  .dc-score {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+  .dc-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .doc-card:hover .dc-actions {
+    opacity: 1;
+  }
+  .dc-action-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--color-background-primary);
+    transition: background 0.15s;
+  }
+  .dc-action-btn:hover {
+    background: var(--color-background-secondary);
+  }
+  .dc-action-btn svg {
+    width: 11px;
+    height: 11px;
+    stroke: var(--color-text-secondary);
+  }
 
-.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.section-title{font-size:12px;font-weight:500;color:var(--color-text-primary)}
-.section-link{font-size:11px;color:var(--color-text-info);cursor:pointer}
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+  .section-link {
+    font-size: 11px;
+    color: var(--color-text-info);
+    cursor: pointer;
+  }
 
-.expiring-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:9px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s}
-.expiring-card:hover{border-color:var(--color-text-warning)}
-.ec-left{display:flex;align-items:center;gap:8px}
-.ec-dot{width:6px;height:6px;border-radius:50%;background:var(--color-text-warning);flex-shrink:0}
-.ec-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
-.ec-date{font-size:10px;color:var(--color-text-warning)}
-.ec-badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;background:var(--color-background-warning);color:var(--color-text-warning)}
+  .expiring-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-warning);
+    border-radius: var(--border-radius-md);
+    padding: 9px 12px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .expiring-card:hover {
+    border-color: var(--color-text-warning);
+  }
+  .ec-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ec-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-text-warning);
+    flex-shrink: 0;
+  }
+  .ec-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+  .ec-date {
+    font-size: 10px;
+    color: var(--color-text-warning);
+  }
+  .ec-badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--color-background-warning);
+    color: var(--color-text-warning);
+  }
 
-.activity-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
-.activity-item:last-child{border-bottom:none}
-.act-dot{width:6px;height:6px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;margin-top:4px}
-.act-text{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
-.act-time{font-size:10px;color:var(--color-text-tertiary)}
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+  .act-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-border-secondary);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .act-text {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+  .act-time {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
 
-.upload-drop{border:1.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:20px}
-.upload-drop:hover{border-color:var(--color-border-info);background:var(--color-background-info)}
-.ud-text{font-size:12px;color:var(--color-text-tertiary)}
-.ud-text strong{font-weight:500;color:var(--color-text-info)}
+  .upload-drop {
+    border: 1.5px dashed var(--color-border-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+  }
+  .upload-drop:hover {
+    border-color: var(--color-border-info);
+    background: var(--color-background-info);
+  }
+  .ud-text {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+  }
+  .ud-text strong {
+    font-weight: 500;
+    color: var(--color-text-info);
+  }
 </style>
 
 <div class="pg">
   <div class="bar">
-    <div style="display:flex;align-items:center;gap:16px">
-      <div class="logo"><div class="logo-dot"></div>LexAI</div>
+    <div style="display: flex; align-items: center; gap: 16px">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        LexAI
+      </div>
       <div class="bc"><span class="cur">Document vault</span></div>
     </div>
-    <div style="display:flex;gap:6px">
-      <button style="font-size:12px;padding:4px 14px" onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">+ New analysis ↗</button>
-      <button style="font-size:12px;padding:4px 12px">Import folder ↗</button>
+    <div style="display: flex; gap: 6px">
+      <button
+        style="font-size: 12px; padding: 4px 14px"
+        onclick="
+          sendPrompt(
+            'Tell me more about the Upload & Analyze page in a legal summarizer',
+          )
+        "
+      >
+        + New analysis ↗
+      </button>
+      <button style="font-size: 12px; padding: 4px 12px">
+        Import folder ↗
+      </button>
     </div>
   </div>
 
   <div class="vault-body">
-
     <div class="left-rail">
       <div class="rail-section">
         <div class="sl">Folders</div>
         <div class="folder-item active">
           <div class="fi-left">
-            <div class="fi-icon" style="background:var(--color-background-info)">
-              <svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-info)" stroke-width="1.5"><path d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"/></svg>
+            <div
+              class="fi-icon"
+              style="background: var(--color-background-info)"
+            >
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="var(--color-text-info)"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"
+                />
+              </svg>
             </div>
             <span class="fi-name">All documents</span>
           </div>
@@ -134,8 +592,20 @@
         </div>
         <div class="folder-item">
           <div class="fi-left">
-            <div class="fi-icon" style="background:var(--color-background-secondary)">
-              <svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5"><path d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"/></svg>
+            <div
+              class="fi-icon"
+              style="background: var(--color-background-secondary)"
+            >
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="var(--color-text-secondary)"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"
+                />
+              </svg>
             </div>
             <span class="fi-name">NDAs</span>
           </div>
@@ -143,8 +613,20 @@
         </div>
         <div class="folder-item">
           <div class="fi-left">
-            <div class="fi-icon" style="background:var(--color-background-secondary)">
-              <svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5"><path d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"/></svg>
+            <div
+              class="fi-icon"
+              style="background: var(--color-background-secondary)"
+            >
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="var(--color-text-secondary)"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"
+                />
+              </svg>
             </div>
             <span class="fi-name">Employment</span>
           </div>
@@ -152,8 +634,20 @@
         </div>
         <div class="folder-item">
           <div class="fi-left">
-            <div class="fi-icon" style="background:var(--color-background-secondary)">
-              <svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5"><path d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"/></svg>
+            <div
+              class="fi-icon"
+              style="background: var(--color-background-secondary)"
+            >
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="var(--color-text-secondary)"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"
+                />
+              </svg>
             </div>
             <span class="fi-name">Vendor contracts</span>
           </div>
@@ -161,15 +655,36 @@
         </div>
         <div class="folder-item">
           <div class="fi-left">
-            <div class="fi-icon" style="background:var(--color-background-secondary)">
-              <svg viewBox="0 0 12 12" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5"><path d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"/></svg>
+            <div
+              class="fi-icon"
+              style="background: var(--color-background-secondary)"
+            >
+              <svg
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="var(--color-text-secondary)"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3zM1 3l1.5-2h3L7 3"
+                />
+              </svg>
             </div>
             <span class="fi-name">Leases</span>
           </div>
           <span class="fi-count">2</span>
         </div>
         <div class="new-folder-btn">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M6 1v10M1 6h10" />
+          </svg>
           New folder
         </div>
       </div>
@@ -189,30 +704,54 @@
       <div class="rail-section">
         <div class="sl">Vault summary</div>
         <div class="stat-grid">
-          <div class="mini-stat"><div class="ms-n">14</div><div class="ms-l">Total docs</div></div>
-          <div class="mini-stat"><div class="ms-n danger">4</div><div class="ms-l">High risk</div></div>
-          <div class="mini-stat"><div class="ms-n warn">3</div><div class="ms-l">Expiring soon</div></div>
-          <div class="mini-stat"><div class="ms-n ok">7</div><div class="ms-l">Low risk</div></div>
+          <div class="mini-stat">
+            <div class="ms-n">14</div>
+            <div class="ms-l">Total docs</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-n danger">4</div>
+            <div class="ms-l">High risk</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-n warn">3</div>
+            <div class="ms-l">Expiring soon</div>
+          </div>
+          <div class="mini-stat">
+            <div class="ms-n ok">7</div>
+            <div class="ms-l">Low risk</div>
+          </div>
         </div>
       </div>
 
       <div class="rail-section">
         <div class="sl">Recent activity</div>
         <div class="activity-item">
-          <div class="act-dot" style="background:var(--color-text-info)"></div>
-          <div><div class="act-text">Analyzed Acme NDA v3</div><div class="act-time">2 min ago</div></div>
+          <div class="act-dot" style="background: var(--color-text-info)"></div>
+          <div>
+            <div class="act-text">Analyzed Acme NDA v3</div>
+            <div class="act-time">2 min ago</div>
+          </div>
         </div>
         <div class="activity-item">
           <div class="act-dot"></div>
-          <div><div class="act-text">Compared NDA v2 vs v3</div><div class="act-time">18 min ago</div></div>
+          <div>
+            <div class="act-text">Compared NDA v2 vs v3</div>
+            <div class="act-time">18 min ago</div>
+          </div>
         </div>
         <div class="activity-item">
           <div class="act-dot"></div>
-          <div><div class="act-text">Uploaded Office Lease Mumbai</div><div class="act-time">Yesterday</div></div>
+          <div>
+            <div class="act-text">Uploaded Office Lease Mumbai</div>
+            <div class="act-time">Yesterday</div>
+          </div>
         </div>
         <div class="activity-item">
           <div class="act-dot"></div>
-          <div><div class="act-text">Added note to Freelance MSA</div><div class="act-time">2 days ago</div></div>
+          <div>
+            <div class="act-text">Added note to Freelance MSA</div>
+            <div class="act-time">2 days ago</div>
+          </div>
         </div>
       </div>
     </div>
@@ -220,8 +759,21 @@
     <div class="main-area">
       <div class="toolbar">
         <div class="search-wrap">
-          <div class="search-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="5" r="3.5"/><path d="M8 8l2.5 2.5"/></svg></div>
-          <input type="text" placeholder="Search by name, party, clause, or keyword…" />
+          <div class="search-icon">
+            <svg
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <circle cx="5" cy="5" r="3.5" />
+              <path d="M8 8l2.5 2.5" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Search by name, party, clause, or keyword…"
+          />
         </div>
         <select class="sort-select">
           <option>Sort: Most recent</option>
@@ -230,15 +782,49 @@
           <option>Sort: Expiry date</option>
         </select>
         <div class="view-toggle">
-          <div class="vt active" title="Grid view"><svg viewBox="0 0 13 13" fill="none" stroke-width="1.5"><rect x="1" y="1" width="4" height="4" rx="1"/><rect x="8" y="1" width="4" height="4" rx="1"/><rect x="1" y="8" width="4" height="4" rx="1"/><rect x="8" y="8" width="4" height="4" rx="1"/></svg></div>
-          <div class="vt" title="List view"><svg viewBox="0 0 13 13" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M1 3h11M1 6.5h11M1 10h11"/></svg></div>
+          <div class="vt active" title="Grid view">
+            <svg viewBox="0 0 13 13" fill="none" stroke-width="1.5">
+              <rect x="1" y="1" width="4" height="4" rx="1" />
+              <rect x="8" y="1" width="4" height="4" rx="1" />
+              <rect x="1" y="8" width="4" height="4" rx="1" />
+              <rect x="8" y="8" width="4" height="4" rx="1" />
+            </svg>
+          </div>
+          <div class="vt" title="List view">
+            <svg
+              viewBox="0 0 13 13"
+              fill="none"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <path d="M1 3h11M1 6.5h11M1 10h11" />
+            </svg>
+          </div>
         </div>
       </div>
 
       <div class="filter-strip">
         <div class="fpill active" onclick="setF(this)">All (14)</div>
-        <div class="fpill" onclick="setF(this)" style="color:var(--color-text-danger);border-color:var(--color-border-danger)">High risk (4)</div>
-        <div class="fpill" onclick="setF(this)" style="color:var(--color-text-warning);border-color:var(--color-border-warning)">Medium risk (3)</div>
+        <div
+          class="fpill"
+          onclick="setF(this)"
+          style="
+            color: var(--color-text-danger);
+            border-color: var(--color-border-danger);
+          "
+        >
+          High risk (4)
+        </div>
+        <div
+          class="fpill"
+          onclick="setF(this)"
+          style="
+            color: var(--color-text-warning);
+            border-color: var(--color-border-warning);
+          "
+        >
+          Medium risk (3)
+        </div>
         <div class="fpill" onclick="setF(this)">NDA</div>
         <div class="fpill" onclick="setF(this)">Employment</div>
         <div class="fpill" onclick="setF(this)">Lease</div>
@@ -250,31 +836,88 @@
         <span class="section-link">View all →</span>
       </div>
 
-      <div style="margin-bottom:20px">
-        <div class="expiring-card" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">
-          <div class="ec-left"><div class="ec-dot"></div><div><div class="ec-name">SaaS Vendor Agreement — DataFlow Inc</div><div class="ec-date">Auto-renews in 14 days · 22 Apr 2025</div></div></div>
+      <div style="margin-bottom: 20px">
+        <div
+          class="expiring-card"
+          onclick="
+            sendPrompt(
+              'What should the Key Dates timeline page look like in a legal document summarizer?',
+            )
+          "
+        >
+          <div class="ec-left">
+            <div class="ec-dot"></div>
+            <div>
+              <div class="ec-name">SaaS Vendor Agreement — DataFlow Inc</div>
+              <div class="ec-date">Auto-renews in 14 days · 22 Apr 2025</div>
+            </div>
+          </div>
           <span class="ec-badge">Renews soon</span>
         </div>
-        <div class="expiring-card" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">
-          <div class="ec-left"><div class="ec-dot"></div><div><div class="ec-name">Office Lease — Mumbai</div><div class="ec-date">Notice deadline in 21 days · 30 Apr 2025</div></div></div>
+        <div
+          class="expiring-card"
+          onclick="
+            sendPrompt(
+              'What should the Key Dates timeline page look like in a legal document summarizer?',
+            )
+          "
+        >
+          <div class="ec-left">
+            <div class="ec-dot"></div>
+            <div>
+              <div class="ec-name">Office Lease — Mumbai</div>
+              <div class="ec-date">
+                Notice deadline in 21 days · 30 Apr 2025
+              </div>
+            </div>
+          </div>
           <span class="ec-badge">Action needed</span>
         </div>
-        <div class="expiring-card" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">
-          <div class="ec-left"><div class="ec-dot"></div><div><div class="ec-name">Freelance MSA — Rajan Mehta</div><div class="ec-date">Expires in 45 days · 14 May 2025</div></div></div>
+        <div
+          class="expiring-card"
+          onclick="
+            sendPrompt(
+              'What should the Key Dates timeline page look like in a legal document summarizer?',
+            )
+          "
+        >
+          <div class="ec-left">
+            <div class="ec-dot"></div>
+            <div>
+              <div class="ec-name">Freelance MSA — Rajan Mehta</div>
+              <div class="ec-date">Expires in 45 days · 14 May 2025</div>
+            </div>
+          </div>
           <span class="ec-badge">Expiring</span>
         </div>
       </div>
 
       <div class="section-head">
         <span class="section-title">All documents</span>
-        <span style="font-size:11px;color:var(--color-text-tertiary)">14 documents</span>
+        <span style="font-size: 11px; color: var(--color-text-tertiary)"
+          >14 documents</span
+        >
       </div>
 
       <div class="doc-grid">
         <div class="doc-card selected" onclick="openDoc()">
           <div class="dc-thumb">
             <div class="dc-risk-stripe high"></div>
-            <svg viewBox="0 0 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z" stroke-width="1.2"/><path d="M16 3v6h6M18 15H10M18 19H10M12 11H10" stroke-width="1.2"/></svg>
+            <svg
+              viewBox="0 0 28 28"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z"
+                stroke-width="1.2"
+              />
+              <path
+                d="M16 3v6h6M18 15H10M18 19H10M12 11H10"
+                stroke-width="1.2"
+              />
+            </svg>
             <div class="dc-type-badge">NDA</div>
           </div>
           <div class="dc-body">
@@ -290,7 +933,21 @@
         <div class="doc-card" onclick="openDoc()">
           <div class="dc-thumb">
             <div class="dc-risk-stripe med"></div>
-            <svg viewBox="0 0 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z" stroke-width="1.2"/><path d="M16 3v6h6M18 15H10M18 19H10M12 11H10" stroke-width="1.2"/></svg>
+            <svg
+              viewBox="0 0 28 28"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z"
+                stroke-width="1.2"
+              />
+              <path
+                d="M16 3v6h6M18 15H10M18 19H10M12 11H10"
+                stroke-width="1.2"
+              />
+            </svg>
             <div class="dc-type-badge">MSA</div>
           </div>
           <div class="dc-body">
@@ -306,7 +963,21 @@
         <div class="doc-card" onclick="openDoc()">
           <div class="dc-thumb">
             <div class="dc-risk-stripe low"></div>
-            <svg viewBox="0 0 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z" stroke-width="1.2"/><path d="M16 3v6h6M18 15H10M18 19H10M12 11H10" stroke-width="1.2"/></svg>
+            <svg
+              viewBox="0 0 28 28"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z"
+                stroke-width="1.2"
+              />
+              <path
+                d="M16 3v6h6M18 15H10M18 19H10M12 11H10"
+                stroke-width="1.2"
+              />
+            </svg>
             <div class="dc-type-badge">Lease</div>
           </div>
           <div class="dc-body">
@@ -322,7 +993,21 @@
         <div class="doc-card" onclick="openDoc()">
           <div class="dc-thumb">
             <div class="dc-risk-stripe high"></div>
-            <svg viewBox="0 0 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z" stroke-width="1.2"/><path d="M16 3v6h6M18 15H10M18 19H10M12 11H10" stroke-width="1.2"/></svg>
+            <svg
+              viewBox="0 0 28 28"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z"
+                stroke-width="1.2"
+              />
+              <path
+                d="M16 3v6h6M18 15H10M18 19H10M12 11H10"
+                stroke-width="1.2"
+              />
+            </svg>
             <div class="dc-type-badge">NDA</div>
           </div>
           <div class="dc-body">
@@ -338,7 +1023,21 @@
         <div class="doc-card" onclick="openDoc()">
           <div class="dc-thumb">
             <div class="dc-risk-stripe high"></div>
-            <svg viewBox="0 0 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z" stroke-width="1.2"/><path d="M16 3v6h6M18 15H10M18 19H10M12 11H10" stroke-width="1.2"/></svg>
+            <svg
+              viewBox="0 0 28 28"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z"
+                stroke-width="1.2"
+              />
+              <path
+                d="M16 3v6h6M18 15H10M18 19H10M12 11H10"
+                stroke-width="1.2"
+              />
+            </svg>
             <div class="dc-type-badge">Employment</div>
           </div>
           <div class="dc-body">
@@ -354,7 +1053,21 @@
         <div class="doc-card" onclick="openDoc()">
           <div class="dc-thumb">
             <div class="dc-risk-stripe low"></div>
-            <svg viewBox="0 0 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z" stroke-width="1.2"/><path d="M16 3v6h6M18 15H10M18 19H10M12 11H10" stroke-width="1.2"/></svg>
+            <svg
+              viewBox="0 0 28 28"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16 3H7a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V9L16 3z"
+                stroke-width="1.2"
+              />
+              <path
+                d="M16 3v6h6M18 15H10M18 19H10M12 11H10"
+                stroke-width="1.2"
+              />
+            </svg>
             <div class="dc-type-badge">SaaS</div>
           </div>
           <div class="dc-body">
@@ -368,30 +1081,44 @@
         </div>
       </div>
 
-      <div class="upload-drop" onclick="sendPrompt('Tell me more about the Upload & Analyze page in a legal summarizer')">
-        <div class="ud-text"><strong>Drop a document here</strong> or click to analyze a new one</div>
+      <div
+        class="upload-drop"
+        onclick="
+          sendPrompt(
+            'Tell me more about the Upload & Analyze page in a legal summarizer',
+          )
+        "
+      >
+        <div class="ud-text">
+          <strong>Drop a document here</strong> or click to analyze a new one
+        </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-function toggleTag(el){
-  document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-}
-function setF(el){
-  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-}
-function openDoc(){
-  sendPrompt('What should the Summary page show in a legal document summarizer?');
-}
-document.querySelectorAll('.doc-card').forEach(function(c){
-  c.addEventListener('mouseenter',function(){
-    var f=c.querySelector('.dc-footer');
-    if(f)f.style.display='flex';
+  function toggleTag(el) {
+    document
+      .querySelectorAll('.tag')
+      .forEach((t) => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function setF(el) {
+    document
+      .querySelectorAll('.fpill')
+      .forEach((p) => p.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function openDoc() {
+    sendPrompt(
+      'What should the Summary page show in a legal document summarizer?',
+    );
+  }
+  document.querySelectorAll('.doc-card').forEach(function (c) {
+    c.addEventListener('mouseenter', function () {
+      var f = c.querySelector('.dc-footer');
+      if (f) f.style.display = 'flex';
+    });
   });
-});
 </script>

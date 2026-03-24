@@ -1,4 +1,8 @@
-import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+import {
+  bindRouteTabs,
+  DOCUMENT_TABS,
+  renderPageTabs,
+} from './shared/page-tabs.js';
 
 const RED_FLAGS = [
   "Unlimited confidentiality term - no sunset clause. You're bound permanently with no way out.",
@@ -7,9 +11,18 @@ const RED_FLAGS = [
 ];
 
 const OBLIGATIONS = [
-  { party: 'John Doe', text: 'Must keep all disclosed information strictly confidential indefinitely.' },
-  { party: 'John Doe', text: 'May only use confidential information to evaluate a potential partnership - no other purpose.' },
-  { party: 'Acme Corp', text: 'May assign this agreement to any entity without notice or consent.' },
+  {
+    party: 'John Doe',
+    text: 'Must keep all disclosed information strictly confidential indefinitely.',
+  },
+  {
+    party: 'John Doe',
+    text: 'May only use confidential information to evaluate a potential partnership - no other purpose.',
+  },
+  {
+    party: 'Acme Corp',
+    text: 'May assign this agreement to any entity without notice or consent.',
+  },
 ];
 
 const MISSING_CLAUSES = [
@@ -20,10 +33,18 @@ const MISSING_CLAUSES = [
 ];
 
 const EXPLORE_LINKS = [
-  { title: 'Clause breakdown', desc: 'Every clause explained', page: 'clause-breakdown' },
+  {
+    title: 'Clause breakdown',
+    desc: 'Every clause explained',
+    page: 'clause-breakdown',
+  },
   { title: 'Risk report', desc: 'Full red flag analysis', page: 'risk-report' },
   { title: 'Key dates', desc: 'Timeline & reminders', page: 'key-dates' },
-  { title: 'Compare versions', desc: 'Diff against another draft', page: 'compare' },
+  {
+    title: 'Compare versions',
+    desc: 'Diff against another draft',
+    page: 'compare',
+  },
 ];
 
 export function renderSummary(container) {
@@ -185,35 +206,42 @@ export function renderSummary(container) {
 }
 
 function renderRedFlags() {
-  return RED_FLAGS.map(flag => `
+  return RED_FLAGS.map(
+    (flag) => `
     <button type="button" class="reset-btn card summary-alert-card flex items-start gap-10 hover-raise-danger" data-nav-target="risk-report">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5" class="flex-shrink-0 mt-4"><path d="M7 1v8M7 11v1.5"/></svg>
       <div class="fs-13 text-danger lh-15 summary-alert-text">${flag}</div>
       <div class="text-danger summary-alert-arrow">›</div>
     </button>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function renderObligations() {
-  return OBLIGATIONS.map(obligation => `
+  return OBLIGATIONS.map(
+    (obligation) => `
     <div class="panel-list-row align-start">
       <span class="badge badge-info mt-4">${obligation.party}</span>
       <span class="fs-13 text-secondary lh-15">${obligation.text}</span>
     </div>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function renderMissingClauses() {
-  return MISSING_CLAUSES.map(clause => `
+  return MISSING_CLAUSES.map(
+    (clause) => `
     <div class="panel-list-row align-start">
       <div class="panel-list-dash mt-8"></div>
       <span class="fs-13 text-secondary">${clause}</span>
     </div>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function renderExploreLinks() {
-  return EXPLORE_LINKS.map(link => `
+  return EXPLORE_LINKS.map(
+    (link) => `
     <button type="button" class="reset-btn flex items-center justify-between hover-bg-secondary summary-link-row" data-nav-target="${link.page}">
       <div>
         <p class="fs-13 fw-500 text-primary m-0">${link.title}</p>
@@ -221,21 +249,28 @@ function renderExploreLinks() {
       </div>
       <span class="text-tertiary">›</span>
     </button>
-  `).join('');
+  `,
+  ).join('');
 }
 
 function bindSummaryActions(container) {
-  container.querySelectorAll('.summary-alert-card, .summary-link-row').forEach(button => {
-    button.addEventListener('click', () => {
-      window.navigateTo(button.dataset.navTarget);
+  container
+    .querySelectorAll('.summary-alert-card, .summary-link-row')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        window.navigateTo(button.dataset.navTarget);
+      });
     });
-  });
 
-  container.querySelector('#download-summary-btn').addEventListener('click', () => {
-    window.navigateTo('export');
-  });
+  container
+    .querySelector('#download-summary-btn')
+    .addEventListener('click', () => {
+      window.navigateTo('export');
+    });
 
-  container.querySelector('#share-summary-btn').addEventListener('click', () => {
-    window.showToast('Link copied to clipboard!');
-  });
+  container
+    .querySelector('#share-summary-btn')
+    .addEventListener('click', () => {
+      window.showToast('Link copied to clipboard!');
+    });
 }

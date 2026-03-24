@@ -1,84 +1,406 @@
-
 <style>
-* { box-sizing: border-box; }
-.page { background: var(--color-background-tertiary); border-radius: var(--border-radius-lg); padding: 0; overflow: hidden; }
-.topbar { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
-.logo { font-size: 14px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; }
-.logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-text-info); }
-.topnav { display: flex; gap: 4px; }
-.topnav span { font-size: 12px; color: var(--color-text-tertiary); padding: 4px 10px; border-radius: var(--border-radius-md); cursor: pointer; }
-.topnav span:hover { background: var(--color-background-secondary); color: var(--color-text-secondary); }
-.main { padding: 28px 24px; }
-.page-head { margin-bottom: 24px; }
-.page-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
-.page-sub { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+  * {
+    box-sizing: border-box;
+  }
+  .page {
+    background: var(--color-background-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 0;
+    overflow: hidden;
+  }
+  .topbar {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-text-info);
+  }
+  .topnav {
+    display: flex;
+    gap: 4px;
+  }
+  .topnav span {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    padding: 4px 10px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+  }
+  .topnav span:hover {
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+  }
+  .main {
+    padding: 28px 24px;
+  }
+  .page-head {
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
 
-.input-tabs { display: flex; gap: 2px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 3px; margin-bottom: 16px; width: fit-content; }
-.tab { font-size: 12px; padding: 5px 14px; border-radius: 6px; cursor: pointer; color: var(--color-text-secondary); transition: all .15s; user-select: none; }
-.tab.active { background: var(--color-background-primary); color: var(--color-text-primary); font-weight: 500; border: 0.5px solid var(--color-border-tertiary); }
+  .input-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 3px;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+  .tab {
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tab.active {
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-weight: 500;
+    border: 0.5px solid var(--color-border-tertiary);
+  }
 
-.upload-zone { border: 1.5px dashed var(--color-border-secondary); border-radius: var(--border-radius-lg); padding: 36px 24px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; background: var(--color-background-primary); }
-.upload-zone:hover, .upload-zone.drag { border-color: var(--color-border-info); background: var(--color-background-info); }
-.upload-icon { width: 40px; height: 40px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-.upload-icon svg { width: 20px; height: 20px; stroke: var(--color-text-secondary); }
-.upload-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
-.upload-sub { font-size: 12px; color: var(--color-text-tertiary); margin: 0 0 14px; }
-.file-chips { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
-.chip { font-size: 11px; padding: 3px 8px; border-radius: 999px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); background: var(--color-background-secondary); }
+  .upload-zone {
+    border: 1.5px dashed var(--color-border-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 36px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+    background: var(--color-background-primary);
+  }
+  .upload-zone:hover,
+  .upload-zone.drag {
+    border-color: var(--color-border-info);
+    background: var(--color-background-info);
+  }
+  .upload-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .upload-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-text-secondary);
+  }
+  .upload-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 4px;
+  }
+  .upload-sub {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin: 0 0 14px;
+  }
+  .file-chips {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+  }
 
-.paste-area textarea { width: 100%; height: 160px; resize: vertical; font-size: 13px; font-family: var(--font-mono); line-height: 1.6; border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); padding: 12px; }
+  .paste-area textarea {
+    width: 100%;
+    height: 160px;
+    resize: vertical;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    border-radius: var(--border-radius-lg);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    padding: 12px;
+  }
 
-.url-row { display: flex; gap: 8px; }
-.url-row input { flex: 1; font-size: 13px; padding: 0 12px; height: 36px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); }
+  .url-row {
+    display: flex;
+    gap: 8px;
+  }
+  .url-row input {
+    flex: 1;
+    font-size: 13px;
+    padding: 0 12px;
+    height: 36px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+  }
 
-.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-.opt-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; cursor: pointer; transition: border-color .15s; }
-.opt-card:hover { border-color: var(--color-border-secondary); }
-.opt-card.selected { border: 1.5px solid var(--color-border-info); background: var(--color-background-info); }
-.opt-label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 2px; }
-.opt-desc { font-size: 11px; color: var(--color-text-tertiary); margin: 0; }
-.opt-card.selected .opt-label { color: var(--color-text-info); }
-.opt-card.selected .opt-desc { color: var(--color-text-info); opacity: .7; }
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .opt-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .opt-card:hover {
+    border-color: var(--color-border-secondary);
+  }
+  .opt-card.selected {
+    border: 1.5px solid var(--color-border-info);
+    background: var(--color-background-info);
+  }
+  .opt-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 2px;
+  }
+  .opt-desc {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+  .opt-card.selected .opt-label {
+    color: var(--color-text-info);
+  }
+  .opt-card.selected .opt-desc {
+    color: var(--color-text-info);
+    opacity: 0.7;
+  }
 
-.section-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 0 0 8px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 0 0 8px;
+  }
 
-.doctype-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.dtype-pill { font-size: 12px; padding: 5px 12px; border-radius: 999px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); background: var(--color-background-primary); cursor: pointer; transition: all .15s; user-select: none; }
-.dtype-pill:hover { border-color: var(--color-border-secondary); }
-.dtype-pill.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
+  .doctype-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .dtype-pill {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    background: var(--color-background-primary);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .dtype-pill:hover {
+    border-color: var(--color-border-secondary);
+  }
+  .dtype-pill.active {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+    font-weight: 500;
+  }
 
-.analyze-btn { width: 100%; padding: 10px; font-size: 14px; font-weight: 500; margin-top: 20px; border-radius: var(--border-radius-md); cursor: pointer; border: none; background: var(--color-text-primary); color: var(--color-background-primary); transition: opacity .15s; }
-.analyze-btn:disabled { opacity: .35; cursor: not-allowed; }
-.analyze-btn:not(:disabled):hover { opacity: .85; }
+  .analyze-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 20px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    border: none;
+    background: var(--color-text-primary);
+    color: var(--color-background-primary);
+    transition: opacity 0.15s;
+  }
+  .analyze-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .analyze-btn:not(:disabled):hover {
+    opacity: 0.85;
+  }
 
-.progress-wrap { margin-top: 20px; }
-.progress-track { height: 3px; background: var(--color-border-tertiary); border-radius: 2px; overflow: hidden; }
-.progress-bar { height: 100%; background: var(--color-text-info); border-radius: 2px; transition: width .4s ease; }
-.progress-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-.p-step { display: flex; align-items: center; gap: 10px; font-size: 13px; }
-.p-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.p-dot.done { background: var(--color-text-success); }
-.p-dot.active { background: var(--color-text-info); }
-.p-dot.pending { background: var(--color-border-secondary); }
-.p-step.done { color: var(--color-text-secondary); }
-.p-step.active { color: var(--color-text-primary); font-weight: 500; }
-.p-step.pending { color: var(--color-text-tertiary); }
+  .progress-wrap {
+    margin-top: 20px;
+  }
+  .progress-track {
+    height: 3px;
+    background: var(--color-border-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--color-text-info);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .p-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .p-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .p-dot.done {
+    background: var(--color-text-success);
+  }
+  .p-dot.active {
+    background: var(--color-text-info);
+  }
+  .p-dot.pending {
+    background: var(--color-border-secondary);
+  }
+  .p-step.done {
+    color: var(--color-text-secondary);
+  }
+  .p-step.active {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+  .p-step.pending {
+    color: var(--color-text-tertiary);
+  }
 
-.recent-section { margin-top: 24px; padding-top: 20px; border-top: 0.5px solid var(--color-border-tertiary); }
-.recent-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); cursor: pointer; }
-.recent-row:last-child { border-bottom: none; }
-.recent-row:hover .recent-name { color: var(--color-text-info); }
-.recent-icon { width: 28px; height: 28px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.recent-icon svg { width: 14px; height: 14px; stroke: var(--color-text-secondary); }
-.recent-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
-.recent-meta { font-size: 11px; color: var(--color-text-tertiary); }
-.risk-pill { font-size: 11px; padding: 2px 8px; border-radius: 999px; }
-.risk-pill.high { background: var(--color-background-danger); color: var(--color-text-danger); }
-.risk-pill.medium { background: var(--color-background-warning); color: var(--color-text-warning); }
-.risk-pill.low { background: var(--color-background-success); color: var(--color-text-success); }
+  .recent-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 0.5px solid var(--color-border-tertiary);
+  }
+  .recent-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    cursor: pointer;
+  }
+  .recent-row:last-child {
+    border-bottom: none;
+  }
+  .recent-row:hover .recent-name {
+    color: var(--color-text-info);
+  }
+  .recent-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .recent-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--color-text-secondary);
+  }
+  .recent-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    flex: 1;
+  }
+  .recent-meta {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+  }
+  .risk-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .risk-pill.high {
+    background: var(--color-background-danger);
+    color: var(--color-text-danger);
+  }
+  .risk-pill.medium {
+    background: var(--color-background-warning);
+    color: var(--color-text-warning);
+  }
+  .risk-pill.low {
+    background: var(--color-background-success);
+    color: var(--color-text-success);
+  }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinner { width: 14px; height: 14px; border: 2px solid var(--color-border-secondary); border-top-color: var(--color-text-info); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--color-border-secondary);
+    border-top-color: var(--color-text-info);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
 </style>
 
 <div class="page">
@@ -96,141 +418,423 @@
   </div>
 
   <div class="main">
-    <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;">
-
+    <div
+      style="
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 24px;
+        align-items: start;
+      "
+    >
       <div>
         <div class="page-head">
           <p class="page-title">Analyze a document</p>
-          <p class="page-sub">Upload, paste, or link a legal document to get an instant plain-English analysis.</p>
+          <p class="page-sub">
+            Upload, paste, or link a legal document to get an instant
+            plain-English analysis.
+          </p>
         </div>
 
         <div class="input-tabs" id="tabs">
-          <div class="tab active" onclick="switchTab('upload')">Upload file</div>
+          <div class="tab active" onclick="switchTab('upload')">
+            Upload file
+          </div>
           <div class="tab" onclick="switchTab('paste')">Paste text</div>
           <div class="tab" onclick="switchTab('url')">From URL</div>
         </div>
 
         <div id="panel-upload">
-          <div class="upload-zone" id="dropzone" onclick="simulateFile()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')">
+          <div
+            class="upload-zone"
+            id="dropzone"
+            onclick="simulateFile()"
+            ondragover="
+              event.preventDefault();
+              this.classList.add('drag');
+            "
+            ondragleave="this.classList.remove('drag')"
+          >
             <div class="upload-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4M8 8l4-4 4 4"/></svg>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4M8 8l4-4 4 4"
+                />
+              </svg>
             </div>
-            <p class="upload-title" id="dropzone-title">Drop your document here</p>
+            <p class="upload-title" id="dropzone-title">
+              Drop your document here
+            </p>
             <p class="upload-sub" id="dropzone-sub">or click to browse files</p>
             <div class="file-chips">
-              <span class="chip">PDF</span><span class="chip">DOCX</span><span class="chip">TXT</span><span class="chip">up to 50 MB</span>
+              <span class="chip">PDF</span><span class="chip">DOCX</span
+              ><span class="chip">TXT</span
+              ><span class="chip">up to 50 MB</span>
             </div>
           </div>
         </div>
 
-        <div id="panel-paste" style="display:none" class="paste-area">
-          <textarea placeholder="Paste the full text of your legal document here..."></textarea>
+        <div id="panel-paste" style="display: none" class="paste-area">
+          <textarea
+            placeholder="Paste the full text of your legal document here..."
+          ></textarea>
         </div>
 
-        <div id="panel-url" style="display:none">
+        <div id="panel-url" style="display: none">
           <div class="url-row">
-            <input type="text" placeholder="https://drive.google.com/... or any public document URL" />
-            <button style="white-space:nowrap;padding:0 16px">Fetch</button>
+            <input
+              type="text"
+              placeholder="https://drive.google.com/... or any public document URL"
+            />
+            <button style="white-space: nowrap; padding: 0 16px">Fetch</button>
           </div>
-          <p style="font-size:11px;color:var(--color-text-tertiary);margin:6px 0 0;">Supports Google Drive, Dropbox, OneDrive, and direct PDF links.</p>
+          <p
+            style="
+              font-size: 11px;
+              color: var(--color-text-tertiary);
+              margin: 6px 0 0;
+            "
+          >
+            Supports Google Drive, Dropbox, OneDrive, and direct PDF links.
+          </p>
         </div>
 
-        <div style="margin-top:20px;">
+        <div style="margin-top: 20px">
           <p class="section-label">Document type</p>
           <div class="doctype-row" id="dtypes">
-            <div class="dtype-pill active" onclick="selectType(this)">Auto-detect</div>
+            <div class="dtype-pill active" onclick="selectType(this)">
+              Auto-detect
+            </div>
             <div class="dtype-pill" onclick="selectType(this)">NDA</div>
             <div class="dtype-pill" onclick="selectType(this)">Employment</div>
             <div class="dtype-pill" onclick="selectType(this)">Lease</div>
             <div class="dtype-pill" onclick="selectType(this)">SaaS / MSA</div>
-            <div class="dtype-pill" onclick="selectType(this)">Terms of service</div>
+            <div class="dtype-pill" onclick="selectType(this)">
+              Terms of service
+            </div>
             <div class="dtype-pill" onclick="selectType(this)">Other</div>
           </div>
         </div>
 
-        <div style="margin-top:20px;">
+        <div style="margin-top: 20px">
           <p class="section-label">Analysis depth</p>
           <div class="options-grid">
-            <div class="opt-card selected" onclick="selectDepth(this)" id="d-quick">
+            <div
+              class="opt-card selected"
+              onclick="selectDepth(this)"
+              id="d-quick"
+            >
               <p class="opt-label">Quick scan</p>
               <p class="opt-desc">Summary + red flags only. ~10 sec.</p>
             </div>
             <div class="opt-card" onclick="selectDepth(this)" id="d-full">
               <p class="opt-label">Full analysis</p>
-              <p class="opt-desc">Every clause, obligations, timeline. ~30 sec.</p>
+              <p class="opt-desc">
+                Every clause, obligations, timeline. ~30 sec.
+              </p>
             </div>
           </div>
         </div>
 
-        <button class="analyze-btn" id="analyze-btn" onclick="startAnalysis()">Analyze document</button>
+        <button class="analyze-btn" id="analyze-btn" onclick="startAnalysis()">
+          Analyze document
+        </button>
 
-        <div class="progress-wrap" id="progress-wrap" style="display:none;">
-          <div class="progress-track"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+        <div class="progress-wrap" id="progress-wrap" style="display: none">
+          <div class="progress-track">
+            <div class="progress-bar" id="pbar" style="width: 0%"></div>
+          </div>
           <div class="progress-steps" id="psteps">
-            <div class="p-step active" id="ps1"><div class="spinner"></div>Reading document structure</div>
-            <div class="p-step pending" id="ps2"><div class="p-dot pending"></div>Identifying parties &amp; dates</div>
-            <div class="p-step pending" id="ps3"><div class="p-dot pending"></div>Extracting clauses</div>
-            <div class="p-step pending" id="ps4"><div class="p-dot pending"></div>Assessing risk level</div>
-            <div class="p-step pending" id="ps5"><div class="p-dot pending"></div>Generating plain-English summary</div>
+            <div class="p-step active" id="ps1">
+              <div class="spinner"></div>
+              Reading document structure
+            </div>
+            <div class="p-step pending" id="ps2">
+              <div class="p-dot pending"></div>
+              Identifying parties &amp; dates
+            </div>
+            <div class="p-step pending" id="ps3">
+              <div class="p-dot pending"></div>
+              Extracting clauses
+            </div>
+            <div class="p-step pending" id="ps4">
+              <div class="p-dot pending"></div>
+              Assessing risk level
+            </div>
+            <div class="p-step pending" id="ps5">
+              <div class="p-dot pending"></div>
+              Generating plain-English summary
+            </div>
           </div>
         </div>
       </div>
 
       <div>
-        <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:16px;">
-          <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:0 0 10px;">What you'll get</p>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;align-items:flex-start;gap:8px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:5px;flex-shrink:0;"></div>
-              <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Plain-English summary of the whole document</span>
+        <div
+          style="
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: var(--border-radius-lg);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+          "
+        >
+          <p
+            style="
+              font-size: 12px;
+              font-weight: 500;
+              color: var(--color-text-secondary);
+              margin: 0 0 10px;
+            "
+          >
+            What you'll get
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; align-items: flex-start; gap: 8px">
+              <div
+                style="
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  background: var(--color-text-success);
+                  margin-top: 5px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span
+                style="
+                  font-size: 12px;
+                  color: var(--color-text-secondary);
+                  line-height: 1.5;
+                "
+                >Plain-English summary of the whole document</span
+              >
             </div>
-            <div style="display:flex;align-items:flex-start;gap:8px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:5px;flex-shrink:0;"></div>
-              <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Parties, key dates &amp; obligations identified</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px">
+              <div
+                style="
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  background: var(--color-text-success);
+                  margin-top: 5px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span
+                style="
+                  font-size: 12px;
+                  color: var(--color-text-secondary);
+                  line-height: 1.5;
+                "
+                >Parties, key dates &amp; obligations identified</span
+              >
             </div>
-            <div style="display:flex;align-items:flex-start;gap:8px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:5px;flex-shrink:0;"></div>
-              <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Red flags and one-sided clauses highlighted</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px">
+              <div
+                style="
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  background: var(--color-text-success);
+                  margin-top: 5px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span
+                style="
+                  font-size: 12px;
+                  color: var(--color-text-secondary);
+                  line-height: 1.5;
+                "
+                >Red flags and one-sided clauses highlighted</span
+              >
             </div>
-            <div style="display:flex;align-items:flex-start;gap:8px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:5px;flex-shrink:0;"></div>
-              <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Overall risk score (Low / Medium / High)</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px">
+              <div
+                style="
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  background: var(--color-text-success);
+                  margin-top: 5px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span
+                style="
+                  font-size: 12px;
+                  color: var(--color-text-secondary);
+                  line-height: 1.5;
+                "
+                >Overall risk score (Low / Medium / High)</span
+              >
             </div>
-            <div style="display:flex;align-items:flex-start;gap:8px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:5px;flex-shrink:0;"></div>
-              <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">Missing standard clauses flagged</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px">
+              <div
+                style="
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  background: var(--color-text-success);
+                  margin-top: 5px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <span
+                style="
+                  font-size: 12px;
+                  color: var(--color-text-secondary);
+                  line-height: 1.5;
+                "
+                >Missing standard clauses flagged</span
+              >
             </div>
           </div>
         </div>
 
-        <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:16px;">
-          <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:0 0 10px;">Privacy</p>
-          <p style="font-size:12px;color:var(--color-text-tertiary);line-height:1.6;margin:0;">Your documents are processed securely and never stored beyond your session unless you choose to save them to your vault.</p>
+        <div
+          style="
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: var(--border-radius-lg);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+          "
+        >
+          <p
+            style="
+              font-size: 12px;
+              font-weight: 500;
+              color: var(--color-text-secondary);
+              margin: 0 0 10px;
+            "
+          >
+            Privacy
+          </p>
+          <p
+            style="
+              font-size: 12px;
+              color: var(--color-text-tertiary);
+              line-height: 1.6;
+              margin: 0;
+            "
+          >
+            Your documents are processed securely and never stored beyond your
+            session unless you choose to save them to your vault.
+          </p>
         </div>
 
-        <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;">
-          <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:0 0 2px;">Not a lawyer</p>
-          <p style="font-size:12px;color:var(--color-text-tertiary);line-height:1.6;margin:0;">This tool provides AI-assisted analysis. Always consult a qualified legal professional for binding decisions.</p>
+        <div
+          style="
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: var(--border-radius-lg);
+            padding: 14px 16px;
+          "
+        >
+          <p
+            style="
+              font-size: 12px;
+              font-weight: 500;
+              color: var(--color-text-secondary);
+              margin: 0 0 2px;
+            "
+          >
+            Not a lawyer
+          </p>
+          <p
+            style="
+              font-size: 12px;
+              color: var(--color-text-tertiary);
+              line-height: 1.6;
+              margin: 0;
+            "
+          >
+            This tool provides AI-assisted analysis. Always consult a qualified
+            legal professional for binding decisions.
+          </p>
         </div>
       </div>
     </div>
 
     <div class="recent-section">
       <p class="section-label">Recent documents</p>
-      <div class="recent-row" onclick="sendPrompt('What should the Summary page show in a legal document summarizer?')">
-        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+      <div
+        class="recent-row"
+        onclick="
+          sendPrompt(
+            'What should the Summary page show in a legal document summarizer?',
+          )
+        "
+      >
+        <div class="recent-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+          </svg>
+        </div>
         <div class="recent-name">Acme Corp — NDA v3.pdf</div>
         <div class="recent-meta">2 days ago</div>
         <div class="risk-pill high">High risk</div>
       </div>
-      <div class="recent-row" onclick="sendPrompt('What should the Clause Breakdown page show in a legal document summarizer?')">
-        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-        <div class="recent-name">Freelance Services Agreement — Jan 2025.docx</div>
+      <div
+        class="recent-row"
+        onclick="
+          sendPrompt(
+            'What should the Clause Breakdown page show in a legal document summarizer?',
+          )
+        "
+      >
+        <div class="recent-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+          </svg>
+        </div>
+        <div class="recent-name">
+          Freelance Services Agreement — Jan 2025.docx
+        </div>
         <div class="recent-meta">5 days ago</div>
         <div class="risk-pill medium">Medium risk</div>
       </div>
-      <div class="recent-row" onclick="sendPrompt('What should the Key Dates timeline page look like in a legal document summarizer?')">
-        <div class="recent-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+      <div
+        class="recent-row"
+        onclick="
+          sendPrompt(
+            'What should the Key Dates timeline page look like in a legal document summarizer?',
+          )
+        "
+      >
+        <div class="recent-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+          </svg>
+        </div>
         <div class="recent-name">Office Lease — Mumbai — 2025.pdf</div>
         <div class="recent-meta">Last week</div>
         <div class="risk-pill low">Low risk</div>
@@ -240,51 +844,71 @@
 </div>
 
 <script>
-function switchTab(t) {
-  ['upload','paste','url'].forEach(id => {
-    document.getElementById('panel-'+id).style.display = id===t ? 'block' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach((el,i) => {
-    el.classList.toggle('active', ['upload','paste','url'][i]===t);
-  });
-}
-function simulateFile() {
-  document.getElementById('dropzone-title').textContent = 'contract_nda_v3.pdf';
-  document.getElementById('dropzone-sub').textContent = '142 KB — ready to analyze';
-  document.getElementById('dropzone').style.borderColor = 'var(--color-border-success)';
-  document.getElementById('dropzone').style.background = 'var(--color-background-success)';
-  document.getElementById('analyze-btn').disabled = false;
-}
-function selectType(el) {
-  document.querySelectorAll('.dtype-pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-}
-function selectDepth(el) {
-  ['d-quick','d-full'].forEach(id => document.getElementById(id).classList.remove('selected'));
-  el.classList.add('selected');
-}
-var step = 0, pct = 0, timer;
-var steps = ['ps1','ps2','ps3','ps4','ps5'];
-var pcts = [15, 35, 58, 78, 100];
-function startAnalysis() {
-  document.getElementById('analyze-btn').style.display = 'none';
-  document.getElementById('progress-wrap').style.display = 'block';
-  step = 0; advanceStep();
-}
-function advanceStep() {
-  if (step >= steps.length) return;
-  if (step > 0) {
-    var prev = document.getElementById(steps[step-1]);
-    prev.className = 'p-step done';
-    prev.innerHTML = '<div class="p-dot done"></div>' + prev.innerText.trim();
+  function switchTab(t) {
+    ['upload', 'paste', 'url'].forEach((id) => {
+      document.getElementById('panel-' + id).style.display =
+        id === t ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab').forEach((el, i) => {
+      el.classList.toggle('active', ['upload', 'paste', 'url'][i] === t);
+    });
   }
-  var cur = document.getElementById(steps[step]);
-  cur.className = 'p-step active';
-  if (step > 0) cur.innerHTML = '<div class="spinner"></div>' + cur.innerText.trim();
-  document.getElementById('pbar').style.width = pcts[step] + '%';
-  step++;
-  if (step < steps.length) timer = setTimeout(advanceStep, 1100);
-  else setTimeout(() => sendPrompt('Tell me more about the Summary page in a legal document summarizer'), 1200);
-}
-document.getElementById('analyze-btn').disabled = true;
+  function simulateFile() {
+    document.getElementById('dropzone-title').textContent =
+      'contract_nda_v3.pdf';
+    document.getElementById('dropzone-sub').textContent =
+      '142 KB — ready to analyze';
+    document.getElementById('dropzone').style.borderColor =
+      'var(--color-border-success)';
+    document.getElementById('dropzone').style.background =
+      'var(--color-background-success)';
+    document.getElementById('analyze-btn').disabled = false;
+  }
+  function selectType(el) {
+    document
+      .querySelectorAll('.dtype-pill')
+      .forEach((p) => p.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function selectDepth(el) {
+    ['d-quick', 'd-full'].forEach((id) =>
+      document.getElementById(id).classList.remove('selected'),
+    );
+    el.classList.add('selected');
+  }
+  var step = 0,
+    pct = 0,
+    timer;
+  var steps = ['ps1', 'ps2', 'ps3', 'ps4', 'ps5'];
+  var pcts = [15, 35, 58, 78, 100];
+  function startAnalysis() {
+    document.getElementById('analyze-btn').style.display = 'none';
+    document.getElementById('progress-wrap').style.display = 'block';
+    step = 0;
+    advanceStep();
+  }
+  function advanceStep() {
+    if (step >= steps.length) return;
+    if (step > 0) {
+      var prev = document.getElementById(steps[step - 1]);
+      prev.className = 'p-step done';
+      prev.innerHTML = '<div class="p-dot done"></div>' + prev.innerText.trim();
+    }
+    var cur = document.getElementById(steps[step]);
+    cur.className = 'p-step active';
+    if (step > 0)
+      cur.innerHTML = '<div class="spinner"></div>' + cur.innerText.trim();
+    document.getElementById('pbar').style.width = pcts[step] + '%';
+    step++;
+    if (step < steps.length) timer = setTimeout(advanceStep, 1100);
+    else
+      setTimeout(
+        () =>
+          sendPrompt(
+            'Tell me more about the Summary page in a legal document summarizer',
+          ),
+        1200,
+      );
+  }
+  document.getElementById('analyze-btn').disabled = true;
 </script>

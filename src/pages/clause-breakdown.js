@@ -1,18 +1,121 @@
-import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+import {
+  bindRouteTabs,
+  DOCUMENT_TABS,
+  renderPageTabs,
+} from './shared/page-tabs.js';
 import { copyText, escapeHtml } from './shared/ui-actions.js';
 
 const CLAUSES = [
-  { id: '1', title: '1. Definition of Confidential Info', risk: 'success', original: 'Confidential Information means all information disclosed by the Disclosing Party in written, oral, graphic, or machine-readable form and marked confidential.', plain: 'This clause defines what information counts as protected under the NDA.', analysis: 'This is a standard definition clause with balanced drafting.' },
-  { id: '2', title: '2. Obligations of Receiving Party', risk: 'warning', original: 'The Receiving Party shall use the Confidential Information solely for the Evaluation Purpose and shall protect it with at least reasonable care.', plain: 'The recipient can only use the information for the stated business purpose and must keep it protected.', analysis: 'The duty of care is acceptable, but the purpose language should stay narrow.' },
-  { id: '3', title: '3. Exclusions from Confidentiality', risk: 'success', original: 'Confidentiality obligations do not apply to information that is public, previously known, independently developed, or lawfully received from a third party.', plain: 'Some information is excluded if it was already public or known independently.', analysis: 'This is a healthy carve-out and reduces overreach.' },
-  { id: '4', title: '4. Term and Termination', risk: 'danger', original: 'This Agreement shall commence on the Effective Date and shall remain in full force and effect for an unlimited period of time. The obligations of confidentiality imposed upon the Receiving Party shall continue in perpetuity.', plain: 'This contract never really ends. The confidentiality obligations continue forever.', analysis: 'Unlimited confidentiality obligations are unusually aggressive. Standard NDAs usually sunset after 2-5 years.' },
-  { id: '5', title: '5. Return of Materials', risk: 'success', original: 'Upon written request, the Receiving Party shall promptly return or destroy all Confidential Information and certify destruction if requested.', plain: 'If asked, the recipient has to return or destroy the confidential material.', analysis: 'This is a standard and useful clean-up obligation.' },
-  { id: '6', title: '6. No License Granted', risk: 'success', original: 'No license or other rights in any intellectual property are granted or implied by disclosure of Confidential Information.', plain: 'Sharing information does not mean the other party gets any IP rights.', analysis: 'A routine protective clause with no obvious imbalance.' },
-  { id: '7', title: '7. Liquidated Damages', risk: 'danger', original: 'Recipient shall pay liquidated damages of $500,000 per violation in the event of any breach of confidentiality.', plain: 'A breach automatically triggers a $500,000 payment.', analysis: 'This is very aggressive and likely over-penalizes even minor breaches.' },
-  { id: '8', title: '8. Governing Law', risk: 'warning', original: 'This Agreement shall be governed by the laws of Delaware, and disputes shall be resolved exclusively in Delaware courts.', plain: 'All disputes have to be handled under Delaware law and in Delaware courts.', analysis: 'This may be expensive and inconvenient for non-US counterparties.' },
-  { id: '9', title: '9. Assignment', risk: 'danger', original: 'Disclosing Party may assign this Agreement without the consent of the Receiving Party.', plain: 'Acme can transfer the agreement without asking you first.', analysis: 'This is one-sided and should be made mutual or consent-based.' },
-  { id: '10', title: '10. Severability', risk: 'success', original: 'If any part of this Agreement is held unenforceable, the remainder shall continue in full force and effect.', plain: 'If one clause is invalid, the rest of the contract still stands.', analysis: 'Standard boilerplate with low risk.' },
-  { id: '11', title: '11. Entire Agreement', risk: 'success', original: 'This Agreement constitutes the entire understanding between the parties regarding Confidential Information.', plain: 'This document is the complete agreement on confidentiality.', analysis: 'Standard integration language.' },
+  {
+    id: '1',
+    title: '1. Definition of Confidential Info',
+    risk: 'success',
+    original:
+      'Confidential Information means all information disclosed by the Disclosing Party in written, oral, graphic, or machine-readable form and marked confidential.',
+    plain:
+      'This clause defines what information counts as protected under the NDA.',
+    analysis: 'This is a standard definition clause with balanced drafting.',
+  },
+  {
+    id: '2',
+    title: '2. Obligations of Receiving Party',
+    risk: 'warning',
+    original:
+      'The Receiving Party shall use the Confidential Information solely for the Evaluation Purpose and shall protect it with at least reasonable care.',
+    plain:
+      'The recipient can only use the information for the stated business purpose and must keep it protected.',
+    analysis:
+      'The duty of care is acceptable, but the purpose language should stay narrow.',
+  },
+  {
+    id: '3',
+    title: '3. Exclusions from Confidentiality',
+    risk: 'success',
+    original:
+      'Confidentiality obligations do not apply to information that is public, previously known, independently developed, or lawfully received from a third party.',
+    plain:
+      'Some information is excluded if it was already public or known independently.',
+    analysis: 'This is a healthy carve-out and reduces overreach.',
+  },
+  {
+    id: '4',
+    title: '4. Term and Termination',
+    risk: 'danger',
+    original:
+      'This Agreement shall commence on the Effective Date and shall remain in full force and effect for an unlimited period of time. The obligations of confidentiality imposed upon the Receiving Party shall continue in perpetuity.',
+    plain:
+      'This contract never really ends. The confidentiality obligations continue forever.',
+    analysis:
+      'Unlimited confidentiality obligations are unusually aggressive. Standard NDAs usually sunset after 2-5 years.',
+  },
+  {
+    id: '5',
+    title: '5. Return of Materials',
+    risk: 'success',
+    original:
+      'Upon written request, the Receiving Party shall promptly return or destroy all Confidential Information and certify destruction if requested.',
+    plain:
+      'If asked, the recipient has to return or destroy the confidential material.',
+    analysis: 'This is a standard and useful clean-up obligation.',
+  },
+  {
+    id: '6',
+    title: '6. No License Granted',
+    risk: 'success',
+    original:
+      'No license or other rights in any intellectual property are granted or implied by disclosure of Confidential Information.',
+    plain:
+      'Sharing information does not mean the other party gets any IP rights.',
+    analysis: 'A routine protective clause with no obvious imbalance.',
+  },
+  {
+    id: '7',
+    title: '7. Liquidated Damages',
+    risk: 'danger',
+    original:
+      'Recipient shall pay liquidated damages of $500,000 per violation in the event of any breach of confidentiality.',
+    plain: 'A breach automatically triggers a $500,000 payment.',
+    analysis:
+      'This is very aggressive and likely over-penalizes even minor breaches.',
+  },
+  {
+    id: '8',
+    title: '8. Governing Law',
+    risk: 'warning',
+    original:
+      'This Agreement shall be governed by the laws of Delaware, and disputes shall be resolved exclusively in Delaware courts.',
+    plain:
+      'All disputes have to be handled under Delaware law and in Delaware courts.',
+    analysis:
+      'This may be expensive and inconvenient for non-US counterparties.',
+  },
+  {
+    id: '9',
+    title: '9. Assignment',
+    risk: 'danger',
+    original:
+      'Disclosing Party may assign this Agreement without the consent of the Receiving Party.',
+    plain: 'Acme can transfer the agreement without asking you first.',
+    analysis: 'This is one-sided and should be made mutual or consent-based.',
+  },
+  {
+    id: '10',
+    title: '10. Severability',
+    risk: 'success',
+    original:
+      'If any part of this Agreement is held unenforceable, the remainder shall continue in full force and effect.',
+    plain: 'If one clause is invalid, the rest of the contract still stands.',
+    analysis: 'Standard boilerplate with low risk.',
+  },
+  {
+    id: '11',
+    title: '11. Entire Agreement',
+    risk: 'success',
+    original:
+      'This Agreement constitutes the entire understanding between the parties regarding Confidential Information.',
+    plain: 'This document is the complete agreement on confidentiality.',
+    analysis: 'Standard integration language.',
+  },
 ];
 
 const ASK_PROMPTS = [
@@ -29,7 +132,7 @@ export function renderClauseBreakdown(container) {
   };
 
   const render = () => {
-    const visibleClauses = CLAUSES.filter(clause =>
+    const visibleClauses = CLAUSES.filter((clause) =>
       clause.title.toLowerCase().includes(state.search.toLowerCase()),
     );
     const activeClause = CLAUSES[state.activeIndex];
@@ -43,12 +146,16 @@ export function renderClauseBreakdown(container) {
             <input type="text" id="clause-search-input" placeholder="Search clauses..." value="${escapeHtml(state.search)}" />
           </div>
           <div class="flex-1 overflow-y-auto">
-            ${visibleClauses.map(clause => `
+            ${visibleClauses
+              .map(
+                (clause) => `
               <button type="button" class="reset-btn clause-item${clause.id === activeClause.id ? ' active' : ''}" data-clause-id="${clause.id}">
                 <div class="severity-dot ${clause.risk === 'danger' ? 'critical' : clause.risk === 'warning' ? 'review' : 'clear'}"></div>
                 <span class="fs-13 clause-item-copy">${clause.title}</span>
               </button>
-            `).join('')}
+            `,
+              )
+              .join('')}
           </div>
         </div>
 
@@ -94,21 +201,27 @@ export function renderClauseBreakdown(container) {
           </div>
 
           <div class="flex flex-col gap-8 mb-16" id="clause-note-list">
-            ${state.notes.map(note => `
+            ${state.notes
+              .map(
+                (note) => `
               <div class="card-surface">
                 <div class="meta-text mb-4">John Doe · Just now</div>
                 <div class="fs-12 text-primary">${escapeHtml(note)}</div>
               </div>
-            `).join('')}
+            `,
+              )
+              .join('')}
           </div>
 
           <p class="section-label">Ask about this clause</p>
           <div class="flex flex-col gap-8 mb-24">
-            ${ASK_PROMPTS.map(prompt => `
+            ${ASK_PROMPTS.map(
+              (prompt) => `
               <button type="button" class="reset-btn card hover-bg-secondary clause-ask-item text-left" data-ask-prompt="${prompt}">
                 <span class="clause-ask-item-text">${prompt}</span>
               </button>
-            `).join('')}
+            `,
+            ).join('')}
           </div>
 
           <p class="section-label">Export clause</p>
@@ -137,14 +250,18 @@ export function renderClauseBreakdown(container) {
 }
 
 function bindClauseBreakdownActions(container, state, render, visibleClauses) {
-  container.querySelector('#clause-search-input')?.addEventListener('input', event => {
-    state.search = event.target.value;
-    render();
-  });
+  container
+    .querySelector('#clause-search-input')
+    ?.addEventListener('input', (event) => {
+      state.search = event.target.value;
+      render();
+    });
 
-  container.querySelectorAll('[data-clause-id]').forEach(button => {
+  container.querySelectorAll('[data-clause-id]').forEach((button) => {
     button.addEventListener('click', () => {
-      const index = CLAUSES.findIndex(clause => clause.id === button.dataset.clauseId);
+      const index = CLAUSES.findIndex(
+        (clause) => clause.id === button.dataset.clauseId,
+      );
       if (index >= 0) {
         state.activeIndex = index;
         render();
@@ -166,19 +283,21 @@ function bindClauseBreakdownActions(container, state, render, visibleClauses) {
     }
   });
 
-  container.querySelector('#post-clause-note-btn')?.addEventListener('click', () => {
-    const input = container.querySelector('#clause-note-input');
-    const note = input.value.trim();
-    if (!note) {
-      window.showToast('Write a note first.');
-      return;
-    }
-    state.notes.unshift(note);
-    render();
-    window.showToast('Clause note posted.');
-  });
+  container
+    .querySelector('#post-clause-note-btn')
+    ?.addEventListener('click', () => {
+      const input = container.querySelector('#clause-note-input');
+      const note = input.value.trim();
+      if (!note) {
+        window.showToast('Write a note first.');
+        return;
+      }
+      state.notes.unshift(note);
+      render();
+      window.showToast('Clause note posted.');
+    });
 
-  container.querySelectorAll('[data-ask-prompt]').forEach(button => {
+  container.querySelectorAll('[data-ask-prompt]').forEach((button) => {
     button.addEventListener('click', () => {
       sessionStorage.setItem('ask_prefill', button.dataset.askPrompt);
       window.navigateTo('ask');
@@ -186,15 +305,27 @@ function bindClauseBreakdownActions(container, state, render, visibleClauses) {
   });
 
   const activeClause = CLAUSES[state.activeIndex];
-  container.querySelector('#copy-clause-original-btn')?.addEventListener('click', () => {
-    copyText(activeClause.original, 'Original clause copied.');
-  });
-  container.querySelector('#copy-clause-analysis-btn')?.addEventListener('click', () => {
-    copyText(`${activeClause.plain}\n\n${activeClause.analysis}`, 'Clause analysis copied.');
-  });
+  container
+    .querySelector('#copy-clause-original-btn')
+    ?.addEventListener('click', () => {
+      copyText(activeClause.original, 'Original clause copied.');
+    });
+  container
+    .querySelector('#copy-clause-analysis-btn')
+    ?.addEventListener('click', () => {
+      copyText(
+        `${activeClause.plain}\n\n${activeClause.analysis}`,
+        'Clause analysis copied.',
+      );
+    });
 
-  if (!visibleClauses.some(clause => clause.id === activeClause.id) && visibleClauses.length > 0) {
-    state.activeIndex = CLAUSES.findIndex(clause => clause.id === visibleClauses[0].id);
+  if (
+    !visibleClauses.some((clause) => clause.id === activeClause.id) &&
+    visibleClauses.length > 0
+  ) {
+    state.activeIndex = CLAUSES.findIndex(
+      (clause) => clause.id === visibleClauses[0].id,
+    );
     render();
   }
 }

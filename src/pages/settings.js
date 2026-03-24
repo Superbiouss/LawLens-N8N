@@ -43,9 +43,11 @@ export function renderSettings(container) {
   const prefetchedTab = sessionStorage.getItem('settings_tab_prefill');
 
   if (prefetchedTab) {
-    const selectedTab = Array.from(tabs).find(tab => tab.dataset.tab === prefetchedTab);
+    const selectedTab = Array.from(tabs).find(
+      (tab) => tab.dataset.tab === prefetchedTab,
+    );
     if (selectedTab) {
-      tabs.forEach(tab => tab.classList.remove('active'));
+      tabs.forEach((tab) => tab.classList.remove('active'));
       selectedTab.classList.add('active');
       content.innerHTML = renderTab(prefetchedTab);
       sessionStorage.removeItem('settings_tab_prefill');
@@ -59,11 +61,12 @@ export function renderSettings(container) {
     }
   }, 0);
 
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
+      tabs.forEach((t) => t.classList.remove('active'));
       tab.classList.add('active');
-      if (window.updateTabIndicator) window.updateTabIndicator(tab.parentElement);
+      if (window.updateTabIndicator)
+        window.updateTabIndicator(tab.parentElement);
 
       const page = tab.dataset.tab;
       content.innerHTML = renderTab(page);
@@ -71,7 +74,9 @@ export function renderSettings(container) {
     });
   });
 
-  const activePage = container.querySelector('#settings-tabs .seg-tab.active')?.dataset.tab || 'profile';
+  const activePage =
+    container.querySelector('#settings-tabs .seg-tab.active')?.dataset.tab ||
+    'profile';
   bindSettingsContent(container, activePage);
   bindSettingsSidebar(container);
 }
@@ -141,11 +146,33 @@ function renderIntegrations() {
       <h3 class="section-label mb-16">Connected Integrations</h3>
       <div class="flex flex-col gap-16">
         ${[
-      { name: 'Google Drive', desc: 'Sync files directly to your vault.', status: 'Connected', icon: '#4285F4' },
-      { name: 'Dropbox', desc: 'Automatic backup of analyzed reports.', status: 'Connect', icon: '#0061FF' },
-      { name: 'Slack', desc: 'Get alerts when a document risk is detected.', status: 'Connect', icon: '#4A154B' },
-      { name: 'OneDrive', desc: 'Import clauses from corporate storage.', status: 'Connect', icon: '#00A1F1' }
-    ].map(i => `
+          {
+            name: 'Google Drive',
+            desc: 'Sync files directly to your vault.',
+            status: 'Connected',
+            icon: '#4285F4',
+          },
+          {
+            name: 'Dropbox',
+            desc: 'Automatic backup of analyzed reports.',
+            status: 'Connect',
+            icon: '#0061FF',
+          },
+          {
+            name: 'Slack',
+            desc: 'Get alerts when a document risk is detected.',
+            status: 'Connect',
+            icon: '#4A154B',
+          },
+          {
+            name: 'OneDrive',
+            desc: 'Import clauses from corporate storage.',
+            status: 'Connect',
+            icon: '#00A1F1',
+          },
+        ]
+          .map(
+            (i) => `
           <div class="flex items-center justify-between p-12 card-surface">
             <div class="flex items-center gap-12">
               <div style="width:28px;height:28px;background:${i.icon};border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:14px;font-weight:bold;">${i.name[0]}</div>
@@ -158,7 +185,9 @@ function renderIntegrations() {
                 ${i.status}
             </button>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
     `;
@@ -338,61 +367,87 @@ function renderSideInfo() {
 
 function bindSettingsContent(container, page) {
   if (page === 'profile') {
-    container.querySelector('#settings-save-profile-btn')?.addEventListener('click', () => {
-      window.showToast('Profile updated');
-    });
+    container
+      .querySelector('#settings-save-profile-btn')
+      ?.addEventListener('click', () => {
+        window.showToast('Profile updated');
+      });
 
-    container.querySelector('#settings-ai-suggestions-toggle')?.addEventListener('click', event => {
-      event.currentTarget.classList.toggle('on');
-      event.currentTarget.setAttribute('aria-pressed', String(event.currentTarget.classList.contains('on')));
-      window.showToast('AI suggestions preference updated');
-    });
+    container
+      .querySelector('#settings-ai-suggestions-toggle')
+      ?.addEventListener('click', (event) => {
+        event.currentTarget.classList.toggle('on');
+        event.currentTarget.setAttribute(
+          'aria-pressed',
+          String(event.currentTarget.classList.contains('on')),
+        );
+        window.showToast('AI suggestions preference updated');
+      });
   }
 
   if (page === 'integrations') {
-    container.querySelectorAll('[data-integration-name]').forEach(button => {
+    container.querySelectorAll('[data-integration-name]').forEach((button) => {
       button.addEventListener('click', () => {
         const isConnected = button.dataset.integrationStatus === 'Connected';
-        button.dataset.integrationStatus = isConnected ? 'Connect' : 'Connected';
+        button.dataset.integrationStatus = isConnected
+          ? 'Connect'
+          : 'Connected';
         button.textContent = isConnected ? 'Connect' : 'Connected';
         button.classList.toggle('border-transparent', !isConnected);
-        window.showToast(`${button.dataset.integrationName} ${isConnected ? 'disconnected' : 'connected'}`);
+        window.showToast(
+          `${button.dataset.integrationName} ${isConnected ? 'disconnected' : 'connected'}`,
+        );
       });
     });
   }
 
   if (page === 'api') {
-    container.querySelector('#settings-copy-api-key-btn')?.addEventListener('click', () => {
-      copyText('sk_live_51Px2_demo_preview', 'Key copied');
-    });
+    container
+      .querySelector('#settings-copy-api-key-btn')
+      ?.addEventListener('click', () => {
+        copyText('sk_live_51Px2_demo_preview', 'Key copied');
+      });
 
-    container.querySelector('#settings-generate-api-key-btn')?.addEventListener('click', () => {
-      window.showToast('Key generation would require backend support.');
-    });
+    container
+      .querySelector('#settings-generate-api-key-btn')
+      ?.addEventListener('click', () => {
+        window.showToast('Key generation would require backend support.');
+      });
 
     bindN8nAgentSettings(container);
   }
 
   if (page === 'billing') {
-    container.querySelector('#settings-edit-billing-btn')?.addEventListener('click', () => {
-      window.showToast('Billing editor would open here.');
-    });
+    container
+      .querySelector('#settings-edit-billing-btn')
+      ?.addEventListener('click', () => {
+        window.showToast('Billing editor would open here.');
+      });
   }
 
   if (page === 'security') {
-    container.querySelector('#settings-2fa-toggle')?.addEventListener('click', event => {
-      event.currentTarget.classList.toggle('on');
-      event.currentTarget.setAttribute('aria-pressed', String(event.currentTarget.classList.contains('on')));
-      window.showToast('2FA updated');
-    });
+    container
+      .querySelector('#settings-2fa-toggle')
+      ?.addEventListener('click', (event) => {
+        event.currentTarget.classList.toggle('on');
+        event.currentTarget.setAttribute(
+          'aria-pressed',
+          String(event.currentTarget.classList.contains('on')),
+        );
+        window.showToast('2FA updated');
+      });
 
-    container.querySelector('#settings-sso-configure-btn')?.addEventListener('click', () => {
-      window.showToast('SSO setup needs backend configuration.');
-    });
+    container
+      .querySelector('#settings-sso-configure-btn')
+      ?.addEventListener('click', () => {
+        window.showToast('SSO setup needs backend configuration.');
+      });
 
-    container.querySelector('#settings-update-password-btn')?.addEventListener('click', () => {
-      window.showToast('Password change submitted in preview mode.');
-    });
+    container
+      .querySelector('#settings-update-password-btn')
+      ?.addEventListener('click', () => {
+        window.showToast('Password change submitted in preview mode.');
+      });
   }
 }
 
@@ -409,68 +464,87 @@ function bindN8nAgentSettings(container) {
     includeDocumentContext: contextToggle?.classList.contains('on') || false,
   });
 
-  [enabledToggle, contextToggle].forEach(toggle => {
+  [enabledToggle, contextToggle].forEach((toggle) => {
     toggle?.addEventListener('click', () => {
       toggle.classList.toggle('on');
-      toggle.setAttribute('aria-pressed', String(toggle.classList.contains('on')));
+      toggle.setAttribute(
+        'aria-pressed',
+        String(toggle.classList.contains('on')),
+      );
     });
   });
 
-  container.querySelector('#save-n8n-config-btn')?.addEventListener('click', () => {
-    const next = readConfig();
-    const validation = validateN8nAgentConfig(next);
-    if (!validation.valid) {
-      window.showToast(validation.message);
-      return;
-    }
+  container
+    .querySelector('#save-n8n-config-btn')
+    ?.addEventListener('click', () => {
+      const next = readConfig();
+      const validation = validateN8nAgentConfig(next);
+      if (!validation.valid) {
+        window.showToast(validation.message);
+        return;
+      }
 
-    saveN8nAgentConfig(validation.config);
-    window.showToast(validation.config.authToken
-      ? 'n8n webhook saved. Token stored for this browser session only.'
-      : 'n8n webhook saved.');
-  });
+      saveN8nAgentConfig(validation.config);
+      window.showToast(
+        validation.config.authToken
+          ? 'n8n webhook saved. Token stored for this browser session only.'
+          : 'n8n webhook saved.',
+      );
+    });
 
-  container.querySelector('#test-n8n-connection-btn')?.addEventListener('click', async () => {
-    const next = readConfig();
-    const validation = validateN8nAgentConfig(next);
-    if (!validation.valid) {
-      window.showToast(validation.message);
-      return;
-    }
+  container
+    .querySelector('#test-n8n-connection-btn')
+    ?.addEventListener('click', async () => {
+      const next = readConfig();
+      const validation = validateN8nAgentConfig(next);
+      if (!validation.valid) {
+        window.showToast(validation.message);
+        return;
+      }
 
-    saveN8nAgentConfig(validation.config);
-    window.showToast('Testing webhook connection...');
+      saveN8nAgentConfig(validation.config);
+      window.showToast('Testing webhook connection...');
 
-    try {
-      const result = await testN8nAgentConnection();
-      window.showToast(result.reply ? 'n8n agent responded successfully.' : 'n8n agent responded, but without text.');
-    } catch (error) {
-      window.showToast(`n8n test failed: ${humanizeN8nAgentError(error)}`);
-    }
-  });
+      try {
+        const result = await testN8nAgentConnection();
+        window.showToast(
+          result.reply
+            ? 'n8n agent responded successfully.'
+            : 'n8n agent responded, but without text.',
+        );
+      } catch (error) {
+        window.showToast(`n8n test failed: ${humanizeN8nAgentError(error)}`);
+      }
+    });
 
-  container.querySelector('#clear-n8n-config-btn')?.addEventListener('click', () => {
-    clearN8nAgentConfig();
-    webhookInput.value = '';
-    tokenInput.value = '';
-    enabledToggle?.classList.remove('on');
-    contextToggle?.classList.add('on');
-    enabledToggle?.setAttribute('aria-pressed', 'false');
-    contextToggle?.setAttribute('aria-pressed', 'true');
-    window.showToast('n8n webhook settings cleared.');
-  });
+  container
+    .querySelector('#clear-n8n-config-btn')
+    ?.addEventListener('click', () => {
+      clearN8nAgentConfig();
+      webhookInput.value = '';
+      tokenInput.value = '';
+      enabledToggle?.classList.remove('on');
+      contextToggle?.classList.add('on');
+      enabledToggle?.setAttribute('aria-pressed', 'false');
+      contextToggle?.setAttribute('aria-pressed', 'true');
+      window.showToast('n8n webhook settings cleared.');
+    });
 }
 
 function bindSettingsSidebar(container) {
-  container.querySelector('#settings-upgrade-plan-btn')?.addEventListener('click', () => {
-    window.showToast('Plan upgrade would continue in billing.');
-  });
+  container
+    .querySelector('#settings-upgrade-plan-btn')
+    ?.addEventListener('click', () => {
+      window.showToast('Plan upgrade would continue in billing.');
+    });
 
-  container.querySelectorAll('[data-support-action]').forEach(button => {
+  container.querySelectorAll('[data-support-action]').forEach((button) => {
     button.addEventListener('click', () => {
       const action = button.dataset.supportAction;
-      if (action === 'documentation') window.showToast('Documentation would open in a new tab.');
-      else if (action === 'help') window.showToast('Help Center would open in a new tab.');
+      if (action === 'documentation')
+        window.showToast('Documentation would open in a new tab.');
+      else if (action === 'help')
+        window.showToast('Help Center would open in a new tab.');
       else window.showToast('Account deletion requires backend confirmation.');
     });
   });

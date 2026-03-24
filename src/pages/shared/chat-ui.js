@@ -16,11 +16,15 @@ export function renderChatMessage(message, options = {}) {
 }
 
 export function renderPromptChips(items, dataAttribute) {
-  return items.map(item => `
+  return items
+    .map(
+      (item) => `
     <button type="button" class="reset-btn badge badge-neutral chat-chip" ${dataAttribute}="${escapeHtml(item)}">
       ${escapeHtml(item)}
     </button>
-  `).join('');
+  `,
+    )
+    .join('');
 }
 
 export function renderAgentStatusCard(status, options = {}) {

@@ -14,12 +14,16 @@ export const REVIEW_TABS = [
 ];
 
 export function renderPageTabs(tabs, activePage, options = {}) {
-  const shellClass = options.flush ? 'page-tabs-shell flush' : 'page-tabs-shell';
+  const shellClass = options.flush
+    ? 'page-tabs-shell flush'
+    : 'page-tabs-shell';
 
   return `
     <div class="${shellClass}">
       <div class="nav-tabs no-border-bottom">
-        ${tabs.map(tab => `
+        ${tabs
+          .map(
+            (tab) => `
           <button
             type="button"
             class="reset-btn nav-tab${tab.page === activePage ? ' active' : ''}"
@@ -27,14 +31,16 @@ export function renderPageTabs(tabs, activePage, options = {}) {
           >
             ${tab.label}
           </button>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `;
 }
 
 export function bindRouteTabs(container) {
-  container.querySelectorAll('[data-nav-target]').forEach(tab => {
+  container.querySelectorAll('[data-nav-target]').forEach((tab) => {
     tab.addEventListener('click', () => {
       window.navigateTo(tab.dataset.navTarget);
     });

@@ -1,4 +1,11 @@
-import { readJSON, readString, removeByPrefix, removeKey, writeJSON, writeString } from './browser-storage.js';
+import {
+  readJSON,
+  readString,
+  removeByPrefix,
+  removeKey,
+  writeJSON,
+  writeString,
+} from './browser-storage.js';
 import {
   DEFAULT_N8N_AGENT_CONFIG,
   buildConversationId,
@@ -19,13 +26,25 @@ const DEFAULT_TIMEOUT_MS = 30000;
 
 export function getN8nAgentConfig() {
   const persisted = readJSON(globalThis.localStorage, N8N_AGENT_KEY, {});
-  const authToken = readString(globalThis.sessionStorage, N8N_AGENT_TOKEN_KEY, '');
-  return sanitizeN8nAgentConfig({ ...DEFAULT_N8N_AGENT_CONFIG, ...persisted, authToken });
+  const authToken = readString(
+    globalThis.sessionStorage,
+    N8N_AGENT_TOKEN_KEY,
+    '',
+  );
+  return sanitizeN8nAgentConfig({
+    ...DEFAULT_N8N_AGENT_CONFIG,
+    ...persisted,
+    authToken,
+  });
 }
 
 export function saveN8nAgentConfig(config) {
   const next = sanitizeN8nAgentConfig(config);
-  writeJSON(globalThis.localStorage, N8N_AGENT_KEY, getPersistedN8nAgentConfig(next));
+  writeJSON(
+    globalThis.localStorage,
+    N8N_AGENT_KEY,
+    getPersistedN8nAgentConfig(next),
+  );
 
   if (next.authToken) {
     writeString(globalThis.sessionStorage, N8N_AGENT_TOKEN_KEY, next.authToken);
@@ -89,9 +108,10 @@ export async function askN8nAgent({
     headers.Authorization = `Bearer ${validation.config.authToken}`;
   }
 
-  const controller = !signal && typeof AbortController === 'function'
-    ? new AbortController()
-    : null;
+  const controller =
+    !signal && typeof AbortController === 'function'
+      ? new AbortController()
+      : null;
   const activeSignal = signal || controller?.signal;
   const timeoutId = controller
     ? setTimeout(() => controller.abort(), timeoutMs)

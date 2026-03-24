@@ -1,4 +1,8 @@
-import { bindRouteTabs, DOCUMENT_TABS, renderPageTabs } from './shared/page-tabs.js';
+import {
+  bindRouteTabs,
+  DOCUMENT_TABS,
+  renderPageTabs,
+} from './shared/page-tabs.js';
 
 const COMPARE_OPTIONS = [
   {
@@ -6,9 +10,24 @@ const COMPARE_OPTIONS = [
     name: 'Acme Corp NDA v4.pdf',
     score: '5.9',
     deltas: [
-      { tone: 'success', title: 'Liquidated damages cap reduced', detail: 'Version 4 replaces the fixed $500,000 penalty with a cap tied to proven damages.' },
-      { tone: 'warning', title: 'Assignment clause still one-sided', detail: 'Acme still retains broader transfer rights than the counterparty.' },
-      { tone: 'danger', title: 'No mutual liability cap added', detail: 'The target draft still omits a balanced limitation of liability clause.' },
+      {
+        tone: 'success',
+        title: 'Liquidated damages cap reduced',
+        detail:
+          'Version 4 replaces the fixed $500,000 penalty with a cap tied to proven damages.',
+      },
+      {
+        tone: 'warning',
+        title: 'Assignment clause still one-sided',
+        detail:
+          'Acme still retains broader transfer rights than the counterparty.',
+      },
+      {
+        tone: 'danger',
+        title: 'No mutual liability cap added',
+        detail:
+          'The target draft still omits a balanced limitation of liability clause.',
+      },
     ],
   },
   {
@@ -16,9 +35,24 @@ const COMPARE_OPTIONS = [
     name: 'Acme Corp NDA - Client Redline.docx',
     score: '4.3',
     deltas: [
-      { tone: 'success', title: 'Confidentiality tail shortened', detail: 'The redline changes the confidentiality survival term from perpetual to 2 years.' },
-      { tone: 'success', title: 'Mutual consent added for assignment', detail: 'Both parties now need prior written consent before assigning the agreement.' },
-      { tone: 'warning', title: 'Jurisdiction still Delaware-only', detail: 'Venue remains Delaware, which may still create cross-border enforcement friction.' },
+      {
+        tone: 'success',
+        title: 'Confidentiality tail shortened',
+        detail:
+          'The redline changes the confidentiality survival term from perpetual to 2 years.',
+      },
+      {
+        tone: 'success',
+        title: 'Mutual consent added for assignment',
+        detail:
+          'Both parties now need prior written consent before assigning the agreement.',
+      },
+      {
+        tone: 'warning',
+        title: 'Jurisdiction still Delaware-only',
+        detail:
+          'Venue remains Delaware, which may still create cross-border enforcement friction.',
+      },
     ],
   },
 ];
@@ -48,7 +82,7 @@ export function renderCompare(container) {
           <label class="meta-text block mb-4" for="compare-target-select">Select document to compare</label>
           <select id="compare-target-select">
             <option value="">Choose a document...</option>
-            ${COMPARE_OPTIONS.map(option => `<option value="${option.id}">${option.name}</option>`).join('')}
+            ${COMPARE_OPTIONS.map((option) => `<option value="${option.id}">${option.name}</option>`).join('')}
           </select>
         </div>
       </div>
@@ -74,7 +108,7 @@ function bindCompareActions(container) {
   const results = container.querySelector('#compare-results');
 
   select?.addEventListener('change', () => {
-    const selected = COMPARE_OPTIONS.find(item => item.id === select.value);
+    const selected = COMPARE_OPTIONS.find((item) => item.id === select.value);
 
     if (!selected) {
       results.innerHTML = renderCompareEmptyState();
@@ -82,9 +116,11 @@ function bindCompareActions(container) {
     }
 
     results.innerHTML = renderCompareResult(selected);
-    results.querySelector('#compare-open-summary-btn')?.addEventListener('click', () => {
-      window.navigateTo('summary');
-    });
+    results
+      .querySelector('#compare-open-summary-btn')
+      ?.addEventListener('click', () => {
+        window.navigateTo('summary');
+      });
   });
 }
 
@@ -128,7 +164,9 @@ function renderCompareResult(selected) {
         <button class="btn-sm" id="compare-open-summary-btn">Open target summary ↗</button>
       </div>
       <div class="flex flex-col gap-12">
-        ${selected.deltas.map(delta => `
+        ${selected.deltas
+          .map(
+            (delta) => `
           <div class="card-surface compare-delta-row">
             <div class="flex items-start gap-10">
               <div class="severity-dot ${delta.tone === 'success' ? 'clear' : delta.tone === 'warning' ? 'review' : 'critical'} mt-4"></div>
@@ -138,7 +176,9 @@ function renderCompareResult(selected) {
               </div>
             </div>
           </div>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </div>
     </div>
   `;
