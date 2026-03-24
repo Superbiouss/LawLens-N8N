@@ -17,9 +17,14 @@ import { renderCompliance } from './pages/compliance.js';
 import { renderKeyDates } from './pages/key-dates.js';
 import { renderExport } from './pages/export.js';
 import { renderSettings } from './pages/settings.js';
+import { renderAnalytics } from './pages/analytics.js';
+import { renderClauseLibrary } from './pages/clause-library.js';
+import { renderDrafting } from './pages/drafting.js';
 
 const routes = {
     'dashboard': { title: 'Dashboard', render: renderDashboard, breadcrumb: ['Dashboard'] },
+    'analytics': { title: 'Portfolio analytics', render: renderAnalytics, breadcrumb: ['Intelligence', 'Portfolio analytics'] },
+    'compliance': { title: 'Compliance checklist', render: renderCompliance, breadcrumb: ['Intelligence', 'Compliance checklist'] },
     'upload': { title: 'Upload & analyze', render: renderUpload, breadcrumb: ['Upload & analyze'] },
     'summary': { title: 'Summary', render: renderSummary, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Summary'] },
     'clause-breakdown': { title: 'Clause breakdown', render: renderClauseBreakdown, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Clause breakdown'] },
@@ -27,15 +32,45 @@ const routes = {
     'compare': { title: 'Compare versions', render: renderCompare, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Compare versions'] },
     'ask': { title: 'Ask the doc', render: renderAsk, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Ask the doc'] },
     'vault': { title: 'Document vault', render: renderVault, breadcrumb: ['Document vault'] },
+    'clause-library': { title: 'Clause library', render: renderClauseLibrary, breadcrumb: ['Drafting', 'Clause library'] },
+    'drafting': { title: 'Drafting assistant', render: renderDrafting, breadcrumb: ['Drafting', 'Drafting assistant'] },
     'templates': { title: 'Template library', render: renderTemplates, breadcrumb: ['Template library'] },
     'glossary': { title: 'Legal glossary', render: renderGlossary, breadcrumb: ['Legal glossary'] },
     'annotations': { title: 'Annotation studio', render: renderAnnotations, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Annotation studio'] },
     'team': { title: 'Team workspace', render: renderTeam, breadcrumb: ['Team workspace'] },
-    'compliance': { title: 'Compliance checklist', render: renderCompliance, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Compliance checklist'] },
     'key-dates': { title: 'Key dates timeline', render: renderKeyDates, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Key dates'] },
     'export': { title: 'Export & share', render: renderExport, breadcrumb: ['Vault', 'Acme Corp NDA v3.pdf', 'Export & share'] },
     'settings': { title: 'Settings', render: renderSettings, breadcrumb: ['Settings'] },
 };
+
+function initTheme() {
+    const saved = localStorage.getItem('theme') || 'light';
+    document.body.dataset.theme = saved;
+    updateThemeToggleUI(saved);
+}
+
+function toggleTheme() {
+    const current = document.body.dataset.theme;
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.body.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    updateThemeToggleUI(next);
+    window.showToast(`Switched to ${next} mode`);
+}
+
+function updateThemeToggleUI(theme) {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    const span = btn.querySelector('span');
+    const svg = btn.querySelector('svg');
+    if (theme === 'dark') {
+        span.textContent = 'Light mode';
+        svg.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    } else {
+        span.textContent = 'Dark mode';
+        svg.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
+    }
+}
 
 function getPage() {
     const hash = window.location.hash.slice(2) || 'dashboard';
@@ -108,8 +143,14 @@ window.showToast = function (message, duration = 3000) {
     }, duration);
 };
 
-// Mobile Sidebar Toggle
+// Theme Toggle Listener
 document.addEventListener('click', (e) => {
+    const themeBtn = e.target.closest('#theme-toggle');
+    if (themeBtn) {
+        toggleTheme();
+        return;
+    }
+
     const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('mobile-menu-toggle');
 
@@ -119,6 +160,8 @@ document.addEventListener('click', (e) => {
         sidebar.classList.remove('open');
     }
 });
+
+initTheme();
 
 // Tab Indicator Update
 window.updateTabIndicator = function (tabsContainer) {

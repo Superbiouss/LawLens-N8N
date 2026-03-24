@@ -1,5 +1,5 @@
 export function renderExport(container) {
-    container.innerHTML = `
+  container.innerHTML = `
     <div class="mb-24">
       <h1 class="page-title">Export & share</h1>
       <p class="body-text mt-4">Download your analysis in professional formats or share with stakeholders.</p>
@@ -46,10 +46,10 @@ export function renderExport(container) {
         <p class="section-label">Recent exports</p>
         <div class="card" style="padding:0;overflow:hidden;">
           ${[
-            { name: 'Summary_Report.pdf', date: 'Today, 2:40 PM', user: 'You' },
-            { name: 'Redlines_Draft_1.docx', date: 'Yesterday', user: 'You' },
-            { name: 'Summary_Full.pdf', date: '2 days ago', user: 'Anand S.' },
-        ].map((e, i, arr) => `
+      { name: 'Summary_Report.pdf', date: 'Today, 2:40 PM', user: 'You' },
+      { name: 'Redlines_Draft_1.docx', date: 'Yesterday', user: 'You' },
+      { name: 'Summary_Full.pdf', date: '2 days ago', user: 'Anand S.' },
+    ].map((e, i, arr) => `
             <div class="flex items-center justify-between p-12" style="${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
               <div class="flex items-center gap-10">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
