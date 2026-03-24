@@ -18,8 +18,8 @@ export function renderUpload(container) {
             <div style="width:40px;height:40px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M12 12V4"/><path d="M8 8l4-4 4 4"/></svg>
             </div>
-            <p id="dropzone-title" style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px;">Drop your document here</p>
-            <p id="dropzone-sub" style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 14px;">or click to browse files</p>
+            <p id="dropzone-title" class="dropzone-title">Drop your document here</p>
+            <p id="dropzone-sub" class="dropzone-sub">or click to browse files</p>
             <div class="flex gap-6" style="justify-content:center;flex-wrap:wrap;">
               <span class="badge badge-neutral">PDF</span>
               <span class="badge badge-neutral">DOCX</span>
@@ -38,7 +38,7 @@ export function renderUpload(container) {
             <input type="url" placeholder="https://drive.google.com/... or any public document URL" style="flex:1;" />
             <button class="btn-sm">Fetch</button>
           </div>
-          <p style="font-size:11px;color:var(--color-text-tertiary);margin:6px 0 0;">Supports Google Drive, Dropbox, OneDrive, and direct PDF links.</p>
+          <p class="fs-11 text-tertiary" style="margin:6px 0 0;">Supports Google Drive, Dropbox, OneDrive, and direct PDF links.</p>
         </div>
 
         <div class="mt-20">
@@ -57,13 +57,13 @@ export function renderUpload(container) {
         <div class="mt-20">
           <p class="section-label">Analysis depth</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="card depth-card selected" id="d-quick" style="cursor:pointer;transition:border-color .15s;">
-              <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px;">Quick scan</p>
-              <p style="font-size:11px;color:var(--color-text-tertiary);margin:0;">Summary + red flags only. ~10 sec.</p>
+            <div class="card depth-card selected" id="d-quick">
+              <p class="fs-13 fw-500 text-primary" style="margin:0 0 2px;">Quick scan</p>
+              <p class="fs-11 text-tertiary m-0">Summary + red flags only. ~10 sec.</p>
             </div>
-            <div class="card depth-card" id="d-full" style="cursor:pointer;transition:border-color .15s;">
-              <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 2px;">Full analysis</p>
-              <p style="font-size:11px;color:var(--color-text-tertiary);margin:0;">Every clause, obligations, timeline. ~30 sec.</p>
+            <div class="card depth-card" id="d-full">
+              <p class="fs-13 fw-500 text-primary" style="margin:0 0 2px;">Full analysis</p>
+              <p class="fs-11 text-tertiary m-0">Every clause, obligations, timeline. ~30 sec.</p>
             </div>
           </div>
         </div>
@@ -73,11 +73,11 @@ export function renderUpload(container) {
         <div id="progress-wrap" style="display:none;margin-top:20px;">
           <div class="progress-track"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
           <div class="flex flex-col gap-8 mt-12" id="psteps">
-            <div class="flex items-center gap-10" style="font-size:13px;color:var(--color-text-primary);font-weight:500;" id="ps1"><div class="spinner"></div>Reading document structure</div>
-            <div class="flex items-center gap-10" style="font-size:13px;color:var(--color-text-tertiary);" id="ps2"><div class="severity-dot" style="width:7px;height:7px;background:var(--color-border-secondary);"></div>Identifying parties & dates</div>
-            <div class="flex items-center gap-10" style="font-size:13px;color:var(--color-text-tertiary);" id="ps3"><div class="severity-dot" style="width:7px;height:7px;background:var(--color-border-secondary);"></div>Extracting clauses</div>
-            <div class="flex items-center gap-10" style="font-size:13px;color:var(--color-text-tertiary);" id="ps4"><div class="severity-dot" style="width:7px;height:7px;background:var(--color-border-secondary);"></div>Assessing risk level</div>
-            <div class="flex items-center gap-10" style="font-size:13px;color:var(--color-text-tertiary);" id="ps5"><div class="severity-dot" style="width:7px;height:7px;background:var(--color-border-secondary);"></div>Generating plain-English summary</div>
+            <div class="progress-step active" id="ps1"><div class="spinner"></div>Reading document structure</div>
+            <div class="progress-step muted" id="ps2"><div class="severity-dot progress-dot-muted"></div>Identifying parties & dates</div>
+            <div class="progress-step muted" id="ps3"><div class="severity-dot progress-dot-muted"></div>Extracting clauses</div>
+            <div class="progress-step muted" id="ps4"><div class="severity-dot progress-dot-muted"></div>Assessing risk level</div>
+            <div class="progress-step muted" id="ps5"><div class="severity-dot progress-dot-muted"></div>Generating plain-English summary</div>
           </div>
         </div>
 
@@ -91,25 +91,25 @@ export function renderUpload(container) {
 
       <div>
         <div class="card mb-16">
-          <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:0 0 10px;">What you'll get</p>
+          <p class="fs-12 fw-500 text-secondary" style="margin:0 0 10px;">What you'll get</p>
           <div class="flex flex-col gap-8">
             ${['Plain-English summary of the whole document', 'Parties, key dates & obligations identified', 'Red flags and one-sided clauses highlighted', 'Overall risk score (Low / Medium / High)', 'Missing standard clauses flagged'].map(t => `
-              <div class="flex items-center gap-8" style="align-items:flex-start;">
+            <div class="flex items-center gap-8" style="align-items:flex-start;">
                 <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-success);margin-top:6px;flex-shrink:0;"></div>
-                <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;">${t}</span>
+                <span class="fs-12 text-secondary lh-15">${t}</span>
               </div>
             `).join('')}
           </div>
         </div>
 
         <div class="card mb-16">
-          <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:0 0 6px;">Privacy</p>
-          <p style="font-size:12px;color:var(--color-text-tertiary);line-height:1.6;margin:0;">Your documents are processed securely and never stored beyond your session unless you choose to save them to your vault.</p>
+          <p class="fs-12 fw-500 text-secondary" style="margin:0 0 6px;">Privacy</p>
+          <p class="fs-12 text-tertiary lh-16 m-0">Your documents are processed securely and never stored beyond your session unless you choose to save them to your vault.</p>
         </div>
 
         <div class="card">
-          <p style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:0 0 2px;">Not a lawyer</p>
-          <p style="font-size:12px;color:var(--color-text-tertiary);line-height:1.6;margin:0;">This tool provides AI-assisted analysis. Always consult a qualified legal professional for binding decisions.</p>
+          <p class="fs-12 fw-500 text-secondary" style="margin:0 0 2px;">Not a lawyer</p>
+          <p class="fs-12 text-tertiary lh-16 m-0">This tool provides AI-assisted analysis. Always consult a qualified legal professional for binding decisions.</p>
         </div>
       </div>
     </div>
@@ -147,18 +147,14 @@ export function renderUpload(container) {
     card.addEventListener('click', () => {
       container.querySelectorAll('.depth-card').forEach(c => {
         c.classList.remove('selected');
-        c.style.borderColor = '';
-        c.style.background = '';
       });
       card.classList.add('selected');
-      card.style.borderColor = 'var(--color-border-info)';
-      card.style.background = 'var(--color-background-info)';
     });
   });
 
   // Init selected depth
   const quick = container.querySelector('#d-quick');
-  if (quick) { quick.style.borderColor = 'var(--color-border-info)'; quick.style.background = 'var(--color-background-info)'; }
+  if (quick) { quick.classList.add('selected'); }
 
   // Drop zone click simulation
   const dropzone = container.querySelector('#dropzone');
@@ -245,8 +241,8 @@ function renderRecentDocs() {
       <div style="width:28px;height:28px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
       </div>
-      <div style="flex:1;font-size:13px;font-weight:500;color:var(--color-text-primary);">${d.name}</div>
-      <div style="font-size:11px;color:var(--color-text-tertiary);">${d.ago}</div>
+      <div class="fs-13 fw-500 text-primary" style="flex:1;">${d.name}</div>
+      <div class="fs-11 text-tertiary">${d.ago}</div>
       <span class="badge badge-${d.risk === 'high' ? 'danger' : d.risk === 'medium' ? 'warning' : 'success'}">${d.risk.charAt(0).toUpperCase() + d.risk.slice(1)} risk</span>
     </div>
   `).join('');

@@ -27,7 +27,7 @@ export function renderCompare(container) {
       </div>
 
       <!-- Target Document -->
-      <div class="card" style="padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--color-border-info)'" onmouseout="this.style.borderColor='var(--color-border-tertiary)'">
+      <div class="card hover-border-info" style="padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;">
         <div style="width:36px;height:36px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <span style="font-size:20px;color:var(--color-text-tertiary);line-height:1;">+</span>
         </div>

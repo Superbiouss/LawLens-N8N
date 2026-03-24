@@ -8,29 +8,29 @@ export function renderVault(container) {
       <button class="btn-primary" onclick="navigateTo('upload')">+ Add document</button>
     </div>
 
-    <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;">
+    <div class="vault-layout">
       <!-- Sidebar Categories -->
       <div>
         <div class="flex flex-col gap-2">
-          <div class="nav-item active" style="padding:8px 12px;cursor:pointer;">
+          <div class="nav-item active vault-cat-item">
             <span>All documents</span>
-            <span class="meta-text" style="margin-left:auto;">12</span>
+            <span class="meta-text ml-auto">12</span>
           </div>
-          <div class="nav-item" style="padding:8px 12px;cursor:pointer;">
+          <div class="nav-item vault-cat-item">
             <span>NDAs</span>
-            <span class="meta-text" style="margin-left:auto;">5</span>
+            <span class="meta-text ml-auto">5</span>
           </div>
-          <div class="nav-item" style="padding:8px 12px;cursor:pointer;">
+          <div class="nav-item vault-cat-item">
             <span>Employment</span>
-            <span class="meta-text" style="margin-left:auto;">3</span>
+            <span class="meta-text ml-auto">3</span>
           </div>
-          <div class="nav-item" style="padding:8px 12px;cursor:pointer;">
+          <div class="nav-item vault-cat-item">
             <span>Commercial</span>
-            <span class="meta-text" style="margin-left:auto;">4</span>
+            <span class="meta-text ml-auto">4</span>
           </div>
-          <div class="nav-item" style="padding:8px 12px;cursor:pointer;">
+          <div class="nav-item vault-cat-item">
             <span>Shared with me</span>
-            <span class="meta-text" style="margin-left:auto;">2</span>
+            <span class="meta-text ml-auto">2</span>
           </div>
         </div>
 
@@ -59,10 +59,10 @@ export function renderVault(container) {
           <table style="width:100%;border-collapse:collapse;font-size:13px;">
             <thead style="background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);">
               <tr>
-                <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--color-text-tertiary);font-size:11px;text-transform:uppercase;">Name</th>
-                <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--color-text-tertiary);font-size:11px;text-transform:uppercase;">Type</th>
-                <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--color-text-tertiary);font-size:11px;text-transform:uppercase;">Risk</th>
-                <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--color-text-tertiary);font-size:11px;text-transform:uppercase;">Modified</th>
+                <th class="vault-th">Name</th>
+                <th class="vault-th">Type</th>
+                <th class="vault-th">Risk</th>
+                <th class="vault-th">Modified</th>
                 <th style="padding:12px 16px;text-align:right;"></th>
               </tr>
             </thead>
@@ -74,24 +74,24 @@ export function renderVault(container) {
             { name: 'Office Rental Mumbai.pdf', type: 'Lease', risk: '3.8', riskType: 'warning', date: '2 weeks ago' },
             { name: 'Beta Program Terms.pdf', type: 'Commercial', risk: '6.4', riskType: 'danger', date: '1 month ago' },
         ].map(d => `
-                <tr style="border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;" onclick="navigateTo('summary')" onmouseover="this.style.background='var(--color-background-secondary)'" onmouseout="this.style.background=''">
+                <tr class="hover-bg-secondary" style="border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;" onclick="navigateTo('summary')">
                   <td style="padding:12px 16px;">
                     <div class="flex items-center gap-10">
                       <div style="width:24px;height:24px;border-radius:4px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:0.5px solid var(--color-border-tertiary);">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
                       </div>
-                      <span style="font-weight:500;">${d.name}</span>
+                      <span class="fw-500">${d.name}</span>
                     </div>
                   </td>
-                  <td style="padding:12px 16px;color:var(--color-text-secondary);">${d.type}</td>
+                  <td class="text-secondary" style="padding:12px 16px;">${d.type}</td>
                   <td style="padding:12px 16px;">
                     <div class="flex items-center gap-6">
                       <div class="severity-dot ${d.riskType === 'danger' ? 'critical' : d.riskType === 'warning' ? 'review' : 'clear'}"></div>
                       <span style="color:var(--color-text-${d.riskType});font-weight:500;">${d.risk}</span>
                     </div>
                   </td>
-                  <td style="padding:12px 16px;color:var(--color-text-tertiary);">${d.date}</td>
-                  <td style="padding:12px 16px;text-align:right;color:var(--color-text-tertiary);">•••</td>
+                  <td class="text-tertiary" style="padding:12px 16px;">${d.date}</td>
+                  <td class="text-tertiary" style="padding:12px 16px;text-align:right;">•••</td>
                 </tr>
               `).join('')}
             </tbody>

@@ -60,11 +60,11 @@ function renderProfile() {
         <h3 class="section-label mb-16">Profile Information</h3>
         <div class="flex flex-col gap-16">
           <div class="flex gap-12">
-            <div style="flex:1;">
+            <div class="flex-1">
               <label class="meta-text mb-4 block">First Name</label>
               <input type="text" value="John" />
             </div>
-            <div style="flex:1;">
+            <div class="flex-1">
               <label class="meta-text mb-4 block">Last Name</label>
               <input type="text" value="Doe" />
             </div>
@@ -82,7 +82,7 @@ function renderProfile() {
         <div class="flex flex-col gap-12">
           <div class="flex justify-between items-center">
             <div>
-              <p style="font-size:13px;font-weight:500;">Default Analysis Depth</p>
+              <p class="fs-13 fw-500">Default Analysis Depth</p>
               <p class="meta-text">Choose how detailed the AI analysis should be by default.</p>
             </div>
             <select style="width:140px;">
@@ -90,9 +90,9 @@ function renderProfile() {
               <option>Quick Scan</option>
             </select>
           </div>
-          <div class="flex justify-between items-center pt-12" style="border-top:0.5px solid var(--color-border-tertiary);">
+          <div class="flex justify-between items-center pt-12 border-top-tertiary">
             <div>
-              <p style="font-size:13px;font-weight:500;">AI Suggestions</p>
+              <p class="fs-13 fw-500">AI Suggestions</p>
               <p class="meta-text">Enable predictive legal terms and auto-complete in Ask the Doc.</p>
             </div>
             <div class="toggle on"></div>
@@ -118,7 +118,7 @@ function renderIntegrations() {
             <div class="flex items-center gap-12">
               <div style="width:28px;height:28px;background:${i.icon};border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:14px;font-weight:bold;">${i.name[0]}</div>
               <div>
-                <p style="font-size:13px;font-weight:500;">${i.name}</p>
+                <p class="fs-13 fw-500">${i.name}</p>
                 <p class="meta-text">${i.desc}</p>
               </div>
             </div>
@@ -140,7 +140,7 @@ function renderAPI() {
       
       <div class="card-surface p-12 mb-16">
          <div class="flex justify-between items-center mb-8">
-            <span style="font-size:12px;font-weight:600;">Main Production Key</span>
+            <span class="fs-12 fw-600">Main Production Key</span>
             <span class="badge badge-success">Active</span>
          </div>
          <div class="flex gap-8">
@@ -160,15 +160,15 @@ function renderBilling() {
       <h3 class="section-label mb-16">Subscription Details</h3>
       <div class="flex flex-col gap-12">
         <div class="flex justify-between items-center">
-            <span style="font-size:13px;">Current Plan</span>
+            <span class="fs-13">Current Plan</span>
             <span class="badge badge-info">Enterprise</span>
         </div>
         <div class="flex justify-between items-center">
-            <span style="font-size:13px;">Billing Cycle</span>
+            <span class="fs-13">Billing Cycle</span>
             <span class="meta-text">Monthly (Next: April 12, 2026)</span>
         </div>
         <div class="flex justify-between items-center">
-            <span style="font-size:13px;">Member Seats</span>
+            <span class="fs-13">Member Seats</span>
             <span class="meta-text">8 of 20 used</span>
         </div>
       </div>
@@ -178,8 +178,8 @@ function renderBilling() {
       <h3 class="section-label mb-16">Payment Method</h3>
       <div class="flex items-center gap-12 card-surface p-12">
          <div style="width:36px;height:24px;background:#1A1F71;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:8px;font-weight:bold;">VISA</div>
-         <div style="flex:1;">
-            <p style="font-size:13px;font-weight:500;">Visa ending in 4242</p>
+         <div class="flex-1">
+            <p class="fs-13 fw-500">Visa ending in 4242</p>
             <p class="meta-text">Expires 12/28</p>
          </div>
          <button class="btn-sm" onclick="showToast('Edit card')">Edit</button>
@@ -196,14 +196,14 @@ function renderSecurity() {
         <div class="flex flex-col gap-12">
           <div class="flex justify-between items-center">
             <div>
-              <p style="font-size:13px;font-weight:500;">Two-Factor Authentication</p>
+              <p class="fs-13 fw-500">Two-Factor Authentication</p>
               <p class="meta-text">Secure your account with a secondary verification code.</p>
             </div>
             <div class="toggle off" onclick="this.classList.toggle('on'); showToast('2FA updated');"></div>
           </div>
-          <div class="flex justify-between items-center pt-12" style="border-top:0.5px solid var(--color-border-tertiary);">
+          <div class="flex justify-between items-center pt-12 border-top-tertiary">
             <div>
-              <p style="font-size:13px;font-weight:500;">SSO Integration</p>
+              <p class="fs-13 fw-500">SSO Integration</p>
               <p class="meta-text">Allow login via SAML or Okta.</p>
             </div>
             <button class="btn-sm" onclick="showToast('SSO setup')">Configure</button>
@@ -226,8 +226,8 @@ function renderSecurity() {
 function renderSideInfo() {
   return `
     <div class="card-surface mb-20" style="background:var(--color-background-purple);">
-       <p style="font-size:12px;font-weight:600;color:var(--color-brand-purple);margin-bottom:8px;">Enterprise Plan</p>
-       <p style="font-size:24px;font-weight:500;color:var(--color-text-primary);">$129<span style="font-size:14px;color:var(--color-text-tertiary);">/mo</span></p>
+       <p class="fs-12 fw-600" style="color:var(--color-brand-purple);margin-bottom:8px;">Enterprise Plan</p>
+       <p class="fs-24 fw-500 text-primary">$129<span class="text-tertiary" style="font-size:14px;">/mo</span></p>
        <div class="progress-track mt-12 mb-8"><div class="progress-bar" style="width:45%;background:var(--color-brand-purple);"></div></div>
        <p class="meta-text">45 of 100 documents analyzed this month.</p>
        <button class="btn-sm mt-16 w-full" style="background:var(--color-background-primary);border-color:var(--color-brand-purple);color:var(--color-brand-purple);">Upgrade plan</button>
@@ -236,9 +236,9 @@ function renderSideInfo() {
     <div class="card">
        <p class="section-label">Support</p>
        <div class="flex flex-col gap-8">
-          <button class="btn-sm w-full" style="justify-content:flex-start;">Documentation</button>
-          <button class="btn-sm w-full" style="justify-content:flex-start;">Help Center</button>
-          <button class="btn-sm w-full" style="justify-content:flex-start;color:var(--color-text-danger);">Delete Account</button>
+          <button class="btn-sm w-full justify-start">Documentation</button>
+          <button class="btn-sm w-full justify-start">Help Center</button>
+          <button class="btn-sm w-full justify-start text-danger">Delete Account</button>
        </div>
     </div>
     `;

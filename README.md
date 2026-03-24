@@ -56,3 +56,15 @@ The application will be available at `http://localhost:5173`.
 ## License
 
 This project is licensed under the MIT License.
+
+## UI QA Checklist (Light/Dark)
+
+Use this quick pass before merging UI changes:
+
+- Verify all primary pages in both themes: `dashboard`, `upload`, `summary`, `risk-report`, `settings`.
+- Confirm no inline hover handlers (`onmouseover` / `onmouseout`) are introduced.
+- Check text contrast for headings, body, badges, pills, and muted metadata.
+- Verify focus visibility on keyboard navigation (`Tab` / `Shift+Tab`) for links, buttons, tabs, pills, and inputs.
+- Validate accent surfaces (danger/warning/info/success) remain readable in dark mode.
+- Ensure cards, toasts, and glass surfaces keep consistent elevation/shadows in both themes.
+

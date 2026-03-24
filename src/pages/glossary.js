@@ -15,7 +15,7 @@ export function renderGlossary(container) {
       <!-- Alphabetical Nav -->
       <div style="display:flex;flex-direction:column;gap:4px;position:sticky;top:80px;height:fit-content;">
         ${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(char => `
-          <div class="meta-text text-center ${char === 'L' ? 'active' : ''}" style="padding:4px;cursor:pointer;border-radius:4px;${char === 'L' ? 'background:var(--color-background-purple);color:var(--color-brand-purple);font-weight:600;' : ''}" onmouseover="if(!this.classList.contains('active'))this.style.background='var(--color-background-secondary)'" onmouseout="if(!this.classList.contains('active'))this.style.background=''">
+          <div class="meta-text text-center glossary-char ${char === 'L' ? 'active' : ''}" style="padding:4px;cursor:pointer;border-radius:4px;${char === 'L' ? 'background:var(--color-background-purple);color:var(--color-brand-purple);font-weight:600;' : ''}">
             ${char}
           </div>
         `).join('')}

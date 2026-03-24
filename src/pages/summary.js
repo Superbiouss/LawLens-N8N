@@ -48,15 +48,15 @@ export function renderSummary(container) {
             <div class="card" style="padding:12px;display:flex;flex-direction:column;gap:12px;">
               <div class="flex justify-between items-center" style="padding-bottom:12px;border-bottom:0.5px solid var(--color-border-tertiary);">
                 <span class="meta-text">Disclosing party</span>
-                <span style="font-size:13px;font-weight:500;">Acme Corp</span>
+                <span class="fs-13 fw-500">Acme Corp</span>
               </div>
               <div class="flex justify-between items-center" style="padding-bottom:12px;border-bottom:0.5px solid var(--color-border-tertiary);">
                 <span class="meta-text">Receiving party</span>
-                <span style="font-size:13px;font-weight:500;">John Doe</span>
+                <span class="fs-13 fw-500">John Doe</span>
               </div>
               <div class="flex justify-between items-center">
                 <span class="meta-text">Governing law</span>
-                <span style="font-size:13px;font-weight:500;">Delaware, USA</span>
+                <span class="fs-13 fw-500">Delaware, USA</span>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@ export function renderSummary(container) {
                 <div class="tl-item">
                   <div class="tl-dot warning"></div>
                   <div class="meta-text">Expiry</div>
-                  <div style="font-size:13px;font-weight:500;color:var(--color-text-warning);">Unlimited — no end date</div>
+                  <div class="fs-13 fw-500 text-warning">Unlimited — no end date</div>
                 </div>
                 <div class="tl-item" style="border-left-color:transparent;padding-bottom:0;">
                   <div class="tl-dot"></div>
@@ -91,10 +91,10 @@ export function renderSummary(container) {
       "$500,000 liquidated damages per breach — regardless of actual harm. Disproportionate and aggressive.",
       "Acme Corp can assign this agreement to any successor without your consent."
     ].map(r => `
-            <div class="card bg-danger flex items-start gap-10" style="padding:10px 14px;background:var(--color-background-danger);border-color:var(--color-border-danger);cursor:pointer;transition:all var(--duration-fast);" onclick="navigateTo('risk-report')" onmouseover="this.style.opacity='.8';this.style.transform='translateX(4px)'" onmouseout="this.style.opacity='1';this.style.transform='none'">
+            <div class="card bg-danger flex items-start gap-10 hover-raise-danger" style="padding:10px 14px;background:var(--color-background-danger);border-color:var(--color-border-danger);cursor:pointer;" onclick="navigateTo('risk-report')">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5" style="margin-top:2px;flex-shrink:0;"><path d="M7 1v8M7 11v1.5"/></svg>
-              <div style="font-size:13px;color:var(--color-text-danger);flex:1;line-height:1.5;">${r}</div>
-              <div style="color:var(--color-text-danger);opacity:0.5;">›</div>
+              <div class="fs-13 text-danger lh-15" style="flex:1;">${r}</div>
+              <div class="text-danger" style="opacity:0.5;">›</div>
             </div>
           `).join('')}
         </div>
@@ -108,7 +108,7 @@ export function renderSummary(container) {
     ].map((o, i, arr) => `
             <div class="flex items-start gap-10" style="padding:12px 0;${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
               <span class="badge badge-info" style="margin-top:2px;">${o.party}</span>
-              <span style="font-size:13px;color:var(--color-text-secondary);line-height:1.5;">${o.text}</span>
+              <span class="fs-13 text-secondary lh-15">${o.text}</span>
             </div>
           `).join('')}
         </div>
@@ -123,7 +123,7 @@ export function renderSummary(container) {
     ].map((m, i, arr) => `
             <div class="flex items-center gap-10" style="padding:10px 0;${i < arr.length - 1 ? 'border-bottom:0.5px solid var(--color-border-tertiary);' : ''}">
               <div style="width:14px;height:1.5px;background:var(--color-border-secondary);flex-shrink:0;"></div>
-              <span style="font-size:13px;color:var(--color-text-secondary);">${m}</span>
+              <span class="fs-13 text-secondary">${m}</span>
             </div>
           `).join('')}
         </div>
@@ -142,7 +142,7 @@ export function renderSummary(container) {
               <span class="score-denom">/ 10</span>
             </div>
           </div>
-          <p style="font-size:13px;font-weight:500;color:var(--color-text-danger);margin:0 0 2px;">High risk</p>
+          <p class="fs-13 fw-500 text-danger" style="margin:0 0 2px;">High risk</p>
           <p class="meta-text mt-0">3 critical issues found</p>
         </div>
 
@@ -154,12 +154,12 @@ export function renderSummary(container) {
       { title: 'Key dates', desc: 'Timeline & reminders', page: 'key-dates' },
       { title: 'Compare versions', desc: 'Diff against another draft', page: 'compare' }
     ].map(l => `
-            <div class="flex items-center justify-between" style="padding:10px 12px;border-radius:var(--border-radius-md);cursor:pointer;transition:background .15s;" onclick="navigateTo('${l.page}')" onmouseover="this.style.background='var(--color-background-secondary)'" onmouseout="this.style.background=''">
+            <div class="flex items-center justify-between hover-bg-secondary" style="padding:10px 12px;border-radius:var(--border-radius-md);cursor:pointer;" onclick="navigateTo('${l.page}')">
               <div>
-                <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0;">${l.title}</p>
-                <p style="font-size:11px;color:var(--color-text-tertiary);margin:0;">${l.desc}</p>
+                <p class="fs-13 fw-500 text-primary m-0">${l.title}</p>
+                <p class="fs-11 text-tertiary m-0">${l.desc}</p>
               </div>
-              <span style="color:var(--color-text-tertiary);">›</span>
+              <span class="text-tertiary">›</span>
             </div>
           `).join('')}
         </div>
@@ -168,15 +168,15 @@ export function renderSummary(container) {
         <div class="card mb-16">
           <div class="flex justify-between mb-8">
             <span class="meta-text">Grade level</span>
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-primary);">Grade 14</span>
+            <span class="fs-12 fw-500 text-primary">Grade 14</span>
           </div>
           <div class="flex justify-between mb-8">
             <span class="meta-text">Est. read time</span>
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-primary);">8 min</span>
+            <span class="fs-12 fw-500 text-primary">8 min</span>
           </div>
           <div class="flex justify-between">
             <span class="meta-text">Word count</span>
-            <span style="font-size:12px;font-weight:500;color:var(--color-text-primary);">1,840</span>
+            <span class="fs-12 fw-500 text-primary">1,840</span>
           </div>
         </div>
 

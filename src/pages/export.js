@@ -10,7 +10,7 @@ export function renderExport(container) {
         <p class="section-label">Download analysis</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="mb-24">
           
-          <div class="card-surface text-center" style="padding:24px;cursor:pointer;transition:border-color .15s;border:1px solid transparent;" onmouseover="this.style.borderColor='var(--color-border-info)'" onmouseout="this.style.borderColor='transparent'">
+          <div class="card-surface text-center hover-border-info" style="padding:24px;cursor:pointer;border:1px solid transparent;">
             <div style="width:48px;height:48px;border-radius:var(--border-radius-md);background:var(--color-background-danger);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-danger)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
             </div>
@@ -19,7 +19,7 @@ export function renderExport(container) {
             <button class="btn-sm mt-16 w-full">Download</button>
           </div>
 
-          <div class="card-surface text-center" style="padding:24px;cursor:pointer;transition:border-color .15s;border:1px solid transparent;" onmouseover="this.style.borderColor='var(--color-border-info)'" onmouseout="this.style.borderColor='transparent'">
+          <div class="card-surface text-center hover-border-info" style="padding:24px;cursor:pointer;border:1px solid transparent;">
             <div style="width:48px;height:48px;border-radius:var(--border-radius-md);background:var(--color-background-info);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-info)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
             </div>

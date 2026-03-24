@@ -74,7 +74,7 @@ export function renderAsk(container) {
         </div>
 
         <p class="section-label">Referenced Clauses</p>
-        <div class="card-surface mb-16" style="cursor:pointer;transition:border-color .15s;border:1px solid transparent;" onmouseover="this.style.borderColor='var(--color-border-info)'" onmouseout="this.style.borderColor='transparent'">
+        <div class="card-surface mb-16 hover-border-info" style="cursor:pointer;border:1px solid transparent;">
           <div class="flex justify-between items-center mb-4">
             <span style="font-size:12px;font-weight:500;color:var(--color-text-info);">Clause 3</span>
             <span class="badge badge-danger" style="font-size:9px;padding:1px 6px;">Critical</span>
