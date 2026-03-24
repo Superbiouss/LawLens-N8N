@@ -1185,6 +1185,10 @@ textarea {
     color: var(--color-text-secondary);
 }
 
+.chat-bubble-pending {
+    opacity: 0.75;
+}
+
 .chat-bubble p {
     margin: 0 0 8px;
 }
@@ -2119,6 +2123,43 @@ textarea {
 .context-clause-card {
     cursor: pointer;
     border: 1px solid transparent;
+}
+
+.ask-agent-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 16px;
+    border: 0.5px solid var(--color-border-tertiary);
+}
+
+.ask-agent-status.connected {
+    background: var(--color-background-success);
+    border-color: var(--color-border-success);
+}
+
+.ask-agent-status.disconnected {
+    background: var(--color-background-secondary);
+    border-color: var(--color-border-tertiary);
+}
+
+.code-block {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--color-text-secondary);
+}
+
+.n8n-payload-preview {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
 }
 
 .dashboard-activity-row {

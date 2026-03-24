@@ -1,4 +1,5 @@
-import { copyText } from './shared/ui-actions.js';
+import { clearN8nAgentConfig, getN8nAgentConfig, saveN8nAgentConfig, testN8nAgentConnection } from './shared/n8n-agent.js';
+import { copyText, escapeHtml } from './shared/ui-actions.js';
 
 export function renderSettings(container) {
   container.innerHTML = `
@@ -31,6 +32,17 @@ export function renderSettings(container) {
   // Tab switching
   const tabs = container.querySelectorAll('#settings-tabs .seg-tab');
   const content = container.querySelector('#settings-content');
+  const prefetchedTab = sessionStorage.getItem('settings_tab_prefill');
+
+  if (prefetchedTab) {
+    const selectedTab = Array.from(tabs).find(tab => tab.dataset.tab === prefetchedTab);
+    if (selectedTab) {
+      tabs.forEach(tab => tab.classList.remove('active'));
+      selectedTab.classList.add('active');
+      content.innerHTML = renderTab(prefetchedTab);
+      sessionStorage.removeItem('settings_tab_prefill');
+    }
+  }
 
   // Init Tab Indicator
   setTimeout(() => {
@@ -46,17 +58,23 @@ export function renderSettings(container) {
       if (window.updateTabIndicator) window.updateTabIndicator(tab.parentElement);
 
       const page = tab.dataset.tab;
-      if (page === 'profile') content.innerHTML = renderProfile();
-      else if (page === 'integrations') content.innerHTML = renderIntegrations();
-      else if (page === 'api') content.innerHTML = renderAPI();
-      else if (page === 'billing') content.innerHTML = renderBilling();
-      else if (page === 'security') content.innerHTML = renderSecurity();
+      content.innerHTML = renderTab(page);
       bindSettingsContent(container, page);
     });
   });
 
-  bindSettingsContent(container, 'profile');
+  const activePage = container.querySelector('#settings-tabs .seg-tab.active')?.dataset.tab || 'profile';
+  bindSettingsContent(container, activePage);
   bindSettingsSidebar(container);
+}
+
+function renderTab(page) {
+  if (page === 'profile') return renderProfile();
+  if (page === 'integrations') return renderIntegrations();
+  if (page === 'api') return renderAPI();
+  if (page === 'billing') return renderBilling();
+  if (page === 'security') return renderSecurity();
+  return renderProfile();
 }
 
 function renderProfile() {
@@ -139,23 +157,82 @@ function renderIntegrations() {
 }
 
 function renderAPI() {
+  const agent = getN8nAgentConfig();
+
   return `
-    <div class="card">
-      <h3 class="section-label mb-16">API Access</h3>
-      <p class="meta-text mb-16">Use our API to programmatically analyze documents and fetch compliance data.</p>
-      
-      <div class="card-surface p-12 mb-16">
-         <div class="flex justify-between items-center mb-8">
-            <span class="fs-12 fw-600">Main Production Key</span>
-            <span class="badge badge-success">Active</span>
-         </div>
-         <div class="flex gap-8">
-            <input type="password" value="sk_live_51Px2..." disabled style="flex:1;background:var(--color-background-primary);" />
-            <button class="btn-sm" id="settings-copy-api-key-btn">Copy</button>
-         </div>
+    <div class="flex flex-col gap-16">
+      <div class="card">
+        <h3 class="section-label mb-16">API Access</h3>
+        <p class="meta-text mb-16">Use our API to programmatically analyze documents and fetch compliance data.</p>
+
+        <div class="card-surface p-12 mb-16">
+           <div class="flex justify-between items-center mb-8">
+              <span class="fs-12 fw-600">Main Production Key</span>
+              <span class="badge badge-success">Active</span>
+           </div>
+           <div class="flex gap-8">
+              <input type="password" value="sk_live_51Px2..." disabled style="flex:1;background:var(--color-background-primary);" />
+              <button class="btn-sm" id="settings-copy-api-key-btn">Copy</button>
+           </div>
+        </div>
+
+        <button class="btn-sm border-primary" id="settings-generate-api-key-btn">+ Generate new secret key</button>
       </div>
 
-      <button class="btn-sm border-primary" id="settings-generate-api-key-btn">+ Generate new secret key</button>
+      <div class="card">
+        <div class="flex justify-between items-center mb-16">
+          <div>
+            <h3 class="section-label mb-4">n8n AI Agent</h3>
+            <p class="meta-text m-0">Configure the webhook that should receive messages from Normal Chat and Ask the Doc.</p>
+          </div>
+          <span class="badge ${agent.enabled && agent.webhookUrl ? 'badge-success' : 'badge-neutral'}">${agent.enabled && agent.webhookUrl ? 'Connected' : 'Inactive'}</span>
+        </div>
+
+        <div class="flex flex-col gap-16">
+          <div>
+            <label class="meta-text mb-4 block" for="n8n-webhook-url">Webhook URL</label>
+            <input type="url" id="n8n-webhook-url" placeholder="https://your-n8n-instance/webhook/agent" value="${escapeHtml(agent.webhookUrl)}" />
+          </div>
+
+          <div>
+            <label class="meta-text mb-4 block" for="n8n-auth-token">Bearer Token (Optional)</label>
+            <input type="password" id="n8n-auth-token" placeholder="Optional secret token" value="${escapeHtml(agent.authToken)}" />
+          </div>
+
+          <div class="flex justify-between items-center pt-12 border-top-tertiary">
+            <div>
+              <p class="fs-13 fw-500">Enable webhook routing</p>
+              <p class="meta-text">When enabled, both chat experiences send messages to your n8n AI agent.</p>
+            </div>
+            <button type="button" class="reset-btn toggle ${agent.enabled ? 'on' : ''}" id="n8n-enabled-toggle" aria-pressed="${agent.enabled}"></button>
+          </div>
+
+          <div class="flex justify-between items-center pt-12 border-top-tertiary">
+            <div>
+              <p class="fs-13 fw-500">Include document context</p>
+              <p class="meta-text">Sends route and document metadata along with the user message.</p>
+            </div>
+            <button type="button" class="reset-btn toggle ${agent.includeDocumentContext ? 'on' : ''}" id="n8n-context-toggle" aria-pressed="${agent.includeDocumentContext}"></button>
+          </div>
+
+          <div class="card-surface p-12">
+            <p class="micro-label mb-8">Payload Preview</p>
+            <div class="code-block n8n-payload-preview">{
+  "message": "Summarize the obligations",
+  "history": [{ "role": "user", "content": "..." }],
+  "context": { "route": "ask", "documentName": "Acme Corp NDA v3.pdf" },
+  "conversationId": "lexai-...",
+  "source": "lexai-web"
+}</div>
+          </div>
+
+          <div class="flex gap-8 flex-wrap">
+            <button class="btn-primary" id="save-n8n-config-btn">Save Webhook</button>
+            <button class="btn-sm" id="test-n8n-connection-btn">Test Connection</button>
+            <button class="btn-sm text-danger" id="clear-n8n-config-btn">Clear</button>
+          </div>
+        </div>
+      </div>
     </div>
     `;
 }
@@ -283,6 +360,8 @@ function bindSettingsContent(container, page) {
     container.querySelector('#settings-generate-api-key-btn')?.addEventListener('click', () => {
       window.showToast('Key generation would require backend support.');
     });
+
+    bindN8nAgentSettings(container);
   }
 
   if (page === 'billing') {
@@ -306,6 +385,66 @@ function bindSettingsContent(container, page) {
       window.showToast('Password change submitted in preview mode.');
     });
   }
+}
+
+function bindN8nAgentSettings(container) {
+  const webhookInput = container.querySelector('#n8n-webhook-url');
+  const tokenInput = container.querySelector('#n8n-auth-token');
+  const enabledToggle = container.querySelector('#n8n-enabled-toggle');
+  const contextToggle = container.querySelector('#n8n-context-toggle');
+
+  const readConfig = () => ({
+    webhookUrl: webhookInput?.value.trim() || '',
+    authToken: tokenInput?.value.trim() || '',
+    enabled: enabledToggle?.classList.contains('on') || false,
+    includeDocumentContext: contextToggle?.classList.contains('on') || false,
+  });
+
+  [enabledToggle, contextToggle].forEach(toggle => {
+    toggle?.addEventListener('click', () => {
+      toggle.classList.toggle('on');
+      toggle.setAttribute('aria-pressed', String(toggle.classList.contains('on')));
+    });
+  });
+
+  container.querySelector('#save-n8n-config-btn')?.addEventListener('click', () => {
+    const next = readConfig();
+    if (!next.webhookUrl) {
+      window.showToast('Add the n8n webhook URL first.');
+      return;
+    }
+    saveN8nAgentConfig(next);
+    window.showToast('n8n webhook saved.');
+  });
+
+  container.querySelector('#test-n8n-connection-btn')?.addEventListener('click', async () => {
+    const next = readConfig();
+    if (!next.webhookUrl) {
+      window.showToast('Add the n8n webhook URL first.');
+      return;
+    }
+
+    saveN8nAgentConfig(next);
+    window.showToast('Testing webhook connection...');
+
+    try {
+      const result = await testN8nAgentConnection();
+      window.showToast(result.reply ? 'n8n agent responded successfully.' : 'n8n agent responded, but without text.');
+    } catch (error) {
+      window.showToast(`n8n test failed: ${error.message || 'Unknown error'}`);
+    }
+  });
+
+  container.querySelector('#clear-n8n-config-btn')?.addEventListener('click', () => {
+    clearN8nAgentConfig();
+    webhookInput.value = '';
+    tokenInput.value = '';
+    enabledToggle?.classList.remove('on');
+    contextToggle?.classList.add('on');
+    enabledToggle?.setAttribute('aria-pressed', 'false');
+    contextToggle?.setAttribute('aria-pressed', 'true');
+    window.showToast('n8n webhook settings cleared.');
+  });
 }
 
 function bindSettingsSidebar(container) {

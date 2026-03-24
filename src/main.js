@@ -2,6 +2,7 @@ import './index.css';
 
 // Page modules
 import { renderUpload } from './pages/upload.js';
+import { renderChat } from './pages/chat.js';
 import { renderDashboard } from './pages/dashboard.js';
 import { renderSummary } from './pages/summary.js';
 import { renderClauseBreakdown } from './pages/clause-breakdown.js';
@@ -23,6 +24,7 @@ import { renderDrafting } from './pages/drafting.js';
 
 const routes = {
     'dashboard': { title: 'Dashboard', render: renderDashboard, breadcrumb: ['Dashboard'] },
+    'chat': { title: 'Normal Chat', render: renderChat, breadcrumb: ['Normal Chat'] },
     'analytics': { title: 'Portfolio analytics', render: renderAnalytics, breadcrumb: ['Intelligence', 'Portfolio analytics'] },
     'compliance': { title: 'Compliance checklist', render: renderCompliance, breadcrumb: ['Intelligence', 'Compliance checklist'] },
     'upload': { title: 'Upload & analyze', render: renderUpload, breadcrumb: ['Upload & analyze'] },
