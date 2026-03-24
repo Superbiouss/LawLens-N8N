@@ -53,7 +53,7 @@ export function renderAsk(container) {
 
         <!-- Chat Input -->
         <div class="ask-bar" style="border-top:0.5px solid var(--color-border-tertiary);padding:16px 24px;">
-          <input type="text" placeholder="Ask anything about the Acme Corp NDA..." style="height:44px;border-radius:22px;padding:0 20px;box-shadow:0 2px 4px rgba(0,0,0,0.02);" />
+          <input type="text" placeholder="Ask anything about the Acme Corp NDA..." style="height:44px;border-radius:22px;padding:0 20px;box-shadow:none;" />
           <button class="btn-primary" style="border-radius:22px;padding:0 20px;">Send ↗</button>
         </div>
       </div>

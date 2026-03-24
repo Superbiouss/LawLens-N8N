@@ -8,9 +8,9 @@ export function renderDrafting(container) {
       <div class="flex items-center gap-12">
          <!-- Collaboration Dots (UX Polish) -->
          <div class="flex -space-x-8">
-            <div title="John Doe (You)" style="width:24px;height:24px;border-radius:50%;background:#EF4444;border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:bold;z-index:3;">JD</div>
-            <div title="LexAI (AI Assistant)" style="width:24px;height:24px;border-radius:50%;background:var(--color-brand-purple);border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:bold;z-index:2;">AI</div>
-            <div title="Sarah (Legal Review)" style="width:24px;height:24px;border-radius:50%;background:#10B981;border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:bold;z-index:1;">S</div>
+            <div title="John Doe (You)" style="width:24px;height:24px;border-radius:50%;background:#EF4444;border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:10px;font-weight:bold;z-index:3;">JD</div>
+            <div title="LexAI (AI Assistant)" style="width:24px;height:24px;border-radius:50%;background:var(--color-brand-purple);border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:10px;font-weight:bold;z-index:2;">AI</div>
+            <div title="Sarah (Legal Review)" style="width:24px;height:24px;border-radius:50%;background:#10B981;border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:10px;font-weight:bold;z-index:1;">S</div>
          </div>
          <button class="btn-primary" onclick="showToast('Document saved to vault')">Save Draft</button>
       </div>
@@ -40,7 +40,7 @@ export function renderDrafting(container) {
             <h2 style="margin-bottom:20px;font-family:var(--font-sans);font-weight:600;">MUTUAL NON-DISCLOSURE AGREEMENT</h2>
             <p>This NON-DISCLOSURE AGREEMENT (the "Agreement") is entered into as of January 24, 2026 (the "Effective Date"), by and between Acme Corp and [COUNTERPARTY NAME].</p>
             <p style="margin-top:20px;">1. <u>Purpose</u>. The parties wish to explore a business opportunity of mutual interest and in connection with this opportunity, may disclose certain proprietary and confidential information.</p>
-            <p style="margin-top:20px;background:rgba(83, 74, 183, 0.08);border-left:3px solid var(--color-brand-purple);padding:12px;">2. <u>Confidentiality</u>. The Receiving Party shall maintain the Confidential Information in strict confidence and shall not disclose it to any third party for a period of five (5) years from the date of disclosure.</p>
+            <p style="margin-top:20px;background:var(--color-background-purple);border-left:3px solid var(--color-brand-purple);padding:12px;">2. <u>Confidentiality</u>. The Receiving Party shall maintain the Confidential Information in strict confidence and shall not disclose it to any third party for a period of five (5) years from the date of disclosure.</p>
             <p style="margin-top:20px;">3. <u>Exclusions</u>. The obligations in Section 2 shall not apply to information that: (a) is or becomes publicly known through no fault of the Receiving Party...</p>
          </div>
       </div>
@@ -56,7 +56,7 @@ export function renderDrafting(container) {
                <div class="card-surface p-12" style="background:var(--color-background-purple);border-color:var(--color-brand-purple-400);">
                   <p style="font-size:12px;font-weight:600;color:var(--color-brand-purple);margin-bottom:4px;">Risk Detected</p>
                   <p style="font-size:12px;opacity:0.8;margin-bottom:12px;">Section 2 specifies a 5-year tail. Standard for this industry is 2 years.</p>
-                  <button class="btn-sm w-full" style="background:var(--color-brand-purple);color:white;border:none;" onclick="showToast('Applying clause improvement')">Fix to Standard (2 Year)</button>
+                  <button class="btn-sm w-full" style="background:var(--color-brand-purple);color:#FFFFFF;border:none;" onclick="showToast('Applying clause improvement')">Fix to Standard (2 Year)</button>
                </div>
 
                <div style="padding-top:12px;border-top:0.5px solid var(--color-border-tertiary);">

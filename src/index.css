@@ -38,6 +38,9 @@
     --color-brand-purple-light: #EEEDFE;
     --color-brand-purple-400: #7F77DD;
     --color-brand-purple-800: #3C3489;
+    --color-action-bg: #534AB7;
+    --color-action-bg-hover: #3C3489;
+    --color-action-text: #FFFFFF;
 
     /* Semantic raw */
     --color-red-400: #E24B4A;
@@ -48,6 +51,9 @@
     --color-pink-400: #D4537E;
     --color-green-400: #639922;
     --color-gray-400: #888780;
+    --color-highlight-danger: rgba(226, 75, 74, 0.18);
+    --color-highlight-warning: rgba(186, 117, 23, 0.15);
+    --color-highlight-info: rgba(55, 138, 221, 0.15);
 
     /* Typography */
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -70,42 +76,60 @@
     --duration-slow: 0.5s;
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --shadow-soft: 0 8px 24px rgba(16, 24, 40, 0.08);
+    --shadow-raised: 0 12px 28px rgba(16, 24, 40, 0.14);
+    --shadow-mobile-nav: 20px 0 50px rgba(16, 24, 40, 0.16);
+    --surface-glass: rgba(255, 255, 255, 0.78);
+    --focus-ring: 0 0 0 2px var(--color-border-info);
+    --color-toast-bg: #1A1A1A;
+    --color-toast-fg: #FFFFFF;
 }
 
 [data-theme="dark"] {
     /* Surfaces */
-    --color-background-primary: #121212;
-    --color-background-secondary: #1E1E1E;
-    --color-background-tertiary: #2A2A2A;
-    --color-background-danger: #321010;
-    --color-background-warning: #32230A;
-    --color-background-success: #0A241D;
-    --color-background-info: #0A1E32;
-    --color-background-purple: #1D1A39;
+    --color-background-primary: #151B25;
+    --color-background-secondary: #1F2734;
+    --color-background-tertiary: #0F141D;
+    --color-background-danger: #3A181C;
+    --color-background-warning: #3A2A13;
+    --color-background-success: #123126;
+    --color-background-info: #122B44;
+    --color-background-purple: #252051;
 
     /* Text */
-    --color-text-primary: #F0F0F0;
-    --color-text-secondary: #B0B0AF;
-    --color-text-tertiary: #7F7E78;
+    --color-text-primary: #EAF0FA;
+    --color-text-secondary: #BAC5D7;
+    --color-text-tertiary: #8F9CB0;
     --color-text-danger: #E24B4B;
     --color-text-warning: #EF9F27;
     --color-text-success: #1D9E75;
     --color-text-info: #378ADD;
 
     /* Borders */
-    --color-border-tertiary: rgba(255, 255, 255, 0.08);
-    --color-border-secondary: rgba(255, 255, 255, 0.15);
-    --color-border-primary: rgba(255, 255, 255, 0.25);
+    --color-border-tertiary: rgba(234, 240, 250, 0.10);
+    --color-border-secondary: rgba(234, 240, 250, 0.20);
+    --color-border-primary: rgba(234, 240, 250, 0.30);
+    --color-border-danger: rgba(226, 75, 74, 0.42);
+    --color-border-warning: rgba(239, 159, 39, 0.42);
+    --color-border-success: rgba(29, 158, 117, 0.42);
+    --color-border-info: rgba(55, 138, 221, 0.42);
+
+    --color-action-bg: #7F77DD;
+    --color-action-bg-hover: #A39CFF;
+    --color-action-text: #101521;
+    --color-highlight-danger: rgba(226, 75, 74, 0.24);
+    --color-highlight-warning: rgba(239, 159, 39, 0.24);
+    --color-highlight-info: rgba(55, 138, 221, 0.24);
+    --shadow-soft: 0 8px 26px rgba(0, 0, 0, 0.45);
+    --shadow-raised: 0 14px 34px rgba(0, 0, 0, 0.56);
+    --shadow-mobile-nav: 20px 0 50px rgba(0, 0, 0, 0.58);
+    --surface-glass: rgba(15, 20, 29, 0.76);
+    --focus-ring: 0 0 0 2px rgba(55, 138, 221, 0.45);
+    --color-toast-bg: #222C3B;
+    --color-toast-fg: #F5F8FF;
 
     /* Invert SVG Icons */
     --icon-brightness: 0.9;
-}
-
-body {
-    background-color: var(--color-background-primary);
-    color: var(--color-text-primary);
-    font-family: var(--font-sans);
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Animations */
@@ -206,6 +230,7 @@ body {
     line-height: 1.5;
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color var(--duration-normal) ease, color var(--duration-normal) ease, border-color var(--duration-normal) ease, box-shadow var(--duration-normal) ease;
 }
 
 /* ---- Typography Scale ---- */
@@ -445,7 +470,7 @@ a:hover {
 
 .card:hover {
     border-color: var(--color-border-secondary);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-soft);
 }
 
 .card-surface {
@@ -575,17 +600,17 @@ button:active,
 }
 
 .btn-primary {
-    background: var(--color-text-primary);
-    color: var(--color-background-primary);
+    background: var(--color-action-bg);
+    color: var(--color-action-text);
     border: none;
     transition: all var(--duration-fast) var(--ease-in-out);
 }
 
 .btn-primary:hover {
-    opacity: 0.85;
-    background: var(--color-text-primary);
+    opacity: 1;
+    background: var(--color-action-bg-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-soft);
 }
 
 .btn-primary:disabled {
@@ -626,7 +651,7 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-    box-shadow: 0 0 0 2px var(--color-border-info);
+    box-shadow: var(--focus-ring);
 }
 
 textarea {
@@ -658,7 +683,7 @@ textarea {
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background: #FFFFFF;
+    background: var(--color-background-primary);
     top: 2px;
     left: 2px;
     transition: transform 0.2s;
@@ -1158,19 +1183,19 @@ textarea {
 }
 
 .clause-highlight-danger {
-    background: rgba(226, 75, 74, 0.18);
+    background: var(--color-highlight-danger);
     border-radius: 2px;
     padding: 0 1px;
 }
 
 .clause-highlight-warning {
-    background: rgba(186, 117, 23, 0.15);
+    background: var(--color-highlight-warning);
     border-radius: 2px;
     padding: 0 1px;
 }
 
 .clause-highlight-info {
-    background: rgba(55, 138, 221, 0.15);
+    background: var(--color-highlight-info);
     border-radius: 2px;
     padding: 0 1px;
 }
@@ -1337,7 +1362,7 @@ textarea {
 
     .sidebar.open {
         transform: translateX(0);
-        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-mobile-nav);
     }
 
     .sidebar .nav-item span,
@@ -1376,7 +1401,7 @@ textarea {
 .topbar {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: var(--surface-glass) !important;
 }
 
 /* ---- Toast Notifications ---- */
@@ -1392,13 +1417,13 @@ textarea {
 }
 
 .toast {
-    background: var(--color-text-primary);
-    color: var(--color-background-primary);
+    background: var(--color-toast-bg);
+    color: var(--color-toast-fg);
     padding: 10px 16px;
     border-radius: var(--border-radius-md);
     font-size: 13px;
     font-weight: 500;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-raised);
     display: flex;
     align-items: center;
     gap: 10px;

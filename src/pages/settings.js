@@ -116,7 +116,7 @@ function renderIntegrations() {
     ].map(i => `
           <div class="flex items-center justify-between p-12 card-surface">
             <div class="flex items-center gap-12">
-              <div style="width:28px;height:28px;background:${i.icon};border-radius:6px;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:bold;">${i.name[0]}</div>
+              <div style="width:28px;height:28px;background:${i.icon};border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:14px;font-weight:bold;">${i.name[0]}</div>
               <div>
                 <p style="font-size:13px;font-weight:500;">${i.name}</p>
                 <p class="meta-text">${i.desc}</p>
@@ -177,7 +177,7 @@ function renderBilling() {
     <div class="card">
       <h3 class="section-label mb-16">Payment Method</h3>
       <div class="flex items-center gap-12 card-surface p-12">
-         <div style="width:36px;height:24px;background:#1A1F71;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-size:8px;font-weight:bold;">VISA</div>
+         <div style="width:36px;height:24px;background:#1A1F71;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:8px;font-weight:bold;">VISA</div>
          <div style="flex:1;">
             <p style="font-size:13px;font-weight:500;">Visa ending in 4242</p>
             <p class="meta-text">Expires 12/28</p>
@@ -230,7 +230,7 @@ function renderSideInfo() {
        <p style="font-size:24px;font-weight:500;color:var(--color-text-primary);">$129<span style="font-size:14px;color:var(--color-text-tertiary);">/mo</span></p>
        <div class="progress-track mt-12 mb-8"><div class="progress-bar" style="width:45%;background:var(--color-brand-purple);"></div></div>
        <p class="meta-text">45 of 100 documents analyzed this month.</p>
-       <button class="btn-sm mt-16 w-full" style="background:white;border-color:var(--color-brand-purple);color:var(--color-brand-purple);">Upgrade plan</button>
+       <button class="btn-sm mt-16 w-full" style="background:var(--color-background-primary);border-color:var(--color-brand-purple);color:var(--color-brand-purple);">Upgrade plan</button>
     </div>
 
     <div class="card">
