@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LexAI — Professional Legal Intelligence at the Speed of Thought</title>
+    <meta name="description"
+        content="LexAI transforms complex legal documents into precise, actionable intelligence. Portfolio-wide risk analytics, clause breakdown, and cross-jurisdictional compliance — purpose-built for legal professionals." />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="LexAI — Professional Legal Intelligence" />
+    <meta property="og:description"
+        content="Verdict over description. LexAI gives your legal team AI-powered contract analysis, risk scoring, and compliance monitoring." />
+    <meta property="og:url" content="https://lexai.app" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LexAI — Professional Legal Intelligence" />
+
+    <!-- Fonts (same as core app) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <!-- Design System Variables (light + dark) -->
+    <link rel="stylesheet" href="../src/index.css" />
+    <!-- Landing-specific styles -->
+    <link rel="stylesheet" href="css/landing.css" />
+</head>
+
+<body>
+
+    <!-- ===================== Navbar ===================== -->
+    <header class="navbar">
+        <div class="container">
+            <nav class="navbar-inner" aria-label="Main navigation">
+                <!-- Logo -->
+                <a href="#" class="navbar-logo" aria-label="LexAI home">
+                    <div class="logo-dot" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                    </div>
+                    <span class="logo-wordmark">LexAI</span>
+                </a>
+
+                <!-- Desktop nav links -->
+                <ul class="navbar-links" role="list">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How it works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#waitlist">Contact</a></li>
+                </ul>
+
+                <!-- Actions -->
+                <div class="navbar-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"
+                        title="Toggle light / dark mode">
+                        <!-- Moon (shown in light mode) -->
+                        <svg class="icon-moon" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                        <!-- Sun (shown in dark mode) -->
+                        <svg class="icon-sun" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5" />
+                            <line x1="12" y1="1" x2="12" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="23" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                            <line x1="1" y1="12" x2="3" y2="12" />
+                            <line x1="21" y1="12" x2="23" y2="12" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                        </svg>
+                    </button>
+                    <a href="#waitlist" class="btn btn-secondary" style="padding:8px 18px;font-size:13px;">Log in</a>
+                    <a href="#waitlist" class="btn btn-primary" style="padding:8px 18px;font-size:13px;">Get early
+                        access</a>
+
+                    <!-- Mobile menu button -->
+                    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===================== Mobile Nav Overlay ===================== -->
+    <div class="mobile-nav-overlay" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation">
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">
+            <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        </button>
+        <a href="#features" class="mobile-nav-link">Features</a>
+        <a href="#how-it-works" class="mobile-nav-link">How it works</a>
+        <a href="#pricing" class="mobile-nav-link">Pricing</a>
+        <a href="#waitlist" class="mobile-nav-link">Contact</a>
+        <div style="border-top: 1px solid var(--color-border-tertiary); margin: 16px 0;"></div>
+        <a href="#waitlist" class="btn btn-primary" style="align-self:flex-start;">Get early access</a>
+    </div>
+
+    <main>
+        <!-- ===================== Hero ===================== -->
+        <section class="hero" aria-label="Hero">
+            <div class="container">
+                <div class="hero-badge">
+                    <span class="badge-dot" aria-hidden="true"></span>
+                    Now in private beta &mdash; 200+ firms on the waitlist
+                </div>
+
+                <h1 class="hero-title">
+                    Professional Legal Intelligence<br />
+                    at the <span class="accent">Speed of Thought</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Verdict over description. LexAI transforms complex legal documents into precise, actionable
+                    intelligence &mdash; so your team can focus on strategy, not summaries.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#waitlist" class="btn btn-primary btn-lg">Request early access</a>
+                    <a href="#features" class="btn btn-secondary btn-lg">See how it works</a>
+                </div>
+
+                <div class="hero-social-proof">
+                    <div class="avatar-stack" aria-hidden="true">
+                        <div class="avatar">SA</div>
+                        <div class="avatar">MK</div>
+                        <div class="avatar">RP</div>
+                        <div class="avatar">JL</div>
+                    </div>
+                    <span>Trusted by legal teams at leading Tier&nbsp;1 firms</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== Product Preview ===================== -->
+        <section class="product-preview reveal" aria-label="Product preview">
+            <div class="container">
+                <div class="preview-frame">
+                    <!-- Browser chrome bar -->
+                    <div class="preview-toolbar">
+                        <div class="preview-dots" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="preview-url">app.lexai.com/risk-report</div>
+                    </div>
+
+                    <!-- App mock -->
+                    <div class="preview-body">
+                        <!-- Sidebar -->
+                        <aside class="preview-sidebar" aria-hidden="true">
+                            <div class="preview-sidebar-logo">
+                                <div class="preview-logo-dot"></div>
+                                <span class="preview-logo-text">LexAI</span>
+                            </div>
+                            <div class="preview-nav-item">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" />
+                                    <rect x="14" y="3" width="7" height="7" />
+                                    <rect x="14" y="14" width="7" height="7" />
+                                    <rect x="3" y="14" width="7" height="7" />
+                                </svg>
+                                Dashboard
+                            </div>
+                            <div class="preview-nav-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+                                    <path d="M12 12V4" />
+                                    <path d="M8 8l4-4 4 4" />
+                                </svg>
+                                Upload &amp; Analyze
+                            </div>
+                            <div class="preview-nav-item active">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                    <path d="M12 9v4" />
+                                    <path d="M12 17h.01" />
+                                </svg>
+                                Risk Report
+                            </div>
+                            <div class="preview-nav-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                                    <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                                </svg>
+                                Portfolio Analytics
+                            </div>
+                            <div class="preview-nav-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                                Compliance
+                            </div>
+                        </aside>
+
+                        <!-- Main content mock -->
+                        <div class="preview-main" aria-hidden="true">
+                            <div class="preview-header">
+                                <div>
+                                    <div class="preview-doc-name">Master Service Agreement</div>
+                                    <div class="preview-doc-meta">Verified 2 hours ago &middot; ID: MSA-2025-082
+                                        &middot; 47 pages</div>
+                                </div>
+                                <div class="risk-badge">
+                                    <span class="score">8.4</span>
+                                    <span class="label">Aggregate Risk</span>
+                                </div>
+                            </div>
+
+                            <div class="preview-cards">
+                                <div class="preview-card verdict">
+                                    <div class="preview-card-title">⚠ Unlimited Liability Exposure</div>
+                                    <div class="preview-card-text">Clause 14.2 removes all liability caps. Recommend
+                                        immediate redline.</div>
+                                </div>
+                                <div class="preview-card warn">
+                                    <div class="preview-card-title">◐ Auto-Renewal Missing Notice</div>
+                                    <div class="preview-card-text">Contract renews automatically — no advance notice
+                                        clause found in Schedule B.</div>
+                                </div>
+                                <div class="preview-card">
+                                    <div class="preview-card-title">Clause Breakdown</div>
+                                    <div class="preview-placeholder w-80"></div>
+                                    <div class="preview-placeholder w-60"></div>
+                                    <div class="preview-placeholder w-70"></div>
+                                </div>
+                                <div class="preview-card">
+                                    <div class="preview-card-title">Governing Law</div>
+                                    <div class="preview-placeholder w-70"></div>
+                                    <div class="preview-placeholder w-80"></div>
+                                    <div class="preview-placeholder w-60"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== Stats Bar ===================== -->
+        <section class="stats-bar reveal" aria-label="Key statistics">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">95<span class="sup">%</span></div>
+                        <div class="stat-label">Review time reduction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">200<span class="sup">+</span></div>
+                        <div class="stat-label">Legal professionals on waitlist</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12+</div>
+                        <div class="stat-label">Document types supported</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">∞</div>
+                        <div class="stat-label">Documents per portfolio</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== Features ===================== -->
+        <section class="features-section" id="features" aria-label="Features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="overline">Capabilities</span>
+                    <h2>Beyond Summarization</h2>
+                    <p>LexAI does not describe documents &mdash; it delivers verdicts. Every output is designed to drive
+                        a decision, not defer one.</p>
+                </div>
+
+                <div class="features-grid">
+                    <!-- Feature 1 -->
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                <path d="M12 9v4" />
+                                <path d="M12 17h.01" />
+                            </svg>
+                        </div>
+                        <h3>Aggregate Risk Scoring</h3>
+                        <p>Every contract receives a 0&ndash;10 composite risk score across liability, compliance, and
+                            termination exposure &mdash; instantly, at upload.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                                <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                            </svg>
+                        </div>
+                        <h3>Portfolio-Wide Analytics</h3>
+                        <p>Visualise liability exposure across your entire contract portfolio. Identify systemic risk
+                            patterns and concentration across all active agreements.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <h3>Regulatory Watchman</h3>
+                        <p>Built-in compliance checking for Indian contract law or global standards. Never miss a
+                            mandatory clause, consent requirement, or jurisdiction-specific rule.</p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                                <rect x="9" y="3" width="6" height="4" rx="1" />
+                                <path d="M9 14l2 2 4-4" />
+                            </svg>
+                        </div>
+                        <h3>Atomic Clause Breakdown</h3>
+                        <p>Every clause is extracted, categorised, and risk-labelled. Ask any question about a document
+                            and get a grounded, clause-level answer in seconds.</p>
+                    </div>
+
+                    <!-- Feature 5 -->
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                        </div>
+                        <h3>Drafting Assistant</h3>
+                        <p>Generate redlines and draft new clauses from your approved playbook. Maintain consistency
+                            across all outgoing contracts with AI-assisted drafting.</p>
+                    </div>
+
+                    <!-- Feature 6 -->
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="2" y="7" width="20" height="14" rx="2" />
+                                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+                            </svg>
+                        </div>
+                        <h3>Team Workspace</h3>
+                        <p>Annotate, comment, and collaborate on documents with colleagues in real time. Role-based
+                            access ensures the right people see the right information.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== How It Works ===================== -->
+        <section class="how-section" id="how-it-works" aria-label="How it works">
+            <div class="container">
+                <div class="section-header">
+                    <span class="overline">Process</span>
+                    <h2>From Upload to Verdict in Minutes</h2>
+                    <p>No training required. No lengthy onboarding. LexAI is designed to deliver value the moment a
+                        document is uploaded.</p>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step reveal">
+                        <div class="step-number" aria-hidden="true">1</div>
+                        <h3>Upload any legal document</h3>
+                        <p>Drag and drop PDFs, Word documents, or scanned contracts. LexAI handles NDAs, MSAs,
+                            employment agreements, leases, and 10+ other document types with no configuration.</p>
+                    </div>
+                    <div class="step reveal">
+                        <div class="step-number" aria-hidden="true">2</div>
+                        <h3>Receive an immediate verdict</h3>
+                        <p>Within seconds, LexAI returns a risk score, an executive summary, and a structured
+                            clause-by-clause breakdown — categorised into Critical, Review, and Passed groups.</p>
+                    </div>
+                    <div class="step reveal">
+                        <div class="step-number" aria-hidden="true">3</div>
+                        <h3>Act with confidence</h3>
+                        <p>Accept, redline, or escalate with full context. Export reports, share annotations with your
+                            team, or integrate findings into your existing contract management workflow.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== Testimonials ===================== -->
+        <section class="testimonials-section" aria-label="Testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <span class="overline">From legal professionals</span>
+                    <h2>What practitioners are saying</h2>
+                </div>
+
+                <div class="testimonials-grid">
+                    <article class="testimonial-card reveal">
+                        <p class="testimonial-quote">"I reviewed a 60-page MSA in 8 minutes. The risk score surfaced a
+                            liability clause my team would have spent two hours finding manually. This changes how we do
+                            due diligence."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">SA</div>
+                            <div>
+                                <div class="author-name">Sneha A.</div>
+                                <div class="author-title">Senior Associate, Corporate &amp; M&amp;A</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="testimonial-card reveal">
+                        <p class="testimonial-quote">"The portfolio analytics view alone is worth it. I can see which
+                            vendor contracts carry the highest exposure across our entire supplier base — instantly."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">MK</div>
+                            <div>
+                                <div class="author-name">Madhav K.</div>
+                                <div class="author-title">Chief Legal Officer, FinTech</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="testimonial-card reveal">
+                        <p class="testimonial-quote">"LexAI doesn't hallucinate. Every finding is grounded in a specific
+                            clause. That's what makes it trustworthy enough to use in actual legal work, not just as a
+                            first pass."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">RP</div>
+                            <div>
+                                <div class="author-name">Riya P.</div>
+                                <div class="author-title">In-House Counsel, Infrastructure</div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== Pricing ===================== -->
+        <section class="pricing-section" id="pricing" aria-label="Pricing">
+            <div class="container">
+                <div class="section-header">
+                    <span class="overline">Pricing</span>
+                    <h2>Transparent, predictable pricing</h2>
+                    <p>Start free. Scale as your team grows. No per-document fees or surprise usage charges.</p>
+                </div>
+
+                <div class="pricing-grid">
+                    <!-- Free -->
+                    <div class="pricing-card reveal">
+                        <div class="pricing-tier">Free</div>
+                        <div class="pricing-price">₹<span
+                                style="font-size:38px;font-weight:700;letter-spacing:-0.04em;">0</span></div>
+                        <div class="pricing-period">forever</div>
+                        <div class="pricing-description">For individuals exploring contract analysis.</div>
+                        <div class="pricing-divider"></div>
+                        <ul class="pricing-features">
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>5 document analyses per month</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Clause breakdown &amp; summary</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Risk score (top 3 flags)</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>PDF export</li>
+                        </ul>
+                        <a href="#waitlist" class="btn btn-secondary" style="width:100%;justify-content:center;">Get
+                            started free</a>
+                    </div>
+
+                    <!-- Pro (featured) -->
+                    <div class="pricing-card featured reveal">
+                        <div class="featured-badge">Most popular</div>
+                        <div class="pricing-tier">Pro</div>
+                        <div class="pricing-price">₹<span
+                                style="font-size:38px;font-weight:700;letter-spacing:-0.04em;">4,999</span></div>
+                        <div class="pricing-period">per user / month</div>
+                        <div class="pricing-description">For active legal teams and growing practices.</div>
+                        <div class="pricing-divider"></div>
+                        <ul class="pricing-features">
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Unlimited analyses</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Full clause breakdown &amp; risk report</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Portfolio analytics dashboard</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Compliance checklists (India + Global)</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Annotation &amp; team workspace</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Drafting assistant</li>
+                        </ul>
+                        <a href="#waitlist" class="btn btn-primary" style="width:100%;justify-content:center;">Request
+                            early access</a>
+                    </div>
+
+                    <!-- Enterprise -->
+                    <div class="pricing-card reveal">
+                        <div class="pricing-tier">Enterprise</div>
+                        <div class="pricing-price" style="font-size:36px;">Custom</div>
+                        <div class="pricing-period">get a quote</div>
+                        <div class="pricing-description">For law firms and in-house legal departments with advanced
+                            needs.</div>
+                        <div class="pricing-divider"></div>
+                        <ul class="pricing-features">
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Everything in Pro</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Single sign-on (SSO / SAML)</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Dedicated onboarding &amp; support</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Custom playbook &amp; templates</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>Data residency options</li>
+                            <li><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>SLA &amp; audit log</li>
+                        </ul>
+                        <a href="#waitlist" class="btn btn-secondary" style="width:100%;justify-content:center;">Talk to
+                            sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== CTA / Waitlist ===================== -->
+        <section class="cta-section" id="waitlist" aria-label="Join waitlist">
+            <div class="container">
+                <div class="cta-card">
+                    <span class="overline" style="justify-content:center;">Early access</span>
+                    <h2>Be first when we launch</h2>
+                    <p>Join professional legal teams already on the waitlist. Early access members receive onboarding
+                        support and 3 months free on any Pro plan.</p>
+
+                    <div class="waitlist-form-wrap" id="waitlist-form-wrap">
+                        <form class="waitlist-form" id="waitlist-form" novalidate autocomplete="off">
+                            <label for="waitlist-email" class="sr-only">Work email address</label>
+                            <input type="email" id="waitlist-email" name="email" class="waitlist-input"
+                                placeholder="Enter your work email" required autocomplete="email" />
+                            <button type="submit" class="btn btn-primary btn-lg" id="waitlist-submit">
+                                Join waitlist
+                            </button>
+                        </form>
+
+                        <div class="waitlist-success" id="waitlist-success" role="status" aria-live="polite">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            You're on the list — we'll be in touch soon.
+                        </div>
+                    </div>
+
+                    <p class="cta-footnote">No credit card required. Unsubscribe any time.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================== Footer ===================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <div class="logo-dot" aria-hidden="true" style="width:22px;height:22px;border-radius:5px;">
+                        <svg viewBox="0 0 24 24" style="width:12px;height:12px;">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                    </div>
+                    <span class="logo-wordmark" style="font-size:15px;">LexAI</span>
+                    <span class="footer-copy">&nbsp;&nbsp;© 2025 LexAI Intelligence Systems</span>
+                </div>
+
+                <ul class="footer-links" role="list">
+                    <li><a href="#">Privacy policy</a></li>
+                    <li><a href="#">Terms of service</a></li>
+                    <li><a href="#waitlist">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Screen-reader only utility -->
+    <style>
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0
+        }
+    </style>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
