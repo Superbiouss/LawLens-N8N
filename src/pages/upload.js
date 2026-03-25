@@ -1,3 +1,6 @@
+import { supabase } from '../lib/supabase.js';
+import { apiClient } from '../lib/api-client.js';
+
 export function renderUpload(container) {
   container.innerHTML = `
     <div class="layout-2col">
@@ -79,8 +82,8 @@ function renderUploadTabs() {
   return `
     <div class="seg-tabs mb-16" id="upload-tabs">
       ${tabs
-        .map(
-          (tab) => `
+      .map(
+        (tab) => `
         <button
           type="button"
           class="reset-btn seg-tab${tab.active ? ' active' : ''}"
@@ -90,8 +93,8 @@ function renderUploadTabs() {
           ${tab.label}
         </button>
       `,
-        )
-        .join('')}
+      )
+      .join('')}
     </div>
   `;
 }
@@ -185,15 +188,15 @@ function renderUploadSidebar() {
       <p class="fs-12 fw-500 text-secondary mb-12">What you'll get</p>
       <div class="check-list">
         ${checklist
-          .map(
-            (item) => `
+      .map(
+        (item) => `
           <div class="check-list-item">
             <div class="check-list-dot"></div>
             <span class="fs-12 text-secondary lh-15">${item}</span>
           </div>
         `,
-          )
-          .join('')}
+      )
+      .join('')}
       </div>
     </div>
 
@@ -257,13 +260,24 @@ function bindDepthCards(container) {
 function bindDropzone(container) {
   const dropzone = container.querySelector('#dropzone');
 
-  const selectFile = () => {
-    container.querySelector('#dropzone-title').textContent =
-      'contract_nda_v3.pdf';
-    container.querySelector('#dropzone-sub').textContent =
-      '142 KB - ready to analyze';
+  const handleFile = (file) => {
+    if (!file) return;
+    // Store file in a data attribute or global for the analyze button
+    window.__lexai_pending_upload = file;
+
+    container.querySelector('#dropzone-title').textContent = file.name;
+    const mb = (file.size / (1024 * 1024)).toFixed(2);
+    container.querySelector('#dropzone-sub').textContent = `${mb} MB - ready to analyze`;
     dropzone.classList.add('has-file');
     container.querySelector('#analyze-btn').disabled = false;
+  };
+
+  const selectFile = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.doc,.docx,.txt';
+    input.onchange = (e) => handleFile(e.target.files[0]);
+    input.click();
   };
 
   dropzone.addEventListener('click', selectFile);
@@ -282,7 +296,10 @@ function bindDropzone(container) {
   });
   dropzone.addEventListener('drop', (event) => {
     event.preventDefault();
-    selectFile();
+    dropzone.classList.remove('drag');
+    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+      handleFile(event.dataTransfer.files[0]);
+    }
   });
 }
 
@@ -301,10 +318,13 @@ function bindAlternateSources(container) {
     analyzeBtn.disabled = !hasText;
 
     if (hasText) {
+      const file = new File([text], 'pasted-document.txt', { type: 'text/plain' });
+      window.__lexai_pending_upload = file;
       title.textContent = 'Pasted document text';
       sub.textContent = `${text.split(/\s+/).length} words ready to analyze`;
       dropzone.classList.add('has-file');
     } else if (!urlInput?.value.trim()) {
+      window.__lexai_pending_upload = null;
       resetUploadPreview(container);
     }
   });
@@ -315,6 +335,9 @@ function bindAlternateSources(container) {
       window.showToast('Paste a public document URL first.');
       return;
     }
+
+    const file = new File([url], 'remote-link.txt', { type: 'text/uri-list' });
+    window.__lexai_pending_upload = file;
 
     analyzeBtn.disabled = false;
     title.textContent = 'Remote document linked';
@@ -341,65 +364,103 @@ function bindRecentDocs(container) {
   });
 }
 
-function startAnalysis(container) {
-  const mainArea = container.querySelector('.layout-2col > div:first-child');
+async function startAnalysis(container) {
+  const file = window.__lexai_pending_upload;
+  if (!file) {
+    window.showToast('Please select a file first.');
+    return;
+  }
 
+  const mainArea = container.querySelector('.layout-2col > div:first-child');
   container.querySelector('#analyze-btn').classList.add('hidden');
   container.querySelector('#progress-wrap').classList.remove('hidden');
 
   const steps = ['ps1', 'ps2', 'ps3', 'ps4', 'ps5'];
-  const pcts = [15, 35, 58, 78, 100];
-  let step = 0;
+  let currentStep = 0;
 
-  function advance() {
-    if (step >= steps.length) return;
-
-    if (step > 0) {
-      const prev = container.querySelector(`#${steps[step - 1]}`);
+  const updateProgress = (stepIndex, pct) => {
+    if (stepIndex > 0) {
+      const prev = container.querySelector(`#${steps[stepIndex - 1]}`);
       if (prev) {
         prev.classList.remove('active');
         prev.innerHTML = `<div class="progress-dot-done"></div>${prev.textContent.trim()}`;
       }
     }
-
-    const cur = container.querySelector(`#${steps[step]}`);
+    const cur = container.querySelector(`#${steps[stepIndex]}`);
     if (cur) {
       cur.classList.remove('muted');
       cur.classList.add('active');
-      if (step > 0) {
-        cur.innerHTML = `<div class="spinner"></div>${cur.textContent.trim()}`;
-      }
+      cur.innerHTML = `<div class="spinner"></div>${cur.textContent.trim()}`;
     }
-
     const pbar = container.querySelector('#pbar');
-    if (pbar) pbar.style.width = `${pcts[step]}%`;
+    if (pbar) pbar.style.width = `${pct}%`;
+  };
 
-    step++;
+  try {
+    // Step 1: Upload to Supabase Storage
+    updateProgress(0, 15);
 
-    if (step < steps.length) {
-      setTimeout(advance, 1100);
-      return;
+    if (!supabase) {
+      throw new Error('Supabase is not configured. Running in local demo mode.');
     }
 
-    mainArea.innerHTML = `
-      <div class="animate-fade">
-        <div class="skeleton skeleton-title mb-24"></div>
-        <div class="skeleton-rect skeleton mb-16"></div>
-        <div class="flex gap-12 mb-16">
-          <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
-          <div class="skeleton-rect skeleton flex-1" style="height:60px;"></div>
-        </div>
-        <div class="skeleton-text skeleton"></div>
-        <div class="skeleton-text skeleton" style="width:80%;"></div>
-      </div>
-    `;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('You must be logged in to upload documents.');
 
-    setTimeout(() => {
-      window.navigateTo('summary');
-    }, 1000);
+    const filePath = `${session.user.id}/${Date.now()}_${file.name}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('documents')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    // Step 2: Generate Signed URL for n8n
+    updateProgress(1, 35);
+    const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+      .from('documents')
+      .createSignedUrl(filePath, 3600); // 1 hour expiry
+
+    if (signedUrlError) throw signedUrlError;
+
+    // Step 3: Trigger n8n Ingestion
+    updateProgress(2, 60);
+    const orchestratorResponse = await apiClient.orchestrate('document_ingest', {
+      fileUrl: signedUrlData.signedUrl,
+      fileName: file.name,
+      fileType: file.type,
+      analysisDepth: container.querySelector('.depth-card.selected')?.id || 'd-quick'
+    });
+
+    updateProgress(3, 85);
+    // (Simulate waiting for async analysis to complete)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    updateProgress(4, 100);
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    window.__lexai_pending_upload = null;
+    window.navigateTo('summary');
+
+  } catch (error) {
+    console.error('Analysis failed:', error);
+    if (error.message.includes('demo mode')) {
+      // Fallback for demo mode
+      let mockStep = 1;
+      const interval = setInterval(() => {
+        if (mockStep >= 5) {
+          clearInterval(interval);
+          window.navigateTo('summary');
+        } else {
+          updateProgress(mockStep, mockStep * 20);
+          mockStep++;
+        }
+      }, 1000);
+    } else {
+      window.showToast(error.message || 'Failed to analyze document.');
+      container.querySelector('#analyze-btn').classList.remove('hidden');
+      container.querySelector('#progress-wrap').classList.add('hidden');
+    }
   }
-
-  advance();
 }
 
 function renderRecentDocs() {

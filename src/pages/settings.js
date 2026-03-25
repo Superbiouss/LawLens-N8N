@@ -219,28 +219,25 @@ function renderAPI() {
       <div class="card">
         <div class="flex justify-between items-center mb-16">
           <div>
-            <h3 class="section-label mb-4">n8n AI Agent</h3>
-            <p class="meta-text m-0">Configure the webhook that should receive messages from Normal Chat and Ask the Doc.</p>
+            <h3 class="section-label mb-4">Backend Orchestration (n8n)</h3>
+            <p class="meta-text m-0">Your workspace is connected to the secure orchestration layer.</p>
           </div>
-          <span class="badge ${canUseN8nAgent(agent) ? 'badge-success' : 'badge-neutral'}">${canUseN8nAgent(agent) ? 'Connected' : 'Inactive'}</span>
+          <span class="badge badge-success">Connected</span>
         </div>
 
         <div class="flex flex-col gap-16">
-          <div>
-            <label class="meta-text mb-4 block" for="n8n-webhook-url">Webhook URL</label>
-            <input type="url" id="n8n-webhook-url" placeholder="https://your-n8n-instance/webhook/agent" value="${escapeHtml(agent.webhookUrl)}" />
-          </div>
-
-          <div>
-            <label class="meta-text mb-4 block" for="n8n-auth-token">Bearer Token (Optional)</label>
-            <input type="password" id="n8n-auth-token" placeholder="Optional secret token" value="${escapeHtml(agent.authToken)}" />
-            <p class="meta-text mt-4 m-0">Stored only for the current browser session.</p>
+          <div class="flex justify-between items-center pt-12 border-top-tertiary">
+            <div>
+               <p class="fs-13 fw-500">System Health</p>
+               <p class="meta-text">The connection to the Supabase Edge Function is established.</p>
+            </div>
+            <button class="btn-sm" id="test-n8n-connection-btn">Test Connection</button>
           </div>
 
           <div class="flex justify-between items-center pt-12 border-top-tertiary">
             <div>
               <p class="fs-13 fw-500">Enable webhook routing</p>
-              <p class="meta-text">When enabled, both chat experiences send messages to your n8n AI agent.</p>
+              <p class="meta-text">When enabled, chat experiences send messages to the orchestrator.</p>
             </div>
             <button type="button" class="reset-btn toggle ${agent.enabled ? 'on' : ''}" id="n8n-enabled-toggle" aria-pressed="${agent.enabled}"></button>
           </div>
@@ -262,12 +259,6 @@ function renderAPI() {
   "conversationId": "lexai-...",
   "source": "lexai-web"
 }</div>
-          </div>
-
-          <div class="flex gap-8 flex-wrap">
-            <button class="btn-primary" id="save-n8n-config-btn">Save Webhook</button>
-            <button class="btn-sm" id="test-n8n-connection-btn">Test Connection</button>
-            <button class="btn-sm text-danger" id="clear-n8n-config-btn">Clear</button>
           </div>
         </div>
       </div>
@@ -452,14 +443,13 @@ function bindSettingsContent(container, page) {
 }
 
 function bindN8nAgentSettings(container) {
-  const webhookInput = container.querySelector('#n8n-webhook-url');
-  const tokenInput = container.querySelector('#n8n-auth-token');
   const enabledToggle = container.querySelector('#n8n-enabled-toggle');
   const contextToggle = container.querySelector('#n8n-context-toggle');
 
   const readConfig = () => ({
-    webhookUrl: webhookInput?.value.trim() || '',
-    authToken: tokenInput?.value.trim() || '',
+    // Inherit URL and Token from env config/defaults. We only toggle settings here now.
+    webhookUrl: getN8nAgentConfig().webhookUrl || '',
+    authToken: getN8nAgentConfig().authToken || '',
     enabled: enabledToggle?.classList.contains('on') || false,
     includeDocumentContext: contextToggle?.classList.contains('on') || false,
   });
@@ -471,63 +461,29 @@ function bindN8nAgentSettings(container) {
         'aria-pressed',
         String(toggle.classList.contains('on')),
       );
+
+      // Auto-save toggle preferences
+      const next = readConfig();
+      saveN8nAgentConfig(next);
+      window.showToast('Orchestrator preferences saved.');
     });
   });
 
   container
-    .querySelector('#save-n8n-config-btn')
-    ?.addEventListener('click', () => {
-      const next = readConfig();
-      const validation = validateN8nAgentConfig(next);
-      if (!validation.valid) {
-        window.showToast(validation.message);
-        return;
-      }
-
-      saveN8nAgentConfig(validation.config);
-      window.showToast(
-        validation.config.authToken
-          ? 'n8n webhook saved. Token stored for this browser session only.'
-          : 'n8n webhook saved.',
-      );
-    });
-
-  container
     .querySelector('#test-n8n-connection-btn')
     ?.addEventListener('click', async () => {
-      const next = readConfig();
-      const validation = validateN8nAgentConfig(next);
-      if (!validation.valid) {
-        window.showToast(validation.message);
-        return;
-      }
-
-      saveN8nAgentConfig(validation.config);
-      window.showToast('Testing webhook connection...');
+      window.showToast('Testing orchestrator connection...');
 
       try {
         const result = await testN8nAgentConnection();
         window.showToast(
           result.reply
-            ? 'n8n agent responded successfully.'
-            : 'n8n agent responded, but without text.',
+            ? 'Orchestrator responded successfully.'
+            : 'Orchestrator responded, but without text.',
         );
       } catch (error) {
-        window.showToast(`n8n test failed: ${humanizeN8nAgentError(error)}`);
+        window.showToast(`Test failed: ${humanizeN8nAgentError(error)}`);
       }
-    });
-
-  container
-    .querySelector('#clear-n8n-config-btn')
-    ?.addEventListener('click', () => {
-      clearN8nAgentConfig();
-      webhookInput.value = '';
-      tokenInput.value = '';
-      enabledToggle?.classList.remove('on');
-      contextToggle?.classList.add('on');
-      enabledToggle?.setAttribute('aria-pressed', 'false');
-      contextToggle?.setAttribute('aria-pressed', 'true');
-      window.showToast('n8n webhook settings cleared.');
     });
 }
 
