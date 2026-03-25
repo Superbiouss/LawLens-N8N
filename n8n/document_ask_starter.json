@@ -1,0 +1,93 @@
+{
+    "name": "LexAI Document Ask Starter",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "lexai-ask",
+                "options": {}
+            },
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ],
+            "webhookId": "lexai-ask-webhook"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "name": "AI Agent",
+            "type": "n8n-nodes-base.aiAgent",
+            "typeVersion": 1,
+            "position": [
+                400,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "claude-3-sonnet-20240229",
+                "options": {}
+            },
+            "name": "Anthropic Chat Model",
+            "type": "n8n-nodes-base.aiModelAnthropic",
+            "typeVersion": 1,
+            "position": [
+                400,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "content": "={{$json.message}}",
+                "options": {}
+            },
+            "name": "Respond to Webhook",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1,
+            "position": [
+                700,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "AI Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI Agent": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Anthropic Chat Model": {
+            "ai_model": [
+                [
+                    {
+                        "node": "AI Agent",
+                        "type": "ai_model",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

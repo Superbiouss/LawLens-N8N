@@ -146,33 +146,33 @@ function renderIntegrations() {
       <h3 class="section-label mb-16">Connected Integrations</h3>
       <div class="flex flex-col gap-16">
         ${[
-          {
-            name: 'Google Drive',
-            desc: 'Sync files directly to your vault.',
-            status: 'Connected',
-            icon: '#4285F4',
-          },
-          {
-            name: 'Dropbox',
-            desc: 'Automatic backup of analyzed reports.',
-            status: 'Connect',
-            icon: '#0061FF',
-          },
-          {
-            name: 'Slack',
-            desc: 'Get alerts when a document risk is detected.',
-            status: 'Connect',
-            icon: '#4A154B',
-          },
-          {
-            name: 'OneDrive',
-            desc: 'Import clauses from corporate storage.',
-            status: 'Connect',
-            icon: '#00A1F1',
-          },
-        ]
-          .map(
-            (i) => `
+      {
+        name: 'Google Drive',
+        desc: 'Sync files directly to your vault.',
+        status: 'Connected',
+        icon: '#4285F4',
+      },
+      {
+        name: 'Dropbox',
+        desc: 'Automatic backup of analyzed reports.',
+        status: 'Connect',
+        icon: '#0061FF',
+      },
+      {
+        name: 'Slack',
+        desc: 'Get alerts when a document risk is detected.',
+        status: 'Connect',
+        icon: '#4A154B',
+      },
+      {
+        name: 'OneDrive',
+        desc: 'Import clauses from corporate storage.',
+        status: 'Connect',
+        icon: '#00A1F1',
+      },
+    ]
+      .map(
+        (i) => `
           <div class="flex items-center justify-between p-12 card-surface">
             <div class="flex items-center gap-12">
               <div style="width:28px;height:28px;background:${i.icon};border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:14px;font-weight:bold;">${i.name[0]}</div>
@@ -186,8 +186,8 @@ function renderIntegrations() {
             </button>
           </div>
         `,
-          )
-          .join('')}
+      )
+      .join('')}
       </div>
     </div>
     `;

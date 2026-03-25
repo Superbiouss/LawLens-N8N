@@ -83,14 +83,12 @@ export async function askN8nAgent({
   timeoutMs = DEFAULT_TIMEOUT_MS,
 }) {
   const config = getN8nAgentConfig();
-  const validation = validateN8nAgentConfig(config);
 
-  if (!validation.config.webhookUrl) {
+  // Priority: 1. Environment Variable 2. UI/localStorage setting
+  const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL || config.webhookUrl;
+
+  if (!webhookUrl) {
     throw new Error('N8N_WEBHOOK_NOT_CONFIGURED');
-  }
-
-  if (!validation.valid) {
-    throw new Error('N8N_WEBHOOK_INVALID_URL');
   }
 
   const requestBody = buildN8nRequest({
@@ -104,9 +102,13 @@ export async function askN8nAgent({
     'Content-Type': 'application/json',
   };
 
-  if (validation.config.authToken) {
-    headers.Authorization = `Bearer ${validation.config.authToken}`;
+  const authToken = import.meta.env.VITE_N8N_AUTH_TOKEN || config.authToken;
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
   }
+
+  // NOTE: In Phase 2, this call will be moved to apiClient.orchestrate()
+  // to ensure secrets are never exposed to the client.
 
   const controller =
     !signal && typeof AbortController === 'function'
