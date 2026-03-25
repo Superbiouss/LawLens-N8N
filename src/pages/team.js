@@ -54,7 +54,7 @@ export function renderTeam(container) {
                 </div>
               </div>
               <div class="flex items-center gap-12">
-                <span class="badge ${m.role === 'Owner' ? 'badge-info' : 'badge-neutral'}">${m.role}</span>
+                <lex-badge variant="${m.role === 'Owner' ? 'info' : 'neutral'}">${m.role}</lex-badge>
                 <span class="fs-12 text-tertiary">${m.status}</span>
                 <span class="text-tertiary cursor-pointer px-8">•••</span>
               </div>

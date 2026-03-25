@@ -22,6 +22,10 @@ import { renderAnalytics } from './pages/analytics.js';
 import { renderClauseLibrary } from './pages/clause-library.js';
 import { renderDrafting } from './pages/drafting.js';
 
+// Global UI Components
+import './components/ui/lex-badge.js';
+
+
 const routes = {
   dashboard: {
     title: 'Dashboard',

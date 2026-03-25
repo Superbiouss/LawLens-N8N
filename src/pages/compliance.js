@@ -76,9 +76,9 @@ export function renderCompliance(container) {
                 <div class="p-16 ${i < arr.length - 1 ? 'border-b' : ''}">
                   <div class="flex justify-between items-center">
                     <span class="fs-13 fw-500 text-primary">${item.title}</span>
-                    <span class="badge badge-${item.status === 'pass' ? 'success' : item.status === 'fail' ? 'danger' : 'warning'}">
+                    <lex-badge variant="${item.status === 'pass' ? 'success' : item.status === 'fail' ? 'danger' : 'warning'}">
                       ${item.status === 'pass' ? 'Passed' : item.status === 'fail' ? 'Violation' : 'Missing'}
-                    </span>
+                    </lex-badge>
                   </div>
                   ${item.msg ? `<p class="meta-text mt-8 ${item.status === 'fail' ? 'text-danger' : 'text-secondary'}">${item.msg}</p>` : ''}
                 </div>
