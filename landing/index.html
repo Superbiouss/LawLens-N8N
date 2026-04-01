@@ -78,8 +78,8 @@
                             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                         </svg>
                     </button>
-                    <a href="#waitlist" class="btn btn-secondary" style="padding:8px 18px;font-size:13px;">Log in</a>
-                    <a href="#waitlist" class="btn btn-primary" style="padding:8px 18px;font-size:13px;">Get early
+                    <a href="login.html" class="btn btn-secondary" style="padding:8px 18px;font-size:13px;">Log in</a>
+                    <a href="signup.html" class="btn btn-primary" style="padding:8px 18px;font-size:13px;">Get early
                         access</a>
 
                     <!-- Mobile menu button -->
@@ -108,7 +108,7 @@
         <a href="#pricing" class="mobile-nav-link">Pricing</a>
         <a href="#waitlist" class="mobile-nav-link">Contact</a>
         <div style="border-top: 1px solid var(--color-border-tertiary); margin: 16px 0;"></div>
-        <a href="#waitlist" class="btn btn-primary" style="align-self:flex-start;">Get early access</a>
+        <a href="signup.html" class="btn btn-primary" style="align-self:flex-start;">Get early access</a>
     </div>
 
     <main>
@@ -557,6 +557,57 @@
             </div>
         </section>
 
+        <!-- ===================== FAQ ===================== -->
+        <section class="faq-section" id="faq" aria-label="Frequently Asked Questions">
+            <div class="container">
+                <div class="faq-header">
+                    <h2>Got questions?</h2>
+                    <p style="color: var(--color-text-secondary); font-size: 18px;">We've got answers.</p>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item" name="faq">
+                        <summary class="faq-summary">
+                            Is LexAI suitable for sensitive client data?
+                            <svg aria-hidden="true" class="faq-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </summary>
+                        <div class="faq-content">
+                            Yes. Security is our foundation. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). We deploy isolated, zero-retention LLM instances, meaning your documents are processed ephemerally and <strong>never</strong> used to train our AI models. We are SOC2 Type II compliant.
+                        </div>
+                    </details>
+                    
+                    <details class="faq-item" name="faq">
+                        <summary class="faq-summary">
+                            What types of documents can LexAI analyze?
+                            <svg aria-hidden="true" class="faq-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </summary>
+                        <div class="faq-content">
+                            While we specialize in high-stakes commercial agreements (MSAs, NDAs, DPA, SAAS agreements, Employment Contracts), LexAI is trained to understand the legal nuances of most corporate legal documentation, including complex nested schedules and addendums.
+                        </div>
+                    </details>
+                    
+                    <details class="faq-item" name="faq">
+                        <summary class="faq-summary">
+                            Can we customize the risk scoring?
+                            <svg aria-hidden="true" class="faq-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </summary>
+                        <div class="faq-content">
+                            Absolutely. The Enterprise tier allows your legal operations team to define custom playbooks. You can set specific limits for liability caps, govern auto-renewals, or blacklist specific governing laws, and LexAI will flag them according to your firm's strict guidelines.
+                        </div>
+                    </details>
+                    
+                    <details class="faq-item" name="faq">
+                        <summary class="faq-summary">
+                            Does it integrate with our existing CLM?
+                            <svg aria-hidden="true" class="faq-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </summary>
+                        <div class="faq-content">
+                            We currently integrate seamlessly via API with major CLMs like Ironclad and DocuSign CLM. We also support standard integrations with SharePoint and Google Workspace.
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
         <!-- ===================== CTA / Waitlist ===================== -->
         <section class="cta-section" id="waitlist" aria-label="Join waitlist">
             <div class="container">
@@ -605,9 +656,9 @@
                 </div>
 
                 <ul class="footer-links" role="list">
-                    <li><a href="#">Privacy policy</a></li>
-                    <li><a href="#">Terms of service</a></li>
-                    <li><a href="#waitlist">Contact</a></li>
+                    <li><a href="privacy.html">Privacy policy</a></li>
+                    <li><a href="terms.html">Terms of service</a></li>
+                    <li><a href="mailto:contact@lexai.app">Contact</a></li>
                 </ul>
             </div>
         </div>

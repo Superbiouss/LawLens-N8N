@@ -1221,3 +1221,263 @@ button:focus-visible,
 .mobile-nav-link:hover {
     background: var(--color-background-secondary);
 }
+
+/* =========================================================================
+   Expanded Landing Components (FAQ, Auth, Legal)
+   ========================================================================= */
+
+/* ---- FAQ Accordions ---- */
+.faq-section {
+    padding: 96px 0;
+    background: var(--color-background-secondary);
+}
+
+.faq-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.faq-header h2 {
+    font-size: clamp(28px, 4vw, 36px);
+    margin-bottom: 16px;
+}
+
+.faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.faq-item {
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.faq-item:hover {
+    border-color: var(--color-border-primary);
+}
+
+.faq-item[open] {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='dark'] .faq-item[open] {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.faq-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    list-style: none; /* Hide default triangle */
+}
+
+.faq-summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-summary .faq-icon {
+    width: 20px;
+    height: 20px;
+    stroke: var(--color-text-tertiary);
+    fill: none;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+    stroke: var(--color-brand-purple);
+}
+
+.faq-content {
+    padding: 0 24px 24px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* ---- Auth Pages (Login / Signup) ---- */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% -20%, var(--color-background-secondary) 0%, var(--color-background-primary) 70%);
+    padding: 24px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--color-background-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.06);
+    position: relative;
+    z-index: 10;
+}
+
+[data-theme='dark'] .auth-card {
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-logo {
+    display: inline-flex;
+    margin-bottom: 24px;
+}
+
+.auth-header h1 {
+    font-size: 24px;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+}
+
+.auth-header p {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 8px;
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-brand-purple);
+    box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 24px 0;
+    color: var(--color-text-tertiary);
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border-tertiary);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.auth-footer a {
+    color: var(--color-brand-purple);
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ---- Prose (Legal Pages) ---- */
+.prose-section {
+    padding: 64px 0 120px;
+}
+
+.prose {
+    max-width: 680px;
+    margin: 0 auto;
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.prose h1, .prose h2, .prose h3 {
+    color: var(--color-text-primary);
+    margin-top: 48px;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.prose h1 {
+    font-size: 36px;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+.prose h2 {
+    font-size: 24px;
+}
+
+.prose p {
+    margin-bottom: 24px;
+}
+
+.prose ul {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.prose li {
+    margin-bottom: 8px;
+}
+
+.prose a {
+    color: var(--color-brand-purple);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s ease;
+}
+
+.prose a:hover {
+    text-decoration-color: var(--color-brand-purple);
+}
+
+.prose-meta {
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 48px;
+}
