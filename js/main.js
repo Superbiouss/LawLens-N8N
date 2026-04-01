@@ -15,7 +15,7 @@
     const THEME_KEY = 'lex-theme';
 
     function getSystemTheme() {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        return 'dark'; // Force dark mode as the premium default
     }
 
     function applyTheme(theme) {
@@ -247,6 +247,25 @@
     }
 
     /* ─────────────────────────────────────────────
+     * 7. BENTO GRID GLOW EFFECT
+     * Tracks mouse to illuminate feature cards
+     * ───────────────────────────────────────────── */
+    function initBentoGlow() {
+        const grid = document.querySelector('.features-grid');
+        if (!grid) return;
+        
+        grid.addEventListener('mousemove', function(e) {
+            for (const card of document.querySelectorAll('.feature-card')) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', x + 'px');
+                card.style.setProperty('--mouse-y', y + 'px');
+            }
+        });
+    }
+
+    /* ─────────────────────────────────────────────
      * INIT
      * ───────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', function () {
@@ -256,6 +275,7 @@
         initReveal();
         initNavbarScroll();
         initSmoothScroll();
+        initBentoGlow();
     });
 
 })();
