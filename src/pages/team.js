@@ -112,7 +112,7 @@ export function renderTeam(container) {
             </div>
             <div class="tl-item">
               <div class="tl-dot"></div>
-              <div class="fs-12"><strong>LexAI</strong> completed analysis of 12 documents</div>
+              <div class="fs-12"><strong>LAWLENS</strong> completed analysis of 12 documents</div>
               <div class="meta-text mt-4">2 days ago</div>
             </div>
           </div>

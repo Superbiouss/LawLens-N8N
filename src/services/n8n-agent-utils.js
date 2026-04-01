@@ -85,7 +85,7 @@ export function buildConversationId(scope = 'default', options = {}) {
   const now = options.now || Date.now;
   const random = options.random || Math.random;
   const normalizedScope = normalizeConversationScope(scope);
-  return `lexai-${normalizedScope}-${now()}-${random().toString(36).slice(2, 8)}`;
+  return `lawlens-${normalizedScope}-${now()}-${random().toString(36).slice(2, 8)}`;
 }
 
 export function buildN8nRequest({
@@ -93,7 +93,7 @@ export function buildN8nRequest({
   history = [],
   context = {},
   conversationId,
-  source = 'lexai-web',
+  source = 'lawlens-web',
   timestamp = new Date().toISOString(),
 }) {
   const nextMessage = String(message || '').trim();
@@ -191,7 +191,7 @@ export function humanizeN8nAgentError(error) {
   }
 
   if (error?.message === 'N8N_WEBHOOK_INVALID_RESPONSE') {
-    return 'Webhook returned a response shape that LexAI could not parse.';
+    return 'Webhook returned a response shape that LAWLENS could not parse.';
   }
 
   if (error?.message === 'N8N_WEBHOOK_TIMEOUT') {

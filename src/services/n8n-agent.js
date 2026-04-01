@@ -154,7 +154,7 @@ export async function askN8nAgent({
 
 export async function testN8nAgentConnection() {
   return askN8nAgent({
-    message: 'Connection test from LexAI UI',
+    message: 'Connection test from LAWLENS UI',
     history: [],
     context: {
       route: 'settings',

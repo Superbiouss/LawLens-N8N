@@ -39,7 +39,7 @@ serve(async (req) => {
                 ...payload,
                 metadata: {
                     ...metadata,
-                    source: 'lexai-edge-proxy'
+                    source: 'lawlens-edge-proxy'
                 }
             }),
         });

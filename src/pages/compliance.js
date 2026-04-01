@@ -98,7 +98,7 @@ export function renderCompliance(container) {
           <div class="timeline">
             <div class="tl-item">
               <div class="tl-dot"></div>
-              <div class="meta-text">Check run by LexAI</div>
+              <div class="meta-text">Check run by LAWLENS</div>
               <div class="fs-12 text-primary">Today, 2:15 PM</div>
             </div>
             <div class="tl-item">

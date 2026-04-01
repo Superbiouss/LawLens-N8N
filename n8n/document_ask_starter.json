@@ -1,10 +1,10 @@
 {
-    "name": "LexAI Document Ask Starter",
+    "name": "LAWLENS Document Ask Starter",
     "nodes": [
         {
             "parameters": {
                 "httpMethod": "POST",
-                "path": "lexai-ask",
+                "path": "lawlens-ask",
                 "options": {}
             },
             "name": "Webhook",
@@ -14,7 +14,7 @@
                 100,
                 300
             ],
-            "webhookId": "lexai-ask-webhook"
+            "webhookId": "lawlens-ask-webhook"
         },
         {
             "parameters": {

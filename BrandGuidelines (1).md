@@ -1,4 +1,4 @@
-# LexAI — Brand Guidelines
+# LAWLENS — Brand Guidelines
 
 **Version 1.0 · Legal Document Summarizer**
 
@@ -8,11 +8,11 @@
 
 ### 1.1 Product name
 
-**LexAI** — always written as a single word with a capital L and capital AI. Never written as "Lex AI", "LexAi", or "lexai". The full product name is **LexAI Legal Document Summarizer** for formal contexts; **LexAI** for all in-product usage.
+**LAWLENS** — always written as a single word with a capital L and capital AI. Never written as "Lex AI", "LAWLENS", or "lawlens". The full product name is **LAWLENS Legal Document Summarizer** for formal contexts; **LAWLENS** for all in-product usage.
 
 ### 1.2 Brand personality
 
-LexAI presents as a trusted, expert colleague — not a corporate legal tool. The tone is direct, calm, and precise. LexAI never exaggerates risk to create alarm, and never downplays risk to avoid discomfort. It is the most honest voice in the room.
+LAWLENS presents as a trusted, expert colleague — not a corporate legal tool. The tone is direct, calm, and precise. LAWLENS never exaggerates risk to create alarm, and never downplays risk to avoid discomfort. It is the most honest voice in the room.
 
 **Brand attributes:**
 
@@ -23,12 +23,12 @@ LexAI presents as a trusted, expert colleague — not a corporate legal tool. Th
 
 ### 1.3 Logo mark
 
-The logo consists of the wordmark **LexAI** set in Arial Bold, paired with a 7×7px filled circle in `#534AB7` (Purple 400) as the dot element. The dot appears to the left of the wordmark in the navigation bar context.
+The logo consists of the wordmark **LAWLENS** set in Arial Bold, paired with a 7×7px filled circle in `#534AB7` (Purple 400) as the dot element. The dot appears to the left of the wordmark in the navigation bar context.
 
 **Logo lockup (nav bar):**
 
 ```
-● LexAI
+● LAWLENS
 ```
 
 The dot is always Purple 400 (`#534AB7`). The wordmark is always the primary text colour of the surrounding surface. Never place the logo on a coloured background — it always sits on white or the page background.
@@ -37,11 +37,11 @@ The dot is always Purple 400 (`#534AB7`). The wordmark is always the primary tex
 
 ## 2. Colour system
 
-The LexAI colour system is built on nine ramps, each with seven stops. Every colour used in the product comes from this palette — no off-palette hex values are permitted.
+The LAWLENS colour system is built on nine ramps, each with seven stops. Every colour used in the product comes from this palette — no off-palette hex values are permitted.
 
 ### 2.1 Primary palette
 
-**Purple** — the LexAI brand colour. Used for the logo, primary accents, active states, and the primary CTA button.
+**Purple** — the LAWLENS brand colour. Used for the logo, primary accents, active states, and the primary CTA button.
 
 | Token        | Name          | Hex       | Usage                                               |
 | ------------ | ------------- | --------- | --------------------------------------------------- |
@@ -463,7 +463,7 @@ The ring is 64–72px diameter. The score number is centred inside in 16–18px 
 
 ## 6. Iconography
 
-LexAI uses minimal SVG icons throughout the product. All icons follow these rules:
+LAWLENS uses minimal SVG icons throughout the product. All icons follow these rules:
 
 - **Stroke-only.** Never filled icons — always `fill="none"` with `stroke` applied.
 - **Stroke width:** `1.5px` universally. Never `1px` or `2px`.
@@ -477,7 +477,7 @@ The icon set follows the Lucide icon design language — geometric, clean, with 
 
 ## 7. Motion & interaction
 
-LexAI is a low-motion interface. Animations serve a functional purpose — they communicate state change, not add decoration.
+LAWLENS is a low-motion interface. Animations serve a functional purpose — they communicate state change, not add decoration.
 
 ### 7.1 Transition values
 
@@ -605,13 +605,13 @@ The following are explicitly prohibited across all product surfaces. These rules
 
 ### 11.1 Core voice characteristics
 
-**Expert.** LexAI has done the legal reading for you. It speaks with confidence, not hedging. "This clause gives Acme Corp unilateral assignment rights" — not "This clause might potentially suggest that Acme Corp could possibly have some rights around assignment."
+**Expert.** LAWLENS has done the legal reading for you. It speaks with confidence, not hedging. "This clause gives Acme Corp unilateral assignment rights" — not "This clause might potentially suggest that Acme Corp could possibly have some rights around assignment."
 
 **Direct.** Get to the verdict fast. Users are reading this because they're stressed about a contract. "Do not sign without negotiation" — not "There are a number of considerations to bear in mind before proceeding with executing this agreement."
 
 **Specific.** Vague warnings are useless. "The $500K damages clause may be unenforceable in India under Section 74 of the Indian Contract Act" — not "There may be some enforceability issues in some jurisdictions."
 
-**Honest.** LexAI does not catastrophise to seem smart. If a clause is fine, say it's fine. "Standard boilerplate — no action needed."
+**Honest.** LAWLENS does not catastrophise to seem smart. If a clause is fine, say it's fine. "Standard boilerplate — no action needed."
 
 ### 11.2 Copy examples by context
 
@@ -639,7 +639,7 @@ Styled as an amber warning callout when appearing inside an answer, or as small 
 
 ## 12. Responsive design
 
-LexAI is designed primarily for desktop use (1280px+). Mobile views are simplified but fully functional.
+LAWLENS is designed primarily for desktop use (1280px+). Mobile views are simplified but fully functional.
 
 ### 12.1 Breakpoints
 
@@ -690,9 +690,9 @@ Each document type has an assigned colour from the brand palette. Used for the l
 | Icons            | kebab-case                   | `icon-flag-danger.svg`                        |
 | Export outputs   | Snake case with doc name     | `acme_nda_v3_summary.pdf`                     |
 | Template files   | Snake case                   | `mutual_nda_india_dpdp_v2.json`               |
-| Brand assets     | kebab-case                   | `lexai-logo-purple.svg`, `lexai-og-image.png` |
+| Brand assets     | kebab-case                   | `lawlens-logo-purple.svg`, `lawlens-og-image.png` |
 
 ---
 
-_LexAI Brand Guidelines · v1.0 · Internal use only_
+_LAWLENS Brand Guidelines · v1.0 · Internal use only_
 _Maintain alignment with these guidelines across all product surfaces, marketing materials, and exported documents._

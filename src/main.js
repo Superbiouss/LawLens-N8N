@@ -190,7 +190,7 @@ function navigate() {
     return;
   }
 
-  document.title = `${route.title} — LexAI`;
+  document.title = `${route.title} — LAWLENS`;
   updateBreadcrumb(route.breadcrumb);
   updateNav(page);
 

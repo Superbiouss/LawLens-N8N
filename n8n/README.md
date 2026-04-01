@@ -1,6 +1,6 @@
-# n8n Workflows for LexAI
+# n8n Workflows for LAWLENS
 
-This directory contains (or will contain) the workflow definitions required to make LexAI fully functional.
+This directory contains (or will contain) the workflow definitions required to make LAWLENS fully functional.
 
 ## Required Workflows
 

@@ -294,7 +294,7 @@ function bindRiskActions(container) {
       downloadTextFile(
         'risk-report.txt',
         [
-          'LexAI Risk Report Preview',
+          'LAWLENS Risk Report Preview',
           '',
           'Overall risk: 7.2 / 10',
           'Critical issues: 3',

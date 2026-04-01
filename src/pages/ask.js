@@ -37,7 +37,7 @@ const ASK_RESPONSES = [
   },
   {
     test: /india|indian/i,
-    response: `In the UI preview, LexAI would point you to Section 74 of the Indian Contract Act and explain that courts usually award reasonable compensation rather than enforce a penalty mechanically.`,
+    response: `In the UI preview, LAWLENS would point you to Section 74 of the Indian Contract Act and explain that courts usually award reasonable compensation rather than enforce a penalty mechanically.`,
   },
 ];
 

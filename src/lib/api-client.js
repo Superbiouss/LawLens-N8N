@@ -1,5 +1,5 @@
 /**
- * LexAI API Client
+ * LAWLENS API Client
  * Unified layer for all backend communications.
  * Handles authentication headers and standardizes response shapes.
  */
@@ -21,7 +21,7 @@ export const apiClient = {
             throw new Error('AUTH_REQUIRED');
         }
 
-        const { data, error } = await supabase.functions.invoke('lexai-orchestrator', {
+        const { data, error } = await supabase.functions.invoke('lawlens-orchestrator', {
             body: {
                 action,
                 payload,

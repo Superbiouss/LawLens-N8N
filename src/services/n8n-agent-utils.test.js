@@ -48,7 +48,7 @@ describe('n8n-agent-utils', () => {
       random: () => 0.123456,
     });
 
-    expect(conversationId).toContain('lexai-general-chat-123456-');
+    expect(conversationId).toContain('lawlens-general-chat-123456-');
   });
 
   it('builds sanitized webhook payloads', () => {
@@ -65,7 +65,7 @@ describe('n8n-agent-utils', () => {
           documentName: 'Acme NDA.pdf',
           ignored: undefined,
         },
-        conversationId: 'lexai-abc',
+        conversationId: 'lawlens-abc',
         timestamp: '2026-03-24T00:00:00.000Z',
       }),
     ).toEqual({
@@ -78,8 +78,8 @@ describe('n8n-agent-utils', () => {
         route: 'ask',
         documentName: 'Acme NDA.pdf',
       },
-      conversationId: 'lexai-abc',
-      source: 'lexai-web',
+      conversationId: 'lawlens-abc',
+      source: 'lawlens-web',
       timestamp: '2026-03-24T00:00:00.000Z',
     });
   });

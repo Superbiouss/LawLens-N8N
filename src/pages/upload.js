@@ -263,7 +263,7 @@ function bindDropzone(container) {
   const handleFile = (file) => {
     if (!file) return;
     // Store file in a data attribute or global for the analyze button
-    window.__lexai_pending_upload = file;
+    window.__lawlens_pending_upload = file;
 
     container.querySelector('#dropzone-title').textContent = file.name;
     const mb = (file.size / (1024 * 1024)).toFixed(2);
@@ -319,12 +319,12 @@ function bindAlternateSources(container) {
 
     if (hasText) {
       const file = new File([text], 'pasted-document.txt', { type: 'text/plain' });
-      window.__lexai_pending_upload = file;
+      window.__lawlens_pending_upload = file;
       title.textContent = 'Pasted document text';
       sub.textContent = `${text.split(/\s+/).length} words ready to analyze`;
       dropzone.classList.add('has-file');
     } else if (!urlInput?.value.trim()) {
-      window.__lexai_pending_upload = null;
+      window.__lawlens_pending_upload = null;
       resetUploadPreview(container);
     }
   });
@@ -337,7 +337,7 @@ function bindAlternateSources(container) {
     }
 
     const file = new File([url], 'remote-link.txt', { type: 'text/uri-list' });
-    window.__lexai_pending_upload = file;
+    window.__lawlens_pending_upload = file;
 
     analyzeBtn.disabled = false;
     title.textContent = 'Remote document linked';
@@ -365,7 +365,7 @@ function bindRecentDocs(container) {
 }
 
 async function startAnalysis(container) {
-  const file = window.__lexai_pending_upload;
+  const file = window.__lawlens_pending_upload;
   if (!file) {
     window.showToast('Please select a file first.');
     return;
@@ -438,7 +438,7 @@ async function startAnalysis(container) {
     updateProgress(4, 100);
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    window.__lexai_pending_upload = null;
+    window.__lawlens_pending_upload = null;
     window.navigateTo('summary');
 
   } catch (error) {

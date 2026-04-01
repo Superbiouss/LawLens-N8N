@@ -1,6 +1,6 @@
-# LexAI — Legal Document Summarizer
+# LAWLENS — Legal Document Summarizer
 
-LexAI is a powerful, AI-driven legal document assistant designed to help legal professionals and businesses quickly analyze, summarize, and extract key insights from complex legal contracts.
+LAWLENS is a powerful, AI-driven legal document assistant designed to help legal professionals and businesses quickly analyze, summarize, and extract key insights from complex legal contracts.
 
 ## Features
 
@@ -32,8 +32,8 @@ LexAI is a powerful, AI-driven legal document assistant designed to help legal p
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Superbiouss/LexAi.git
-   cd LexAi
+   git clone https://github.com/Superbiouss/LAWLENS.git
+   cd LAWLENS
    ```
 
 2. Install dependencies:

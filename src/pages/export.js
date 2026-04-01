@@ -40,7 +40,7 @@ export function renderExport(container) {
         <div class="card mb-24">
           <p class="meta-text mb-12">Anyone with this link can view the summary and risk report.</p>
           <div class="flex gap-8">
-            <input type="text" id="share-link-input" value="https://lexai.app/share/acme-nda-77x2" readonly class="export-share-input" />
+            <input type="text" id="share-link-input" value="https://lawlens.app/share/acme-nda-77x2" readonly class="export-share-input" />
             <button class="btn-primary" id="copy-share-link-btn">Copy link</button>
           </div>
           <div class="flex items-center gap-12 mt-16 p-12 card-surface">
@@ -96,7 +96,7 @@ export function renderExport(container) {
             <span class="fs-13 fw-500">Dropbox</span>
             <span class="badge badge-success ml-auto">Linked</span>
           </div>
-          <p class="meta-text">All exports are automatically synced to <code>/Apps/LexAI/Exports</code></p>
+          <p class="meta-text">All exports are automatically synced to <code>/Apps/LAWLENS/Exports</code></p>
         </div>
       </div>
     </div>
@@ -112,8 +112,8 @@ function bindExportActions(container) {
       downloadTextFile(
         isPdf ? 'analysis-report.txt' : 'word-redlines.txt',
         isPdf
-          ? 'LexAI analysis report preview\n\nSummary, risk findings, and obligations would be exported here.'
-          : 'LexAI redline preview\n\nSuggested clause edits would be exported here.',
+          ? 'LAWLENS analysis report preview\n\nSummary, risk findings, and obligations would be exported here.'
+          : 'LAWLENS redline preview\n\nSuggested clause edits would be exported here.',
       );
     });
   });

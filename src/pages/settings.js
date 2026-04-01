@@ -256,8 +256,8 @@ function renderAPI() {
   "message": "Summarize the obligations",
   "history": [{ "role": "user", "content": "..." }],
   "context": { "route": "ask", "documentName": "Acme Corp NDA v3.pdf" },
-  "conversationId": "lexai-...",
-  "source": "lexai-web"
+  "conversationId": "lawlens-...",
+  "source": "lawlens-web"
 }</div>
           </div>
         </div>

@@ -9,7 +9,7 @@ export function renderDrafting(container) {
          <!-- Collaboration Dots (UX Polish) -->
          <div class="flex draft-avatar-stack">
             <div title="John Doe (You)" class="draft-avatar draft-avatar-user">JD</div>
-            <div title="LexAI (AI Assistant)" class="draft-avatar draft-avatar-ai">AI</div>
+            <div title="LAWLENS (AI Assistant)" class="draft-avatar draft-avatar-ai">AI</div>
             <div title="Sarah (Legal Review)" class="draft-avatar draft-avatar-review">S</div>
          </div>
          <button class="btn-primary" id="save-draft-btn">Save Draft</button>
@@ -73,7 +73,7 @@ export function renderDrafting(container) {
                
                <div class="mt-12">
                   <button class="btn-sm w-full btn-between-tertiary" id="ask-drafting-btn">
-                     <span>Ask LexAI to draft...</span>
+                     <span>Ask LAWLENS to draft...</span>
                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                   </button>
                </div>

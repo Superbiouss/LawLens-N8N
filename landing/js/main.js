@@ -1,5 +1,5 @@
 /**
- * LexAI Landing Page — Main Script
+ * LAWLENS Landing Page — Main Script
  * Handles: theme management, mobile nav, waitlist form, reveal animations.
  * No external dependencies.
  */
