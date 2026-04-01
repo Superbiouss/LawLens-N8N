@@ -121,6 +121,17 @@
                     <a href="#features" class="btn btn-secondary btn-lg">See how it works</a>
                 </div>
 
+                <!-- Command-K Hint -->
+                <div class="command-k-hint reveal">
+                    <div class="command-k-bar">
+                        <span class="command-k-btn">CMD+K</span>
+                        <div class="typing-container">
+                            <span id="typing-text">Find liability caps in this MSA...</span>
+                            <span class="cursor">|</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="hero-social-proof">
                     <span class="proof-label">Trusted by legal teams at leading Tier&nbsp;1 firms</span>
                     <div class="partner-logos">
@@ -204,19 +215,36 @@
                                     <div class="preview-doc-meta">Verified 2 hours ago &middot; ID: MSA-2025-082
                                         &middot; 47 pages</div>
                                 </div>
-                                <div class="risk-badge">
-                                    <span class="score">8.4</span>
+                                <div class="risk-badge" id="risk-score-badge">
+                                    <span class="score" id="risk-score-value">0.0</span>
                                     <span class="label">Aggregate Risk</span>
                                 </div>
                             </div>
 
+                            <!-- Document Snippet Mock -->
+                            <div class="preview-doc-snippet" id="doc-audit-target">
+                                <div class="snippet-lens" id="audit-lens"></div>
+                                <div class="snippet-content">
+                                    <p class="clause-text">14. LIMITATION OF LIABILITY</p>
+                                    <p class="clause-body">
+                                        14.2 NOTWITHSTANDING ANYTHING TO THE CONTRARY, VENDOR SHALL HAVE 
+                                        <span class="risk-highlight" id="highlight-1">UNLIMITED LIABILITY</span> FOR ANY AND ALL DAMAGES ARISING UNDER THIS AGREEMENT.
+                                    </p>
+                                    <p class="clause-text">SCHEDULE B: RENEWAL TERMS</p>
+                                    <p class="clause-body">
+                                        THIS AGREEMENT SHALL 
+                                        <span class="risk-highlight" id="highlight-2">AUTOMATICALLY RENEW</span> FOR CONSECUTIVE 24-MONTH PERIODS UNLESS TERMINATED.
+                                    </p>
+                                </div>
+                            </div>
+
                             <div class="preview-cards">
-                                <div class="preview-card verdict">
+                                <div class="preview-card verdict reveal-item" id="verdict-1">
                                     <div class="preview-card-title">⚠ Unlimited Liability Exposure</div>
                                     <div class="preview-card-text">Clause 14.2 removes all liability caps. Recommend
                                         immediate redline.</div>
                                 </div>
-                                <div class="preview-card warn">
+                                <div class="preview-card warn reveal-item" id="verdict-2">
                                     <div class="preview-card-title">◐ Auto-Renewal Missing Notice</div>
                                     <div class="preview-card-text">Contract renews automatically — no advance notice
                                         clause found in Schedule B.</div>
@@ -386,6 +414,56 @@
                         <h3>Act with confidence</h3>
                         <p>Accept, redline, or escalate with full context. Export reports, share annotations with your
                             team, or integrate findings into your existing contract management workflow.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== Security Section ===================== -->
+        <section class="security-section reveal" id="security" aria-label="Security and Privacy">
+            <div class="container">
+                <div class="section-header">
+                    <span class="overline">Enterprise-Grade</span>
+                    <h2>Security-First Architecture</h2>
+                    <p>Legal data is sacrosanct. We built LAWLENS with zero-trust foundations to ensure your data 
+                       is never saved, never trained on, and always encrypted.</p>
+                </div>
+
+                <div class="security-grid">
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg aria-hidden="true" viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                <path d="M12 8v4" /><path d="M12 16h.01" />
+                            </svg>
+                        </div>
+                        <h3>Zero-Data Training</h3>
+                        <p>We process documents ephemerally. Your data is <strong>never</strong> used to train LLM models 
+                           or improve our general platform. It remains yours, always.</p>
+                    </div>
+
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg aria-hidden="true" viewBox="0 0 24 24">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                        </div>
+                        <h3>AES-256 Encryption</h3>
+                        <p>All data is encrypted with bank-grade AES-256 protocols at rest and TLS 1.3 in transit. 
+                           Private, isolated processing instances for every session.</p>
+                    </div>
+
+                    <div class="security-card">
+                        <div class="security-icon">
+                            <svg aria-hidden="true" viewBox="0 0 24 24">
+                                <path d="M9 11l3 3L22 4" />
+                                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                            </svg>
+                        </div>
+                        <h3>SOC2 Type II (Audit)</h3>
+                        <p>Our infrastructure and processes are designed to exceed SOC2 Type II standards. 
+                           Regular penetration tests and third-party audits ensure compliance.</p>
                     </div>
                 </div>
             </div>

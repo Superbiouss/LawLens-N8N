@@ -224,6 +224,126 @@
     }
 
     /* ─────────────────────────────────────────────
+     * 7. INTERACTIVE AUDIT ANIMATION
+     * Sequenced "Aha!" moment for product preview.
+     * ───────────────────────────────────────────── */
+    function initAuditAnimation() {
+        const section = document.querySelector('.product-preview');
+        if (!section) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    startAuditSequence();
+                    observer.unobserve(section);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        observer.observe(section);
+
+        function startAuditSequence() {
+            const lens = document.getElementById('audit-lens');
+            const h1 = document.getElementById('highlight-1');
+            const v1 = document.getElementById('verdict-1');
+            const h2 = document.getElementById('highlight-2');
+            const v2 = document.getElementById('verdict-2');
+            const scoreBadge = document.getElementById('risk-score-badge');
+            const scoreValue = document.getElementById('risk-score-value');
+
+            // 1. Start Lens Sweep
+            setTimeout(() => lens.classList.add('animating'), 500);
+
+            // 2. High Risk Clause Spot (T+1200ms)
+            setTimeout(() => {
+                h1.classList.add('active');
+                v1.classList.add('active');
+                scoreBadge.classList.add('pop');
+                animateScore(0, 4.2, 800);
+            }, 1200);
+
+            // 3. Second Clause Spot (T+2200ms)
+            setTimeout(() => {
+                h2.classList.add('active');
+                v2.classList.add('active');
+                animateScore(4.2, 8.4, 800);
+            }, 2200);
+            
+            // 4. Final Pop (T+3000ms)
+            setTimeout(() => {
+                scoreBadge.classList.add('pop');
+                setTimeout(() => scoreBadge.classList.remove('pop'), 400);
+            }, 3000);
+        }
+
+        function animateScore(start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = start + (end - start) * progress;
+                const el = document.getElementById('risk-score-value');
+                if (el) el.textContent = current.toFixed(1);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            requestAnimationFrame(update);
+        }
+    }
+
+    /* ─────────────────────────────────────────────
+     * 8. COMMAND-K TYPING HINT
+     * Cycling animation for search capability.
+     * ───────────────────────────────────────────── */
+    function initCommandKHint() {
+        const textEl = document.getElementById('typing-text');
+        if (!textEl) return;
+
+        const queries = [
+            "Find liability caps in this MSA...",
+            "Check governing law for Vendor B...",
+            "Spot auto-renewal clauses...",
+            "Does this have a non-compete?",
+            "Summarize termination rights..."
+        ];
+
+        let queryIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingSpeed = 100;
+
+        function type() {
+            const currentQuery = queries[queryIndex];
+            
+            if (isDeleting) {
+                textEl.textContent = currentQuery.substring(0, charIndex - 1);
+                charIndex--;
+                typingSpeed = 50;
+            } else {
+                textEl.textContent = currentQuery.substring(0, charIndex + 1);
+                charIndex++;
+                typingSpeed = 100;
+            }
+
+            if (!isDeleting && charIndex === currentQuery.length) {
+                isDeleting = true;
+                typingSpeed = 2000; // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                queryIndex = (queryIndex + 1) % queries.length;
+                typingSpeed = 500;
+            }
+
+            setTimeout(type, typingSpeed);
+        }
+
+        type();
+    }
+
+    /* ─────────────────────────────────────────────
      * INIT
      * ───────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', function () {
@@ -233,6 +353,8 @@
         initNavbarScroll();
         initSmoothScroll();
         initBentoGlow();
+        initAuditAnimation();
+        initCommandKHint();
     });
 
 })();
