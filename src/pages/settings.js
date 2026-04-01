@@ -350,6 +350,7 @@ function renderSideInfo() {
        <div class="flex flex-col gap-8">
           <button class="btn-sm w-full justify-start" data-support-action="documentation">Documentation</button>
           <button class="btn-sm w-full justify-start" data-support-action="help">Help Center</button>
+          <button class="btn-sm w-full justify-start" id="settings-logout-btn" style="color: var(--color-text-danger);">Sign out</button>
           <button class="btn-sm w-full justify-start text-danger" data-support-action="delete">Delete Account</button>
        </div>
     </div>
@@ -488,6 +489,12 @@ function bindN8nAgentSettings(container) {
 }
 
 function bindSettingsSidebar(container) {
+  container
+    .querySelector('#settings-logout-btn')
+    ?.addEventListener('click', () => {
+      window.location.href = '../index.html';
+    });
+
   container
     .querySelector('#settings-upgrade-plan-btn')
     ?.addEventListener('click', () => {

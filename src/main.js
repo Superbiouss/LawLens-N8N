@@ -241,6 +241,12 @@ document.addEventListener('click', (e) => {
     return;
   }
 
+  const logoutBtn = e.target.closest('#logout-btn');
+  if (logoutBtn) {
+    window.location.href = '../index.html';
+    return;
+  }
+
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('mobile-menu-toggle');
 

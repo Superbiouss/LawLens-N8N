@@ -241,14 +241,9 @@
             <span>Settings</span>
           </a>
           <div
-            class="nav-item mt-auto"
+            class="nav-item"
             id="theme-toggle"
-            style="
-              cursor: pointer;
-              margin-top: auto;
-              border-top: 1px solid var(--color-border-tertiary);
-              padding-top: 12px;
-            "
+            style="cursor: pointer; padding-top: 12px"
           >
             <svg
               viewBox="0 0 24 24"
@@ -259,6 +254,28 @@
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
             <span>Dark mode</span>
+          </div>
+          <div
+            class="nav-item"
+            id="logout-btn"
+            style="
+              cursor: pointer;
+              border-top: 1px solid var(--color-border-tertiary);
+              padding-top: 12px;
+              color: var(--color-text-danger);
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Sign out</span>
           </div>
         </nav>
       </aside>
