@@ -135,6 +135,37 @@ function initTheme() {
   updateThemeToggleUI(saved);
 }
 
+function initSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+
+  // Restore mini state
+  const isMini = localStorage.getItem('sidebar-mini') === 'true';
+  if (isMini) sidebar.classList.add('mini');
+
+  // Restore section states
+  const collapsedGroups = JSON.parse(
+    localStorage.getItem('sidebar-collapsed-groups') || '[]'
+  );
+  collapsedGroups.forEach((groupName) => {
+    const group = document.querySelector(`.sidebar-group[data-group="${groupName}"]`);
+    if (group) group.classList.add('collapsed');
+  });
+
+  // Default collapse some groups if first time
+  if (!localStorage.getItem('sidebar-collapsed-groups')) {
+    const autoCollapse = ['collaborate', 'intelligence', 'drafting', 'system'];
+    autoCollapse.forEach((groupName) => {
+      const group = document.querySelector(`.sidebar-group[data-group="${groupName}"]`);
+      if (group) {
+        group.classList.add('collapsed');
+        collapsedGroups.push(groupName);
+      }
+    });
+    localStorage.setItem('sidebar-collapsed-groups', JSON.stringify(collapsedGroups));
+  }
+}
+
 function toggleTheme() {
   const current = document.body.dataset.theme;
   const next = current === 'dark' ? 'light' : 'dark';
@@ -250,6 +281,34 @@ document.addEventListener('click', (e) => {
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('mobile-menu-toggle');
 
+  const miniToggle = e.target.closest('#sidebar-mini-toggle');
+  if (miniToggle && sidebar) {
+    sidebar.classList.toggle('mini');
+    localStorage.setItem('sidebar-mini', sidebar.classList.contains('mini'));
+    return;
+  }
+
+  const sectionLabel = e.target.closest('.sidebar-section-label');
+  if (sectionLabel) {
+    const group = sectionLabel.closest('.sidebar-group');
+    if (group) {
+      group.classList.toggle('collapsed');
+      const groupName = group.dataset.group;
+      const collapsedGroups = JSON.parse(
+        localStorage.getItem('sidebar-collapsed-groups') || '[]'
+      );
+
+      if (group.classList.contains('collapsed')) {
+        if (!collapsedGroups.includes(groupName)) collapsedGroups.push(groupName);
+      } else {
+        const index = collapsedGroups.indexOf(groupName);
+        if (index > -1) collapsedGroups.splice(index, 1);
+      }
+      localStorage.setItem('sidebar-collapsed-groups', JSON.stringify(collapsedGroups));
+    }
+    return;
+  }
+
   if (toggle && toggle.contains(e.target)) {
     sidebar.classList.toggle('open');
   } else if (
@@ -262,6 +321,7 @@ document.addEventListener('click', (e) => {
 });
 
 initTheme();
+initSidebar();
 
 // Tab Indicator Update
 window.updateTabIndicator = function (tabsContainer) {
