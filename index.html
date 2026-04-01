@@ -59,25 +59,7 @@
 
                 <!-- Actions -->
                 <div class="navbar-actions">
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"
-                        title="Toggle light / dark mode">
-                        <!-- Moon (shown in light mode) -->
-                        <svg aria-hidden="true" class="icon-moon" viewBox="0 0 24 24">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                        </svg>
-                        <!-- Sun (shown in dark mode) -->
-                        <svg aria-hidden="true" class="icon-sun" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="5" />
-                            <line x1="12" y1="1" x2="12" y2="3" />
-                            <line x1="12" y1="21" x2="12" y2="23" />
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                            <line x1="1" y1="12" x2="3" y2="12" />
-                            <line x1="21" y1="12" x2="23" y2="12" />
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                        </svg>
-                    </button>
+
                     <a href="login.html" class="btn btn-secondary" style="padding:8px 18px;font-size:13px;">Log in</a>
                     <a href="signup.html" class="btn btn-primary" style="padding:8px 18px;font-size:13px;">Get early
                         access</a>
@@ -115,9 +97,14 @@
         <!-- ===================== Hero ===================== -->
         <section class="hero" aria-label="Hero">
             <div class="container">
+                <div class="hero-glow-container">
+                    <div class="glow-1"></div>
+                    <div class="glow-2"></div>
+                </div>
+
                 <div class="hero-badge">
-                    <span class="badge-dot" aria-hidden="true"></span>
-                    Now in private beta &mdash; 200+ firms on the waitlist
+                    <span class="badge-pill">Beta</span>
+                    Now in private beta &mdash; 200+ firms waitlisted
                 </div>
 
                 <h1 class="hero-title">
@@ -130,18 +117,18 @@
                 </p>
 
                 <div class="hero-cta-group">
-                    <a href="#waitlist" class="btn btn-primary btn-lg">Request early access</a>
+                    <a href="signup.html" class="btn btn-primary btn-lg">Request early access</a>
                     <a href="#features" class="btn btn-secondary btn-lg">See how it works</a>
                 </div>
 
-                <div class="hero-social-proof" style="flex-direction: column; opacity: 0.6;">
-                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">Trusted by legal teams at leading Tier&nbsp;1 firms</span>
-                    <div class="partner-logos" style="display: flex; gap: 32px; font-weight: 700; font-size: 18px; filter: grayscale(100%);">
+                <div class="hero-social-proof">
+                    <span class="proof-label">Trusted by legal teams at leading Tier&nbsp;1 firms</span>
+                    <div class="partner-logos">
                         <span>LATHAM</span>
                         <span>BAKER</span>
                         <span>CLIFFORD</span>
-                        <span style="font-family: serif; font-style: italic;">Kirkland</span>
-                        <span style="letter-spacing: -1px;">Skadden</span>
+                        <span class="kirkland">Kirkland</span>
+                        <span class="skadden">Skadden</span>
                     </div>
                 </div>
             </div>

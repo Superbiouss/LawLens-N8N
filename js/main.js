@@ -9,54 +9,12 @@
 
     /* ─────────────────────────────────────────────
      * 1. THEME MANAGEMENT
-     * Persists preference in localStorage.
-     * Syncs with the main app's 'data-theme' attribute.
+     * Hardcoded to 'dark' for the Linear aesthetic.
      * ───────────────────────────────────────────── */
-    const THEME_KEY = 'lex-theme';
-
-    function getSystemTheme() {
-        return 'dark'; // Force dark mode as the premium default
+    function applyTheme() {
+        document.documentElement.setAttribute('data-theme', 'dark');
     }
-
-    function applyTheme(theme) {
-        const html = document.documentElement;
-        if (theme === 'dark') {
-            html.setAttribute('data-theme', 'dark');
-        } else {
-            html.removeAttribute('data-theme');
-        }
-    }
-
-    function getSavedTheme() {
-        try {
-            return localStorage.getItem(THEME_KEY);
-        } catch (_) {
-            return null;
-        }
-    }
-
-    function saveTheme(theme) {
-        try {
-            localStorage.setItem(THEME_KEY, theme);
-        } catch (_) { /* private mode — ignore */ }
-    }
-
-    // Initialize theme on page load
-    const savedTheme = getSavedTheme() || getSystemTheme();
-    applyTheme(savedTheme);
-
-    // Wire up toggle button
-    function initThemeToggle() {
-        const btn = document.getElementById('theme-toggle');
-        if (!btn) return;
-
-        btn.addEventListener('click', function () {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-            saveTheme(next);
-        });
-    }
+    applyTheme();
 
     /* ─────────────────────────────────────────────
      * 2. MOBILE NAVIGATION
@@ -269,7 +227,6 @@
      * INIT
      * ───────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', function () {
-        initThemeToggle();
         initMobileNav();
         initWaitlistForm();
         initReveal();
