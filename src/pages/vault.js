@@ -140,7 +140,7 @@ function renderVaultTable(docs) {
               <td class="vault-cell">
                 <div class="flex items-center gap-10">
                   <div class="vault-file-icon">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                    <i data-lucide="file-text" style="color: var(--color-text-secondary); width: 12px; height: 12px;"></i>
                   </div>
                   <span class="fw-500">${doc.name}</span>
                 </div>

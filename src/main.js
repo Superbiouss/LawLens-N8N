@@ -21,10 +21,10 @@ import { renderSettings } from './pages/settings.js';
 import { renderAnalytics } from './pages/analytics.js';
 import { renderClauseLibrary } from './pages/clause-library.js';
 import { renderDrafting } from './pages/drafting.js';
+import { initIcons } from './lib/icons.js';
 
 // Global UI Components
 import './components/ui/lex-badge.js';
-
 
 const routes = {
   dashboard: {
@@ -179,16 +179,15 @@ function updateThemeToggleUI(theme) {
   const btn = document.getElementById('theme-toggle');
   if (!btn) return;
   const span = btn.querySelector('span');
-  const svg = btn.querySelector('svg');
+  const icon = btn.querySelector('i');
   if (theme === 'dark') {
     span.textContent = 'Light mode';
-    svg.innerHTML =
-      '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    icon.setAttribute('data-lucide', 'sun');
   } else {
     span.textContent = 'Dark mode';
-    svg.innerHTML =
-      '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
+    icon.setAttribute('data-lucide', 'moon');
   }
+  initIcons();
 }
 
 function getPage() {
@@ -234,6 +233,7 @@ function navigate() {
 
   content.innerHTML = '';
   route.render(content);
+  initIcons();
 }
 
 // Navigation helper for use by pages
@@ -252,11 +252,12 @@ window.showToast = function (message, duration = 3000) {
   const toast = document.createElement('div');
   toast.className = 'toast';
   toast.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <i data-lucide="check-circle-2"></i>
         <span>${message}</span>
     `;
 
   container.appendChild(toast);
+  initIcons();
 
   setTimeout(() => {
     toast.classList.add('hiding');
@@ -322,6 +323,7 @@ document.addEventListener('click', (e) => {
 
 initTheme();
 initSidebar();
+initIcons();
 
 // Tab Indicator Update
 window.updateTabIndicator = function (tabsContainer) {

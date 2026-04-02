@@ -64,7 +64,7 @@ export function renderCompare(container) {
     <div class="layout-2col-equal mb-20 gap-16">
       <div class="card-surface compare-doc-card compare-doc-card-base">
         <div class="compare-doc-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+          <i data-lucide="file-text" style="color: var(--color-text-secondary); width: 18px; height: 18px;"></i>
         </div>
         <div class="flex-1">
           <div class="compare-doc-kicker">Version 1 (Base)</div>
@@ -127,7 +127,7 @@ function bindCompareActions(container) {
 function renderCompareEmptyState() {
   return `
     <div class="compare-empty-state">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="compare-empty-icon"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M21 3l-7 7"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M8 21H3v-5"/><path d="M21 21l-7-7"/><path d="M3 21l7-7"/></svg>
+      <i data-lucide="maximize" class="compare-empty-icon" style="color: var(--color-text-tertiary); width: 32px; height: 32px;"></i>
       <div class="compare-empty-title">Compare document versions</div>
       <div class="compare-empty-copy">Select a second document above to see a side-by-side diff. LAWLENS will highlight additions, deletions, and risk changes.</div>
     </div>

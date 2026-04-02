@@ -209,7 +209,7 @@ function renderRedFlags() {
   return RED_FLAGS.map(
     (flag) => `
     <button type="button" class="reset-btn card summary-alert-card flex items-start gap-10 hover-raise-danger" data-nav-target="risk-report">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--color-text-danger)" stroke-width="1.5" class="flex-shrink-0 mt-4"><path d="M7 1v8M7 11v1.5"/></svg>
+      <i data-lucide="alert-circle" class="flex-shrink-0 mt-4" style="color: var(--color-text-danger); width: 14px; height: 14px;"></i>
       <div class="fs-13 text-danger lh-15 summary-alert-text">${flag}</div>
       <div class="text-danger summary-alert-arrow">›</div>
     </button>

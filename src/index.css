@@ -60,6 +60,22 @@
   --font-serif: Georgia, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
+  .lucide-icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.nav-item .lucide-icon {
+  margin-right: 0;
+}
+
+.sidebar.mini .nav-item .lucide-icon {
+  margin-right: 0;
+}
+
+/* Layouts */
   /* Radius */
   --border-radius-sm: 4px;
   --border-radius-md: 8px;

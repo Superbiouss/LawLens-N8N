@@ -86,7 +86,7 @@ export function renderAsk(container) {
           <div class="card mb-16 p-12">
             <div class="flex items-center gap-8 mb-8">
               <div class="icon-tile-sm icon-danger">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                <i data-lucide="file-text" style="color: var(--color-text-danger); width: 12px; height: 12px;"></i>
               </div>
               <div class="context-card-title">Acme Corp NDA v3.pdf</div>
             </div>

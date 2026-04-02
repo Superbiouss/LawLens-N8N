@@ -104,7 +104,7 @@ function renderUploadPanels() {
     <div id="panel-upload">
       <div class="upload-zone" id="dropzone" role="button" tabindex="0" aria-label="Upload a legal document">
         <div class="upload-drop-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M12 12V4"/><path d="M8 8l4-4 4 4"/></svg>
+          <i data-lucide="upload"></i>
         </div>
         <p id="dropzone-title" class="dropzone-title">Drop your document here</p>
         <p id="dropzone-sub" class="dropzone-sub">or click to browse files</p>
@@ -490,7 +490,7 @@ function renderRecentDocs() {
       (doc) => `
     <button type="button" class="reset-btn flex items-center gap-10 recent-doc-row" data-nav-target="${doc.page}">
       <div class="recent-doc-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+        <i data-lucide="file-text"></i>
       </div>
       <div class="fs-13 fw-500 text-primary recent-doc-name">${doc.name}</div>
       <div class="fs-11 text-tertiary">${doc.ago}</div>

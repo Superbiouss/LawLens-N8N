@@ -14,10 +14,13 @@
     "ci": "npm run lint && npm run test && npm run check:inline-styles && npm run build && npm run format:check"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.49.1",
     "eslint": "^9.22.0",
     "prettier": "^3.5.3",
     "vite": "^6.0.0",
-    "vitest": "^3.0.8",
-    "@supabase/supabase-js": "^2.49.1"
+    "vitest": "^3.0.8"
+  },
+  "dependencies": {
+    "lucide": "^1.7.0"
   }
 }
