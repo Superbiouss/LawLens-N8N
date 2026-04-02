@@ -178,14 +178,16 @@ function toggleTheme() {
 function updateThemeToggleUI(theme) {
   const btn = document.getElementById('theme-toggle');
   if (!btn) return;
+
   const span = btn.querySelector('span');
   const icon = btn.querySelector('i');
+
   if (theme === 'dark') {
-    span.textContent = 'Light mode';
-    icon.setAttribute('data-lucide', 'sun');
+    if (span) span.textContent = 'Light mode';
+    if (icon) icon.setAttribute('data-lucide', 'sun');
   } else {
-    span.textContent = 'Dark mode';
-    icon.setAttribute('data-lucide', 'moon');
+    if (span) span.textContent = 'Dark mode';
+    if (icon) icon.setAttribute('data-lucide', 'moon');
   }
   initIcons();
 }

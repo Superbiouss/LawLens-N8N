@@ -191,13 +191,30 @@
           <div class="topbar-actions" id="topbar-actions">
             <div class="user-profile" id="user-profile">
               <button class="profile-trigger" id="profile-trigger">
-                <div class="avatar">AY</div>
+                <div class="avatar-wrapper">
+                  <div class="avatar">AY</div>
+                  <div class="avatar-status"></div>
+                </div>
               </button>
               <div class="profile-dropdown" id="profile-dropdown">
                 <div class="dropdown-header">
-                  <div class="user-info">
-                    <p class="name">Aakash Yadav</p>
+                  <div class="user-main-info">
+                    <div style="display: flex; align-items: center; gap: 8px">
+                      <span class="name">Aakash Yadav</span>
+                      <span class="badge-pro">PRO</span>
+                    </div>
                     <p class="email">ay@example.com</p>
+                    <p class="role">Workspace Owner</p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="usage-section">
+                  <div class="usage-info">
+                    <span class="usage-label">Usage</span>
+                    <span class="usage-stats">7/10 Analyzed</span>
+                  </div>
+                  <div class="usage-bar-container">
+                    <div class="usage-bar-progress" style="width: 70%"></div>
                   </div>
                 </div>
                 <div class="dropdown-divider"></div>
@@ -206,9 +223,12 @@
                     <i data-lucide="settings"></i>
                     <span>Settings</span>
                   </a>
-                  <div class="dropdown-item" id="theme-toggle">
-                    <i data-lucide="moon"></i>
-                    <span>Dark mode</span>
+                  <div class="dropdown-item theme-switch-item" id="theme-toggle">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                      <i data-lucide="moon" id="theme-icon"></i>
+                      <span>Dark mode</span>
+                    </div>
+                    <div class="toggle-switch"></div>
                   </div>
                   <div class="dropdown-divider"></div>
                   <div class="dropdown-item danger" id="logout-btn">
