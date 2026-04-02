@@ -180,14 +180,19 @@ function updateThemeToggleUI(theme) {
   if (!btn) return;
 
   const span = btn.querySelector('span');
-  const icon = btn.querySelector('i');
+  const iconContainer = btn.querySelector('div'); // The flex container for icon and span
 
   if (theme === 'dark') {
     if (span) span.textContent = 'Light mode';
-    if (icon) icon.setAttribute('data-lucide', 'sun');
+    if (iconContainer) {
+      // Replace the entire icon part to ensure Lucide can re-render it
+      iconContainer.innerHTML = `<i data-lucide="sun"></i><span>Light mode</span>`;
+    }
   } else {
     if (span) span.textContent = 'Dark mode';
-    if (icon) icon.setAttribute('data-lucide', 'moon');
+    if (iconContainer) {
+      iconContainer.innerHTML = `<i data-lucide="moon"></i><span>Dark mode</span>`;
+    }
   }
   initIcons();
 }
@@ -277,17 +282,11 @@ document.addEventListener('click', (e) => {
     return;
   }
 
-  // Close dropdown when clicking outside
-  if (userProfile && !userProfile.contains(e.target)) {
-    userProfile.classList.remove('active');
-  }
-
   // 2. Theme Toggle
   const themeBtn = e.target.closest('#theme-toggle');
   if (themeBtn) {
     toggleTheme();
-    // Close dropdown after action
-    if (userProfile) userProfile.classList.remove('active');
+    // Keep dropdown open so user can see theme change
     return;
   }
 
