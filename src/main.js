@@ -265,20 +265,38 @@ window.showToast = function (message, duration = 3000) {
   }, duration);
 };
 
-// Theme Toggle Listener
+// Global click listener for UI interactions
 document.addEventListener('click', (e) => {
-  const themeBtn = e.target.closest('#theme-toggle');
-  if (themeBtn) {
-    toggleTheme();
+  // 1. User Profile Dropdown
+  const profileTrigger = e.target.closest('#profile-trigger');
+  const userProfile = document.getElementById('user-profile');
+  if (profileTrigger) {
+    userProfile.classList.toggle('active');
     return;
   }
 
+  // Close dropdown when clicking outside
+  if (userProfile && !userProfile.contains(e.target)) {
+    userProfile.classList.remove('active');
+  }
+
+  // 2. Theme Toggle
+  const themeBtn = e.target.closest('#theme-toggle');
+  if (themeBtn) {
+    toggleTheme();
+    // Close dropdown after action
+    if (userProfile) userProfile.classList.remove('active');
+    return;
+  }
+
+  // 3. Log out
   const logoutBtn = e.target.closest('#logout-btn');
   if (logoutBtn) {
     window.location.href = '../index.html';
     return;
   }
 
+  // 4. Sidebar interactions
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('mobile-menu-toggle');
 

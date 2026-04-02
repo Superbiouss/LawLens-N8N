@@ -22,7 +22,6 @@
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
           <div style="display: flex; align-items: center; gap: 8px">
-            <div class="logo-dot"></div>
             <span class="logo-text">LAWLENS</span>
           </div>
           <button class="sidebar-mini-toggle" id="sidebar-mini-toggle" title="Toggle Sidebar">
@@ -174,31 +173,6 @@
               <i data-lucide="download"></i>
               <span>Export & share</span>
             </a>
-            <a href="#/settings" class="nav-item" data-page="settings">
-              <i data-lucide="settings"></i>
-              <span>Settings</span>
-            </a>
-            <div
-              class="nav-item"
-              id="theme-toggle"
-              style="cursor: pointer; padding-top: 12px"
-            >
-              <i data-lucide="moon"></i>
-              <span>Dark mode</span>
-            </div>
-            <div
-              class="nav-item"
-              id="logout-btn"
-              style="
-                cursor: pointer;
-                border-top: 1px solid var(--color-border-tertiary);
-                padding-top: 12px;
-                color: var(--color-text-danger);
-              "
-            >
-              <i data-lucide="log-out"></i>
-              <span>Sign out</span>
-            </div>
           </nav>
         </div>
       </aside>
@@ -214,7 +188,37 @@
               <span class="current">Upload & analyze</span>
             </div>
           </div>
-          <div class="topbar-actions" id="topbar-actions"></div>
+          <div class="topbar-actions" id="topbar-actions">
+            <div class="user-profile" id="user-profile">
+              <button class="profile-trigger" id="profile-trigger">
+                <div class="avatar">AY</div>
+              </button>
+              <div class="profile-dropdown" id="profile-dropdown">
+                <div class="dropdown-header">
+                  <div class="user-info">
+                    <p class="name">Aakash Yadav</p>
+                    <p class="email">ay@example.com</p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-content">
+                  <a href="#/settings" class="dropdown-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                  </a>
+                  <div class="dropdown-item" id="theme-toggle">
+                    <i data-lucide="moon"></i>
+                    <span>Dark mode</span>
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <div class="dropdown-item danger" id="logout-btn">
+                    <i data-lucide="log-out"></i>
+                    <span>Sign out</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
         <main class="page-content" id="page-content">
           <!-- Page content injected by router -->
