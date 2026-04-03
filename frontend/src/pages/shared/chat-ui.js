@@ -6,11 +6,45 @@ export function renderChatMessage(message, options = {}) {
   const assistantInitials = options.assistantInitials || 'L';
   const animationClass = message.animate ? 'animate-chat-entry' : '';
 
+  const messageId = message.id || '';
+
   return `
-    <div class="chat-msg ${animationClass}">
+    <div class="chat-msg ${animationClass}" data-message-id="${messageId}" data-role="${message.role}">
       <div class="chat-avatar ${isUser ? 'user chat-avatar-muted' : 'ai'}">${isUser ? userInitials : assistantInitials}</div>
       <div class="chat-bubble${message.pending ? ' chat-bubble-pending' : ''}">
-        <p class="${isUser ? 'text-primary' : ''}">${message.html}</p>
+        <div class="chat-bubble-content">
+          ${message.html}
+        </div>
+        ${!message.pending ? `
+          <div class="chat-actions">
+            ${!isUser ? `
+              <button class="chat-action-btn copy-msg-btn" title="Copy to clipboard">
+                <i data-lucide="copy"></i>
+              </button>
+            ` : ''}
+            <button class="chat-action-btn delete-msg-btn" title="Delete message">
+              <i data-lucide="trash-2"></i>
+            </button>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+export function renderChatError(errorContent) {
+  return `
+    <div class="chat-msg animate-chat-entry chat-msg-error">
+      <div class="chat-avatar ai chat-avatar-danger">!</div>
+      <div class="chat-bubble chat-bubble-error">
+        <div class="chat-bubble-content">
+          ${errorContent}
+        </div>
+        <div class="mt-12">
+          <button class="btn-sm btn-danger-outline" id="retry-chat-btn" style="display: inline-flex; align-items: center; gap: 6px;">
+            <i data-lucide="refresh-cw"></i> Retry
+          </button>
+        </div>
       </div>
     </div>
   `;

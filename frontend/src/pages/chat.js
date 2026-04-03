@@ -4,6 +4,7 @@ import {
   renderPromptChips,
   renderChatHistoryPanel,
   renderTypingIndicator,
+  renderChatError,
 } from './shared/chat-ui.js';
 import {
   createPendingAssistantMessage,
@@ -17,7 +18,10 @@ import {
   createChatSession,
   saveChatMessage,
   deleteChatSession,
+  deleteChatMessage,
   getUserDisplayName,
+  updateChatSessionTitle,
+  generateChatTitleAI,
 } from '../services/chat-service.js';
 
 const CHAT_STARTERS = [
@@ -63,6 +67,9 @@ export async function renderChat(container) {
           <h1 class="page-title">Normal Chat</h1>
           <p class="body-text mt-4">General-purpose legal chat powered by your configured AI agent.</p>
         </div>
+        <button class="btn-sm btn-ghost" id="toggle-history-btn" title="View History" style="display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="history"></i> History
+        </button>
       </div>
 
       <div class="workspace-shell">
@@ -87,10 +94,7 @@ export async function renderChat(container) {
           </div>
 
           <div class="ask-bar p-16">
-            <button class="history-toggle-btn mr-12" id="toggle-history-btn" title="View History">
-              <i data-lucide="history"></i> History
-            </button>
-            <input type="text" id="chat-input" class="ask-input" placeholder="Ask a general legal question..." ${state.sending ? 'disabled' : ''} />
+            <input type="text" id="chat-input" class="ask-input" placeholder="Ask a general legal question..." />
             <button class="btn-primary ask-send-btn ml-12" id="chat-send-btn" ${state.sending ? 'disabled' : ''}>${state.sending ? 'Sending...' : 'Send ↗'}</button>
           </div>
         </div>
@@ -143,10 +147,13 @@ export async function renderChat(container) {
     // Natural delay
     await new Promise(r => setTimeout(r, 1000));
     
+    const greetingText = `Hello **${name}**! Welcome to your **Normal Chat**. I'm here to help you brainstorm legal concepts, clarify legal jargon, or just discuss any of your general legal queries. What's on your mind today?`;
+    
     state.isTyping = false;
     state.messages = [{
       role: 'assistant',
-      html: `Hello **${name}**! Welcome to your **Normal Chat**. I'm here to help you brainstorm legal concepts, clarify legal jargon, or just discuss any of your general legal queries. What's on your mind today?`,
+      html: formatAssistantMessage(greetingText),
+      content: greetingText,
       animate: true
     }];
     render();
@@ -240,6 +247,48 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
     });
   });
 
+  // Message Actions (Copy/Delete)
+  container.addEventListener('click', async (e) => {
+    const copyBtn = e.target.closest('.copy-msg-btn');
+    if (copyBtn) {
+      const msgRow = copyBtn.closest('.chat-msg');
+      const text = state.messages.find((m, i) => i === Array.from(msgRow.parentNode.children).indexOf(msgRow))?.content;
+      if (text) {
+        navigator.clipboard.writeText(text);
+        window.showToast('Copied to clipboard.');
+      }
+      return;
+    }
+
+    const deleteBtn = e.target.closest('.delete-msg-btn');
+    if (deleteBtn) {
+      const msgRow = deleteBtn.closest('.chat-msg');
+      const idx = Array.from(msgRow.parentNode.children).indexOf(msgRow);
+      const msg = state.messages[idx];
+      
+      if (msg.id) {
+        await deleteChatMessage(msg.id);
+      }
+      
+      state.messages.splice(idx, 1);
+      render();
+      window.showToast('Message deleted.');
+      return;
+    }
+
+    const retryBtn = e.target.closest('#retry-chat-btn');
+    if (retryBtn) {
+      // Find the last user message to retry
+      const lastUserMsg = [...state.messages].reverse().find(m => m.role === 'user');
+      if (lastUserMsg) {
+        // Remove error message and retry
+        state.messages = state.messages.filter(m => m !== state.messages[state.messages.length - 1]);
+        input.value = lastUserMsg.content;
+        submit();
+      }
+    }
+  });
+
   const submit = async () => {
     const question = input.value.trim();
     if (!question || state.sending) {
@@ -261,36 +310,53 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
         if (session) {
           state.currentSessionId = session.id;
           state.sessions = [session, ...state.sessions];
+          
+          // Persistence: Save the greeting as the first message if it's there
+          if (state.messages.length > 0 && state.messages[0].role === 'assistant') {
+            const savedGreeting = await saveChatMessage(session.id, 'assistant', state.messages[0].content);
+            if (savedGreeting) state.messages[0].id = savedGreeting.id;
+          }
         }
       }
 
       // 2. Save user message
       if (state.currentSessionId) {
-        await saveChatMessage(state.currentSessionId, 'user', question);
+        const savedUserMsg = await saveChatMessage(state.currentSessionId, 'user', question);
+        if (savedUserMsg) state.messages[state.messages.length - 2].id = savedUserMsg.id;
       }
 
       // 3. Get AI reply
       const reply = await getChatReply(question, state.messages);
       
       // 4. Update state and save AI message
+      const savedAiMsg = state.currentSessionId 
+        ? await saveChatMessage(state.currentSessionId, 'assistant', reply)
+        : null;
+
       state.messages[state.messages.length - 1] = {
+        id: savedAiMsg?.id,
         role: 'assistant',
         html: formatAssistantMessage(reply),
         content: reply
       };
 
-      if (state.currentSessionId) {
-        await saveChatMessage(state.currentSessionId, 'assistant', reply);
+      // 5. AI Title Generation (after first exchange: Greeting + User + AI)
+      if (state.messages.length === 3) {
+        const aiTitle = await generateChatTitleAI(question, reply);
+        if (aiTitle) {
+          await updateChatSessionTitle(state.currentSessionId, aiTitle);
+          state.sessions = state.sessions.map(s => s.id === state.currentSessionId ? { ...s, title: aiTitle } : s);
+        }
       }
     } catch (error) {
       state.messages[state.messages.length - 1] = {
         role: 'assistant',
-        html: formatAgentError(error),
+        html: renderChatError(formatAgentError(error)), // Using new error renderer
       };
     } finally {
       state.sending = false;
       render();
-      window.initIcons(); // Re-init icons for Lucide components
+      window.initIcons(); 
     }
   };
 

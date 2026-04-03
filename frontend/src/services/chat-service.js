@@ -115,8 +115,9 @@ export async function fetchChatMessages(sessionId) {
   }
   
   return data.map(msg => ({
+    id: msg.id,
     role: msg.role,
-    html: msg.role === 'user' ? escapeHtml(msg.content) : formatMultilineHtml(msg.content),
+    html: msg.role === 'user' ? escapeHtml(msg.content) : parseMarkdown(msg.content),
     content: msg.content // Raw content
   }));
 }
@@ -185,6 +186,64 @@ export async function deleteChatSession(sessionId) {
     return false;
   }
   return true;
+}
+
+export async function deleteChatMessage(messageId) {
+  if (!supabase) return false;
+  
+  const { error } = await supabase
+    .from('chat_messages')
+    .delete()
+    .eq('id', messageId);
+
+  if (error) {
+    console.error('Error deleting chat message:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function updateChatSessionTitle(sessionId, title) {
+  if (!supabase) return null;
+  
+  const { data, error } = await supabase
+    .from('chat_sessions')
+    .update({ title, updated_at: new Date().toISOString() })
+    .eq('id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating chat session title:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function generateChatTitleAI(userQuestion, aiResponse) {
+  try {
+    const prompt = `Based on this exchange, generate a very short (max 5 words) title for the conversation. 
+    User: ${userQuestion}
+    AI: ${aiResponse}
+    Title:`;
+
+    const response = await apiClient.orchestrate('ask', {
+      question: prompt,
+      history: [],
+      context: { mode: 'title_generation' },
+      conversationScope: 'utility'
+    });
+
+    let title = response.answer || response.reply || generateChatTitle(userQuestion);
+    // Strip quotes and trim
+    title = title.replace(/["']/g, '').trim();
+    if (title.length > 40) title = title.substring(0, 37) + '...';
+    
+    return title;
+  } catch (err) {
+    console.error('Failed to generate AI title:', err);
+    return generateChatTitle(userQuestion);
+  }
 }
 
 function generateChatTitle(message) {
