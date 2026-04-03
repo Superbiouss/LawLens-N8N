@@ -80,24 +80,28 @@ export function parseMarkdown(text = '') {
   html = html.replace(/<\/ol>\n?<ol>/g, '');
 
   // 11. Paragraphs and Line Breaks
-  // Replace double newlines with a special marker first to avoid interference
-  html = html.replace(/\n\s*\n/g, '</p><p>');
+  const hasBlockElements = /^(#|\s*[-*]\s|\s*\d+\.\s|>|```)/m.test(text) || text.includes('\n\n');
 
-  const lines = html.split('\n');
-  const processedLines = lines.map(line => {
-    // If it's a block element tag or starts with a paragraph tag, don't add <br/>
-    if (/^<(ul|ol|li|h1|h2|h3|pre|code|blockquote|p|<\/p)/.test(line.trim())) {
-      return line;
+  if (hasBlockElements) {
+    // Multi-line/Block logic
+    html = html.replace(/\n\s*\n/g, '</p><p>');
+
+    const lines = html.split('\n');
+    const processedLines = lines.map(line => {
+      if (/^<(ul|ol|li|h1|h2|h3|pre|code|blockquote|p|<\/p)/.test(line.trim())) {
+        return line;
+      }
+      return line ? line + '<br/>' : '';
+    });
+
+    let finalized = processedLines.join('\n');
+    
+    if (!finalized.startsWith('<h') && !finalized.startsWith('<p') && !finalized.startsWith('<ul') && !finalized.startsWith('-') && !finalized.startsWith('<ol')) {
+      finalized = '<p>' + finalized + '</p>';
     }
-    return line ? line + '<br/>' : '';
-  });
-
-  let finalized = processedLines.join('\n');
-  
-  // Wrap in a single paragraph if not already block-structured
-  if (!finalized.startsWith('<h') && !finalized.startsWith('<p') && !finalized.startsWith('<ul') && !finalized.startsWith('<ol')) {
-    finalized = '<p>' + finalized + '</p>';
+    return finalized.replace(/<p><\/p>/g, '').replace(/(<br\/>)+$/g, '');
+  } else {
+    // Single-line/Simple text logic: Just do the inline replacements and return
+    return html.replace(/\n/g, '<br/>');
   }
-
-  return finalized.replace(/<p><\/p>/g, '').replace(/(<br\/>)+$/g, '');
 }

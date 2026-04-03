@@ -147,7 +147,7 @@ export async function renderChat(container) {
     // Natural delay
     await new Promise(r => setTimeout(r, 1000));
     
-    const greetingText = `Hello **${name}**! Welcome to your **Normal Chat**. I'm here to help you brainstorm legal concepts, clarify legal jargon, or just discuss any of your general legal queries. What's on your mind today?`;
+    const greetingText = `Hello ${name || 'there'}! I'm LawLens AI, your legal assistant. I can help brainstorm concepts, clarify jargon, or discuss general legal queries. What's on your mind?`;
     
     state.isTyping = false;
     state.messages = [{
