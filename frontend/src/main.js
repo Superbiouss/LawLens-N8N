@@ -22,6 +22,7 @@ import { renderAnalytics } from './pages/analytics.js';
 import { renderClauseLibrary } from './pages/clause-library.js';
 import { renderDrafting } from './pages/drafting.js';
 import { initIcons } from './lib/icons.js';
+window.initIcons = initIcons;
 import { supabase } from './lib/supabase.js';
 import { authService } from './services/auth-service.js';
 
@@ -306,11 +307,7 @@ async function navigate() {
   content.classList.add('page-transition');
 
   content.innerHTML = '';
-  if (page === 'settings') {
-    await route.render(content);
-  } else {
-    route.render(content);
-  }
+  await route.render(content);
   initIcons();
 }
 

@@ -1,4 +1,5 @@
 import { apiClient } from '../lib/api-client.js';
+import { supabase } from '../lib/supabase.js';
 import { escapeHtml, formatMultilineHtml, stripHtml } from './text-utils.js';
 
 export function createUserChatMessage(question) {
@@ -76,4 +77,118 @@ export async function resolveAgentReply({
     }
     throw error;
   }
+}
+
+/**
+ * Chat History Functions
+ */
+
+export async function fetchChatSessions() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('chat_sessions')
+    .select('*')
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching chat sessions:', error);
+    return [];
+  }
+  return data;
+}
+
+export async function fetchChatMessages(sessionId) {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .select('*')
+    .eq('session_id', sessionId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching chat messages:', error);
+    return [];
+  }
+  
+  return data.map(msg => ({
+    role: msg.role,
+    html: msg.role === 'user' ? escapeHtml(msg.content) : formatMultilineHtml(msg.content),
+    content: msg.content // Raw content
+  }));
+}
+
+export async function createChatSession(firstUserMessage) {
+  if (!supabase) return null;
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const title = generateChatTitle(firstUserMessage);
+  
+  const { data, error } = await supabase
+    .from('chat_sessions')
+    .insert([{ 
+      user_id: user.id, 
+      title 
+    }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating chat session:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function saveChatMessage(sessionId, role, content) {
+  if (!supabase) return null;
+  
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .insert([{ 
+      session_id: sessionId, 
+      role, 
+      content 
+    }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error saving chat message:', error);
+    return null;
+  }
+
+  // Update session's updated_at timestamp
+  await supabase
+    .from('chat_sessions')
+    .update({ updated_at: new Date().toISOString() })
+    .eq('id', sessionId);
+
+  return data;
+}
+
+export async function deleteChatSession(sessionId) {
+  if (!supabase) return false;
+  
+  const { error } = await supabase
+    .from('chat_sessions')
+    .delete()
+    .eq('id', sessionId);
+
+  if (error) {
+    console.error('Error deleting chat session:', error);
+    return false;
+  }
+  return true;
+}
+
+function generateChatTitle(message) {
+  const cleanMsg = stripHtml(message).trim();
+  if (!cleanMsg) return 'New Chat';
+  
+  const words = cleanMsg.split(/\s+/);
+  if (words.length <= 5) return cleanMsg;
+  
+  return words.slice(0, 5).join(' ') + '...';
 }

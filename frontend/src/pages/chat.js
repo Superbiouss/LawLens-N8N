@@ -2,6 +2,7 @@ import {
   renderAgentStatusCard,
   renderChatMessage,
   renderPromptChips,
+  renderChatHistoryPanel,
 } from './shared/chat-ui.js';
 import {
   createPendingAssistantMessage,
@@ -10,6 +11,11 @@ import {
   formatAssistantMessage,
   getAgentStatusMeta,
   resolveAgentReply,
+  fetchChatSessions,
+  fetchChatMessages,
+  createChatSession,
+  saveChatMessage,
+  deleteChatSession,
 } from '../services/chat-service.js';
 
 const CHAT_STARTERS = [
@@ -36,7 +42,7 @@ const CHAT_FALLBACKS = [
   },
 ];
 
-export function renderChat(container) {
+export async function renderChat(container) {
   const state = {
     messages: [
       {
@@ -45,27 +51,35 @@ export function renderChat(container) {
       },
     ],
     sending: false,
+    historyOpen: false,
+    sessions: [],
+    currentSessionId: null,
   };
 
   const render = () => {
     const agentStatus = getAgentStatusMeta();
 
     container.innerHTML = `
-      <div class="mb-24">
-        <h1 class="page-title">Normal Chat</h1>
-        <p class="body-text mt-4">General-purpose legal chat powered by your configured AI agent, separate from the document-specific Ask the Doc workflow.</p>
+      <div class="mb-24 flex justify-between items-center">
+        <div>
+          <h1 class="page-title">Normal Chat</h1>
+          <p class="body-text mt-4">General-purpose legal chat powered by your configured AI agent.</p>
+        </div>
       </div>
 
       <div class="workspace-shell">
         <div class="workspace-main with-divider">
+          ${renderChatHistoryPanel(state.sessions, state.currentSessionId)}
+          
           <div class="workspace-scroll" id="chat-thread">
             <div class="chat-msg">
               <div class="chat-avatar ai">L</div>
               <div class="chat-bubble">
                 <p>Hi. I can help with legal drafting, negotiation prep, and general contract questions. What are you working on?</p>
+                ${state.messages.length <= 1 ? `
                 <div class="flex gap-8 flex-wrap mt-12">
                   ${renderPromptChips(CHAT_STARTERS, 'data-chat-starter')}
-                </div>
+                </div>` : ''}
               </div>
             </div>
             ${state.messages
@@ -75,8 +89,11 @@ export function renderChat(container) {
           </div>
 
           <div class="ask-bar p-16">
+            <button class="history-toggle-btn mr-12" id="toggle-history-btn" title="View History">
+              <i data-lucide="history"></i> History
+            </button>
             <input type="text" id="chat-input" class="ask-input" placeholder="Ask a general legal question..." ${state.sending ? 'disabled' : ''} />
-            <button class="btn-primary ask-send-btn" id="chat-send-btn" ${state.sending ? 'disabled' : ''}>${state.sending ? 'Sending...' : 'Send ↗'}</button>
+            <button class="btn-primary ask-send-btn ml-12" id="chat-send-btn" ${state.sending ? 'disabled' : ''}>${state.sending ? 'Sending...' : 'Send ↗'}</button>
           </div>
         </div>
 
@@ -103,6 +120,12 @@ export function renderChat(container) {
       </div>
     `;
 
+    // Toggle history class
+    const historyPanel = container.querySelector('#chat-history-panel');
+    if (state.historyOpen) {
+      historyPanel.classList.add('active');
+    }
+
     bindChatInteractions(container, state, render);
 
     setTimeout(() => {
@@ -111,10 +134,74 @@ export function renderChat(container) {
     }, 0);
   };
 
+  // Initial load
+  state.sessions = await fetchChatSessions();
   render();
 }
 
 function bindChatInteractions(container, state, render) {
+  const input = container.querySelector('#chat-input');
+
+  // History Toggles
+  container.querySelector('#toggle-history-btn')?.addEventListener('click', () => {
+    state.historyOpen = true;
+    render();
+  });
+
+  container.querySelector('#close-history-btn')?.addEventListener('click', () => {
+    state.historyOpen = false;
+    render();
+  });
+
+  // History Actions
+  container.querySelectorAll('[data-session-id]').forEach(item => {
+    item.addEventListener('click', async (e) => {
+      if (e.target.closest('.history-delete-btn')) return;
+      
+      const sessionId = item.dataset.sessionId;
+      if (state.currentSessionId === sessionId) return;
+
+      state.sending = true;
+      state.currentSessionId = sessionId;
+      render();
+
+      const messages = await fetchChatMessages(sessionId);
+      state.messages = [
+        state.messages[0], // Keep welcome message
+        ...messages
+      ];
+      state.sending = false;
+      render();
+    });
+  });
+
+  container.querySelectorAll('[data-session-delete]').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const sessionId = btn.dataset.sessionDelete;
+      const confirmed = confirm('Are you sure you want to delete this conversation?');
+      if (!confirmed) return;
+
+      const success = await deleteChatSession(sessionId);
+      if (success) {
+        state.sessions = state.sessions.filter(s => s.id !== sessionId);
+        if (state.currentSessionId === sessionId) {
+          state.currentSessionId = null;
+          state.messages = [state.messages[0]];
+        }
+        render();
+        window.showToast('Chat deleted.');
+      }
+    });
+  });
+
+  container.querySelector('#new-chat-btn')?.addEventListener('click', () => {
+    state.currentSessionId = null;
+    state.messages = [state.messages[0]];
+    state.historyOpen = false;
+    render();
+  });
+
   container
     .querySelector('#open-chat-agent-settings-btn')
     ?.addEventListener('click', () => {
@@ -127,8 +214,6 @@ function bindChatInteractions(container, state, render) {
       window.navigateTo(button.dataset.chatNav);
     });
   });
-
-  const input = container.querySelector('#chat-input');
 
   container.querySelectorAll('[data-chat-starter]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -144,18 +229,41 @@ function bindChatInteractions(container, state, render) {
       return;
     }
 
-    state.messages.push(createUserChatMessage(question));
+    const userMsg = createUserChatMessage(question);
+    state.messages.push(userMsg);
     state.messages.push(createPendingAssistantMessage('Thinking...'));
     state.sending = true;
     input.value = '';
     render();
 
     try {
+      // 1. Ensure we have a session
+      if (!state.currentSessionId) {
+        const session = await createChatSession(question);
+        if (session) {
+          state.currentSessionId = session.id;
+          state.sessions = [session, ...state.sessions];
+        }
+      }
+
+      // 2. Save user message
+      if (state.currentSessionId) {
+        await saveChatMessage(state.currentSessionId, 'user', question);
+      }
+
+      // 3. Get AI reply
       const reply = await getChatReply(question, state.messages);
+      
+      // 4. Update state and save AI message
       state.messages[state.messages.length - 1] = {
         role: 'assistant',
         html: formatAssistantMessage(reply),
+        content: reply
       };
+
+      if (state.currentSessionId) {
+        await saveChatMessage(state.currentSessionId, 'assistant', reply);
+      }
     } catch (error) {
       state.messages[state.messages.length - 1] = {
         role: 'assistant',
@@ -164,6 +272,7 @@ function bindChatInteractions(container, state, render) {
     } finally {
       state.sending = false;
       render();
+      window.initIcons(); // Re-init icons for Lucide components
     }
   };
 
@@ -174,6 +283,11 @@ function bindChatInteractions(container, state, render) {
       submit();
     }
   });
+
+  // Re-init lucide icons
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
 }
 
 async function getChatReply(question, messages) {

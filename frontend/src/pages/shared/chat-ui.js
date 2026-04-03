@@ -41,3 +41,34 @@ export function renderAgentStatusCard(status, options = {}) {
     </div>
   `;
 }
+
+export function renderChatHistoryPanel(sessions, currentSessionId) {
+  return `
+    <div class="chat-history-panel" id="chat-history-panel">
+      <div class="panel-header">
+        <p class="section-label m-0">Conversation History</p>
+        <button class="btn-icon-sm" id="close-history-btn" title="Close History">×</button>
+      </div>
+      <div class="panel-body">
+        <button class="btn-sm w-full mb-12 justify-center" id="new-chat-btn">
+          New Chat
+        </button>
+        <div class="history-list">
+          ${sessions.length === 0 ? '<p class="meta-text p-16 text-center">No past chats yet.</p>' : sessions.map(s => renderChatHistoryItem(s, currentSessionId)).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+export function renderChatHistoryItem(session, currentSessionId) {
+  const isActive = session.id === currentSessionId;
+  return `
+    <div class="history-item ${isActive ? 'active' : ''}" data-session-id="${session.id}">
+      <div class="history-title" title="${escapeHtml(session.title)}">${escapeHtml(session.title)}</div>
+      <button class="history-delete-btn" title="Delete conversation" data-session-delete="${session.id}">
+        Delete
+      </button>
+    </div>
+  `;
+}
