@@ -1,4 +1,6 @@
+/* global window, document, sessionStorage, localStorage */
 import { copyText, downloadTextFile } from './shared/ui-actions.js';
+import { apiClient } from '../lib/api-client.js';
 
 const RECENT_EXPORTS = [
   { name: 'Summary_Report.pdf', date: 'Today, 2:40 PM', user: 'You' },
@@ -23,7 +25,7 @@ export function renderExport(container) {
             </div>
             <p class="export-card-title">Analysis PDF</p>
             <p class="meta-text mt-4">Professional report with risk score and summaries.</p>
-            <button class="btn-sm mt-16 w-full" data-export-file="analysis-pdf">Download</button>
+            <button class="btn-sm mt-16 w-full" data-export-file="pdf">Download</button>
           </div>
 
           <div class="card-surface text-center hover-border-info export-card">
@@ -32,7 +34,7 @@ export function renderExport(container) {
             </div>
             <p class="export-card-title">Word Redlines</p>
             <p class="meta-text mt-4">Draft suggested changes directly into DOCX.</p>
-            <button class="btn-sm mt-16 w-full" data-export-file="word-redlines">Download</button>
+            <button class="btn-sm mt-16 w-full" data-export-file="docx">Download</button>
           </div>
         </div>
 
@@ -107,14 +109,31 @@ export function renderExport(container) {
 
 function bindExportActions(container) {
   container.querySelectorAll('[data-export-file]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const isPdf = button.dataset.exportFile === 'analysis-pdf';
-      downloadTextFile(
-        isPdf ? 'analysis-report.txt' : 'word-redlines.txt',
-        isPdf
-          ? 'LAWLENS analysis report preview\n\nSummary, risk findings, and obligations would be exported here.'
-          : 'LAWLENS redline preview\n\nSuggested clause edits would be exported here.',
-      );
+    button.addEventListener('click', async () => {
+      const format = button.dataset.exportFile;
+      const originalText = button.innerHTML;
+      button.innerHTML = 'Generating...';
+      button.disabled = true;
+
+      try {
+        const response = await apiClient.orchestrate('export', {
+          format,
+          documentId: 'acme-nda-v3'
+        });
+
+        if (response.success && response.downloadUrl) {
+          window.showToast(`${format.toUpperCase()} generated! (Link in console)`);
+          console.log('Download URL:', response.downloadUrl);
+        } else {
+          throw new Error(response.error || 'Export failed');
+        }
+      } catch (err) {
+        window.showToast('Export failed. Check console.');
+        console.error(err);
+      } finally {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }
     });
   });
 

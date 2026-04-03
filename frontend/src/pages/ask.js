@@ -1,3 +1,4 @@
+/* global window, document, sessionStorage, localStorage */
 import {
   bindRouteTabs,
   DOCUMENT_TABS,
@@ -233,7 +234,6 @@ function bindAskInteractions(container, state, render) {
 }
 
 async function getAgentReply(question, messages) {
-  const config = getN8nAgentConfig();
   return resolveAgentReply({
     question,
     messages,
@@ -241,9 +241,9 @@ async function getAgentReply(question, messages) {
     context: {
       route: 'ask',
       documentName: 'Acme Corp NDA v3.pdf',
+      documentId: 'acme-nda-v3', // This will be dynamic in later phases
       clauseCount: 11,
       riskLevel: 'High',
-      includeDocumentContext: config.includeDocumentContext,
     },
     conversationScope: 'ask-doc',
   });

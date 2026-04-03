@@ -1,3 +1,4 @@
+/* global window, document, sessionStorage, localStorage */
 import {
   canUseN8nAgent,
   clearN8nAgentConfig,

@@ -1,9 +1,4 @@
-import {
-  askN8nAgent,
-  canUseN8nAgent,
-  getN8nAgentConfig,
-  humanizeN8nAgentError,
-} from './n8n-agent.js';
+import { apiClient } from '../lib/api-client.js';
 import { escapeHtml, formatMultilineHtml, stripHtml } from './text-utils.js';
 
 export function createUserChatMessage(question) {
@@ -40,18 +35,16 @@ export function formatAgentError(
   error,
   intro = "I couldn't reach the configured AI agent.",
 ) {
-  return `${intro}<div class="disclaimer-callout mt-16"><strong>Reason:</strong> ${escapeHtml(humanizeN8nAgentError(error))}</div>`;
+  const message = error.message || (typeof error === 'string' ? error : 'Unknown error');
+  return `${intro}<div class="disclaimer-callout mt-16"><strong>Reason:</strong> ${escapeHtml(message)}</div>`;
 }
 
-export function getAgentStatusMeta(config = getN8nAgentConfig()) {
-  const connected = canUseN8nAgent(config);
-
+export function getAgentStatusMeta() {
+  // Now using Supabase Edge Functions as the primary orchestrator
   return {
-    connected,
-    tone: connected ? 'connected' : 'disconnected',
-    description: connected
-      ? 'Connected to n8n webhook'
-      : 'Using local fallback until webhook is configured',
+    connected: true,
+    tone: 'connected',
+    description: 'Connected via LawLens Orchestrator',
   };
 }
 
@@ -62,18 +55,25 @@ export async function resolveAgentReply({
   context = {},
   conversationScope = 'default',
 }) {
-  const config = getN8nAgentConfig();
+  try {
+    const response = await apiClient.orchestrate('ask', {
+      question,
+      history: buildChatHistory(messages),
+      context,
+      conversationScope,
+      documentId: context.documentId
+    });
 
-  if (!canUseN8nAgent(config)) {
-    return Promise.resolve(fallback(question, config));
+    if (response.error) {
+      throw new Error(response.error);
+    }
+
+    return response.answer || response.reply;
+  } catch (error) {
+    console.error('Agent lookup failed, checking fallback...', error);
+    if (fallback) {
+      return fallback(question);
+    }
+    throw error;
   }
-
-  const response = await askN8nAgent({
-    message: question,
-    history: buildChatHistory(messages),
-    context,
-    conversationScope,
-  });
-
-  return response.reply;
 }

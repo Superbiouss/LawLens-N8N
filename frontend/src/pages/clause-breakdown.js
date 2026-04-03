@@ -1,9 +1,11 @@
+/* global window, document, sessionStorage, localStorage */
 import {
   bindRouteTabs,
   DOCUMENT_TABS,
   renderPageTabs,
 } from './shared/page-tabs.js';
 import { copyText, escapeHtml } from './shared/ui-actions.js';
+import { supabase } from '../lib/supabase.js';
 
 const CLAUSES = [
   {
@@ -129,6 +131,24 @@ export function renderClauseBreakdown(container) {
     activeIndex: 3,
     search: '',
     notes: [],
+    loadingNotes: false,
+    documentId: 'acme-nda-v3', // This will be dynamic in later phases
+  };
+
+  const fetchNotes = async () => {
+    if (!supabase) return;
+    state.loadingNotes = true;
+    const { data, error } = await supabase
+      .from('document_annotations')
+      .select('*')
+      .eq('document_id', state.documentId) // Ideally filtering by clause_id too if needed
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      state.notes = data;
+    }
+    state.loadingNotes = false;
+    render();
   };
 
   const render = () => {
@@ -201,12 +221,14 @@ export function renderClauseBreakdown(container) {
           </div>
 
           <div class="flex flex-col gap-8 mb-16" id="clause-note-list">
+            ${state.loadingNotes ? '<div class="meta-text">Loading notes...</div>' : ''}
             ${state.notes
+              .filter(n => !n.clause_id || n.clause_id === activeClause.id)
               .map(
                 (note) => `
               <div class="card-surface">
-                <div class="meta-text mb-4">John Doe · Just now</div>
-                <div class="fs-12 text-primary">${escapeHtml(note)}</div>
+                <div class="meta-text mb-4">You · ${new Date(note.created_at).toLocaleDateString()}</div>
+                <div class="fs-12 text-primary">${escapeHtml(note.comment)}</div>
               </div>
             `,
               )
@@ -237,7 +259,7 @@ export function renderClauseBreakdown(container) {
     `;
 
     bindRouteTabs(container);
-    bindClauseBreakdownActions(container, state, render, visibleClauses);
+    bindClauseBreakdownActions(container, state, render, visibleClauses, fetchNotes);
 
     setTimeout(() => {
       if (window.updateTabIndicator) {
@@ -247,9 +269,16 @@ export function renderClauseBreakdown(container) {
   };
 
   render();
+  fetchNotes();
 }
 
-function bindClauseBreakdownActions(container, state, render, visibleClauses) {
+function bindClauseBreakdownActions(
+  container,
+  state,
+  render,
+  visibleClauses,
+  fetchNotes,
+) {
   container
     .querySelector('#clause-search-input')
     ?.addEventListener('input', (event) => {
@@ -285,16 +314,42 @@ function bindClauseBreakdownActions(container, state, render, visibleClauses) {
 
   container
     .querySelector('#post-clause-note-btn')
-    ?.addEventListener('click', () => {
+    ?.addEventListener('click', async () => {
       const input = container.querySelector('#clause-note-input');
-      const note = input.value.trim();
-      if (!note) {
+      const comment = input.value.trim();
+      if (!comment) {
         window.showToast('Write a note first.');
         return;
       }
-      state.notes.unshift(note);
-      render();
-      window.showToast('Clause note posted.');
+
+      if (!supabase) {
+        window.showToast('Supabase not connected.');
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.showToast('Authentication required.');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('document_annotations')
+        .insert({
+          document_id: state.documentId,
+          user_id: session.user.id,
+          clause_id: CLAUSES[state.activeIndex].id,
+          comment: comment
+        });
+
+      if (error) {
+        window.showToast('Failed to save note.');
+        console.error(error);
+      } else {
+        input.value = '';
+        window.showToast('Clause note posted.');
+        fetchNotes();
+      }
     });
 
   container.querySelectorAll('[data-ask-prompt]').forEach((button) => {
