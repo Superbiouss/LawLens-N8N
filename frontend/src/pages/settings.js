@@ -8,6 +8,7 @@ import {
   validateN8nAgentConfig,
 } from '../services/n8n-agent.js';
 import { copyText, escapeHtml } from './shared/ui-actions.js';
+import { supabase } from '../lib/supabase.js';
 
 export function renderSettings(container) {
   container.innerHTML = `
@@ -491,7 +492,10 @@ function bindN8nAgentSettings(container) {
 function bindSettingsSidebar(container) {
   container
     .querySelector('#settings-logout-btn')
-    ?.addEventListener('click', () => {
+    ?.addEventListener('click', async () => {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
       window.location.href = '../index.html';
     });
 
