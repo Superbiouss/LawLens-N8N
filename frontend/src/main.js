@@ -293,7 +293,7 @@ document.addEventListener('click', (e) => {
   // 3. Log out
   const logoutBtn = e.target.closest('#logout-btn');
   if (logoutBtn) {
-    window.location.href = '../index.html';
+    window.location.href = '/index.html';
     return;
   }
 

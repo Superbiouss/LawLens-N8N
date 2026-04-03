@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["frontend/src/*"]
+    },
+    "jsx": "preserve",
+    "checkJs": true,
+    "allowJs": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "lib": ["ESNext", "DOM"]
+  },
+  "exclude": ["node_modules", "dist"]
+}

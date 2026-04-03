@@ -3,7 +3,7 @@
 set -eu
 
 BASELINE=63
-CURRENT="$(rg -o 'style=\"' src/pages 2>/dev/null | wc -l | tr -d ' ')"
+CURRENT="$(rg -o 'style=\"' frontend/src/pages 2>/dev/null | wc -l | tr -d ' ')"
 
 printf 'Inline style count: %s (baseline: %s)\n' "$CURRENT" "$BASELINE"
 
