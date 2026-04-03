@@ -1,6 +1,6 @@
 import { apiClient } from '../lib/api-client.js';
 import { supabase } from '../lib/supabase.js';
-import { escapeHtml, formatMultilineHtml, stripHtml } from './text-utils.js';
+import { escapeHtml, formatMultilineHtml, stripHtml, parseMarkdown } from './text-utils.js';
 
 export function createUserChatMessage(question) {
   return {
@@ -29,7 +29,7 @@ export function buildChatHistory(messages, limit = 12) {
 }
 
 export function formatAssistantMessage(text) {
-  return formatMultilineHtml(text);
+  return parseMarkdown(text);
 }
 
 export function formatAgentError(

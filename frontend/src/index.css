@@ -1683,11 +1683,78 @@ textarea {
 }
 
 .chat-bubble p {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
 }
 
 .chat-bubble p:last-child {
   margin-bottom: 0;
+}
+
+/* Markdown Specifics — Bubble Context */
+.chat-bubble blockquote {
+  border-left: 4px solid var(--color-brand-purple);
+  margin: 16px 0;
+  padding: 10px 16px;
+  background: var(--color-background-tertiary);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+  font-style: italic;
+  color: var(--color-text-primary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.chat-bubble strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.chat-bubble em {
+  font-style: italic;
+  opacity: 0.95;
+}
+
+.chat-bubble ul, .chat-bubble ol {
+  margin: 14px 0;
+  padding-left: 24px;
+}
+
+.chat-bubble li {
+  margin-bottom: 8px;
+}
+
+.chat-bubble li:last-child {
+  margin-bottom: 0;
+}
+
+.chat-bubble code {
+  background: var(--color-background-tertiary);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  border: 0.5px solid var(--color-border-secondary);
+}
+
+.chat-bubble pre {
+  background: var(--color-background-tertiary);
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  margin: 12px 0;
+  overflow-x: auto;
+  border: 0.5px solid var(--color-border-secondary);
+}
+
+.chat-bubble pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.chat-header {
+  margin: 16px 0 8px;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 15px;
 }
 
 .citation-badge {
