@@ -73,11 +73,14 @@ The application will be available at `http://localhost:5173`.
 - `npm run format:check`: Verify Prettier formatting.
 - `npm run ci`: Run lint, tests, inline-style guardrail, build, and format checks.
 
-## n8n Agent Notes
+## n8n Orchestration
 
-- Normal Chat and Ask the Doc now use the same webhook settings but keep separate conversation scopes.
-- The optional bearer token is stored in `sessionStorage`, so it lasts only for the current browser session.
-- For production, route webhook traffic through a backend proxy instead of exposing a long-lived secret to the browser.
+LAWLENS uses a unified orchestrator (Supabase Edge Function) to manage AI agent communications:
+
+- **Orchestrated Routing**: All chat features (`Normal Chat`, `Ask the Doc`) are routed through the `lawlens-orchestrator` function.
+- **Feature-Specific Workflows**: Different features can target different n8n webhooks. This is managed in the Edge Function configuration.
+- **Security**: Authentication and webhook URLs are handled server-side, preventing direct exposure of n8n endpoints to the frontend.
+- **Local Development**: For local n8n instances (e.g., Docker), the orchestrator can be configured to point to `http://localhost:5678`.
 
 ## License
 

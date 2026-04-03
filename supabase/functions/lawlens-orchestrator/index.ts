@@ -1,47 +1,113 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
-const supabaseServer = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+// n8n Webhook Configuration
+// NOTE: http://localhost:5678 only works if the function and n8n are in the same environment.
+// For Cloud Supabase to reach a local n8n, use a tunnel URL (ngrok).
+const N8N_URLS = {
+  ask: "https://retiform-nonsensuously-crew.ngrok-free.dev/webhook/89b41797-0382-40a0-a3a4-eb11fcae3782",
+};
 
 Deno.serve(async (req) => {
-  const { action, payload, metadata } = await req.json();
-  const authHeader = req.headers.get('Authorization')!;
-  const userClient = createClient(SUPABASE_URL, Deno.env.get('SUPABASE_ANON_KEY')!, {
-    global: { headers: { Authorization: authHeader } }
-  });
-
-  console.log(`Orchestrator Action: ${action} by ${metadata.userId}`);
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
 
   try {
+    const { action, payload, metadata } = await req.json();
+    const authHeader = req.headers.get('Authorization')!;
+
+    console.log(`Orchestrator Action: ${action} by ${metadata?.userId}`);
+
     switch (action) {
-      case 'upload':
-        // Mock processing for Turn 18 demonstration
-        return new Response(JSON.stringify({ 
-          success: true, 
-          documentId: payload.documentId,
-          status: 'indexing' 
-        }), { headers: { 'Content-Type': 'application/json' } });
+      case 'ask': {
+        const webhookUrl = N8N_URLS.ask;
+        console.log(`Forwarding to n8n: ${webhookUrl}`);
 
-      case 'ask':
-        // Vector search + n8n webhook routing would happen here
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authHeader,
+            'ngrok-skip-browser-warning': 'true' // Bypass ngrok free warning page
+          },
+          body: JSON.stringify({
+            // Redundant field names for n8n node compatibility
+            chatInput: payload.question,
+            text: payload.question,
+            query: payload.question,
+            history: payload.history || [],
+            metadata: {
+              ...metadata,
+              documentId: payload.documentId || null
+            }
+          })
+        });
+
+        const rawText = await response.text();
+        if (!response.ok) {
+          console.error(`n8n error (${response.status}):`, rawText);
+          return new Response(JSON.stringify({
+            success: true,
+            answer: `[Technical Error] n8n responded with ${response.status}: ${rawText.substring(0, 100)}...`
+          }), { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          });
+        }
+
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (e) {
+          console.error('Invalid JSON from n8n:', rawText);
+          return new Response(JSON.stringify({
+            success: true,
+            answer: `[Technical Error] Orchestrator can't parse n8n JSON. Raw Output: ${rawText.substring(0, 150)}...`
+          }), { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          });
+        }
+
+        const result = Array.isArray(data) ? data[0] : data;
+        
+        if (!result) {
+          return new Response(JSON.stringify({
+            success: true,
+            answer: `[Technical Error] n8n returned success but an empty response body.`
+          }), { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          });
+        }
+
+        const answer = result.output || result.response || result.text || result.msg || "I'm sorry, I couldn't generate a response.";
+
         return new Response(JSON.stringify({
           success: true,
-          answer: `I've analyzed your question: "${payload.question}". This is a secure response from the orchestrator.`
-        }), { headers: { 'Content-Type': 'application/json' } });
-
-      case 'export':
-        return new Response(JSON.stringify({
-          success: true,
-          downloadUrl: `https://lawlens.app/mock-export/${payload.documentId}.${payload.format}`
-        }), { headers: { 'Content-Type': 'application/json' } });
+          answer: answer
+        }), { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        });
+      }
 
       default:
-        return new Response(JSON.stringify({ error: 'Unknown action' }), { status: 400 });
+        return new Response(JSON.stringify({ error: 'Unknown action' }), { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        });
     }
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    console.error('Orchestrator Error:', err);
+    return new Response(JSON.stringify({ 
+      error: err.message,
+      success: false 
+    }), { 
+      status: 200, 
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+    });
   }
 });

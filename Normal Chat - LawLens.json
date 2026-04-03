@@ -1,0 +1,145 @@
+{
+  "name": "Normal Chat - LawLens",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "89b41797-0382-40a0-a3a4-eb11fcae3782",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        -128
+      ],
+      "id": "b4bc93da-ef17-4c76-99b6-e7ef1b0d0f46",
+      "name": "Webhook",
+      "webhookId": "89b41797-0382-40a0-a3a4-eb11fcae3782"
+    },
+    {
+      "parameters": {
+        "needsFallback": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -224,
+        -128
+      ],
+      "id": "dc681d8b-d6f5-4ee1-8c7a-12992ef3f629",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        128
+      ],
+      "id": "ccc33bee-be4f-48d3-a9c4-2670b194684a",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Kzbt5Wait3dfnc6D",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        128
+      ],
+      "id": "8c4dc856-31a6-41ca-a772-3ca1202e0ca7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "c9wFOS6DVIFrDaSx",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        128,
+        -128
+      ],
+      "id": "a910e0ce-450a-46d5-9b50-ff243e6fc3f4",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "4145e0fd-beef-405e-b28d-61e96f17fe8c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4987283a68dc7a2c57a8f320893ace85e5615535f4350f712871e29f8f6ed645"
+  },
+  "id": "iOGk4lWAwRHB1Hvp1NS69",
+  "tags": []
+}

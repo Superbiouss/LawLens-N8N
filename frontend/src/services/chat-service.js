@@ -66,16 +66,20 @@ export async function resolveAgentReply({
     });
 
     if (response.error) {
-      throw new Error(response.error);
+      const errorMsg = `[Technical Error] Orchestrator failed: ${response.error}`;
+      throw new Error(errorMsg);
     }
 
     return response.answer || response.reply;
   } catch (error) {
-    console.error('Agent lookup failed, checking fallback...', error);
-    if (fallback) {
-      return fallback(question);
+    console.error('Agent lookup failed:', error);
+    
+    // If it's a technical error we want to debug, don't use fallback
+    if (error.message.includes('[Technical Error]') || !fallback) {
+      throw error;
     }
-    throw error;
+    
+    return fallback(question);
   }
 }
 
