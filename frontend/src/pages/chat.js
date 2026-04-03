@@ -49,6 +49,7 @@ const CHAT_FALLBACKS = [
 ];
 
 export async function renderChat(container) {
+  container.className = 'chat-page-container';
   const state = {
     messages: [], // Start empty for animation
     sending: false,
@@ -59,81 +60,75 @@ export async function renderChat(container) {
   };
 
   const render = () => {
-    const agentStatus = getAgentStatusMeta();
-
     container.innerHTML = `
-      <div class="mb-24 flex justify-between items-center">
-        <div>
-          <h1 class="page-title">Normal Chat</h1>
-          <p class="body-text mt-4">General-purpose legal chat powered by your configured AI agent.</p>
-        </div>
-        <button class="btn-sm btn-ghost" id="toggle-history-btn" title="View History" style="display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="history"></i> History
-        </button>
-      </div>
-
+      <div class="chat-glow-1"></div>
+      <div class="chat-glow-2"></div>
+      
       <div class="workspace-shell">
-        <div class="workspace-main with-divider">
-          ${renderChatHistoryPanel(state.sessions, state.currentSessionId)}
-          
+        <div class="workspace-main">
+          <header class="chat-header-minimal">
+            <span class="chat-title-badge">Normal Chat</span>
+          </header>
+
           <div class="workspace-scroll" id="chat-thread">
-            ${state.messages
-              .map((message, index) => {
-                const isFirst = index === 0 && message.role === 'assistant' && !state.currentSessionId;
-                return `
-                  ${renderChatMessage(message)}
-                  ${isFirst ? `
-                    <div class="flex gap-8 flex-wrap mt-12 mb-16 ml-44">
-                      ${renderPromptChips(CHAT_STARTERS, 'data-chat-starter')}
-                    </div>
-                  ` : ''}
-                `;
-              })
-              .join('')}
-            ${state.isTyping ? renderTypingIndicator() : ''}
-          </div>
-
-          <div class="ask-bar p-16">
-            <input type="text" id="chat-input" class="ask-input" placeholder="Ask a general legal question..." />
-            <button class="btn-primary ask-send-btn ml-12" id="chat-send-btn" ${state.sending ? 'disabled' : ''}>${state.sending ? 'Sending...' : 'Send ↗'}</button>
-          </div>
-        </div>
-
-        <div class="workspace-sidebar">
-          ${renderAgentStatusCard(agentStatus, { buttonId: 'open-chat-agent-settings-btn' })}
-
-          <p class="section-label">What This Chat Is For</p>
-          <div class="card mb-16 p-12">
-            <div class="flex flex-col gap-8">
-              <div class="meta-text">General legal concepts</div>
-              <div class="meta-text">Negotiation talking points</div>
-              <div class="meta-text">Drafting help</div>
-              <div class="meta-text">Clause brainstorming</div>
+            <div class="chat-thread-inner">
+              ${state.messages.length === 0 && !state.isTyping ? `
+                <div class="premium-empty-hero animate-chat-entry">
+                  <div class="hero-logo-orb">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  </div>
+                  <h1>How can LawLens help today?</h1>
+                  <p>I'm your dedicated legal intelligence assistant. Ask me to draft clauses, analyze risks, or explain complex legal concepts.</p>
+                  <div class="flex gap-12 flex-wrap justify-center mt-32">
+                    ${renderPromptChips(CHAT_STARTERS, 'data-chat-starter')}
+                  </div>
+                </div>
+              ` : `
+                ${state.messages
+                  .map((message) => renderChatMessage(message))
+                  .join('')}
+                ${state.isTyping ? renderTypingIndicator() : ''}
+              `}
+              <div id="anchor"></div>
             </div>
           </div>
 
-          <p class="section-label">Quick Jump</p>
-          <div class="flex flex-col gap-8">
-            <button class="btn-sm w-full justify-start" data-chat-nav="upload">Analyze a document</button>
-            <button class="btn-sm w-full justify-start" data-chat-nav="clause-library">Open clause library</button>
-            <button class="btn-sm w-full justify-start" data-chat-nav="drafting">Go to drafting assistant</button>
+          <div class="ask-container-sleek">
+            <div class="chat-thread-inner">
+              <div class="ask-bar-premium">
+                <input type="text" id="chat-input" class="ask-input-premium" placeholder="Message LawLens..." autocomplete="off" />
+                <button class="ask-send-btn-premium" id="chat-send-btn" ${state.sending ? 'disabled' : ''} title="Send Message">
+                  <i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+
+        <aside class="chat-history-sidebar">
+          ${renderChatHistoryPanel(state.sessions, state.currentSessionId, true)}
+        </aside>
       </div>
     `;
 
-    // Toggle history class
-    const historyPanel = container.querySelector('#chat-history-panel');
-    if (state.historyOpen) {
-      historyPanel.classList.add('active');
-    }
-
     bindChatInteractions(container, state, render, triggerInitialGreeting);
 
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+
+    scrollToBottom();
+  };
+
+  const scrollToBottom = (force = false) => {
     setTimeout(() => {
-      const thread = container.querySelector('#chat-thread');
-      if (thread) thread.scrollTop = thread.scrollHeight;
-    }, 0);
+      const anchor = container.querySelector('#anchor');
+      if (anchor) {
+        anchor.scrollIntoView({ behavior: force ? 'auto' : 'smooth', block: 'end' });
+      }
+    }, 50);
   };
 
   const triggerInitialGreeting = async () => {
@@ -143,11 +138,9 @@ export async function renderChat(container) {
     render();
     
     const name = await getUserDisplayName();
+    await new Promise(r => setTimeout(r, 1200));
     
-    // Natural delay
-    await new Promise(r => setTimeout(r, 1000));
-    
-    const greetingText = `Hello ${name || 'there'}! I'm LawLens AI, your legal assistant. I can help brainstorm concepts, clarify jargon, or discuss general legal queries. What's on your mind?`;
+    const greetingText = `Hello ${name || 'there'}! I'm LAWLENS. I've been trained on thousands of legal documents to help you with research, drafting, and analysis. What can we look at together?`;
     
     state.isTyping = false;
     state.messages = [{
@@ -167,17 +160,6 @@ export async function renderChat(container) {
 
 function bindChatInteractions(container, state, render, triggerInitialGreeting) {
   const input = container.querySelector('#chat-input');
-
-  // History Toggles
-  container.querySelector('#toggle-history-btn')?.addEventListener('click', () => {
-    state.historyOpen = true;
-    render();
-  });
-
-  container.querySelector('#close-history-btn')?.addEventListener('click', () => {
-    state.historyOpen = false;
-    render();
-  });
 
   // History Actions
   container.querySelectorAll('[data-session-id]').forEach(item => {
@@ -222,22 +204,8 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
   container.querySelector('#new-chat-btn')?.addEventListener('click', () => {
     state.currentSessionId = null;
     state.messages = [];
-    state.historyOpen = false;
     render();
     triggerInitialGreeting();
-  });
-
-  container
-    .querySelector('#open-chat-agent-settings-btn')
-    ?.addEventListener('click', () => {
-      sessionStorage.setItem('settings_tab_prefill', 'api');
-      window.navigateTo('settings');
-    });
-
-  container.querySelectorAll('[data-chat-nav]').forEach((button) => {
-    button.addEventListener('click', () => {
-      window.navigateTo(button.dataset.chatNav);
-    });
   });
 
   container.querySelectorAll('[data-chat-starter]').forEach((button) => {
@@ -278,10 +246,8 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
 
     const retryBtn = e.target.closest('#retry-chat-btn');
     if (retryBtn) {
-      // Find the last user message to retry
       const lastUserMsg = [...state.messages].reverse().find(m => m.role === 'user');
       if (lastUserMsg) {
-        // Remove error message and retry
         state.messages = state.messages.filter(m => m !== state.messages[state.messages.length - 1]);
         input.value = lastUserMsg.content;
         submit();
@@ -291,10 +257,7 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
 
   const submit = async () => {
     const question = input.value.trim();
-    if (!question || state.sending) {
-      if (!question) window.showToast('Type a message first.');
-      return;
-    }
+    if (!question || state.sending) return;
 
     const userMsg = createUserChatMessage(question);
     state.messages.push(userMsg);
@@ -304,14 +267,11 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
     render();
 
     try {
-      // 1. Ensure we have a session
       if (!state.currentSessionId) {
         const session = await createChatSession(question);
         if (session) {
           state.currentSessionId = session.id;
           state.sessions = [session, ...state.sessions];
-          
-          // Persistence: Save the greeting as the first message if it's there
           if (state.messages.length > 0 && state.messages[0].role === 'assistant') {
             const savedGreeting = await saveChatMessage(session.id, 'assistant', state.messages[0].content);
             if (savedGreeting) state.messages[0].id = savedGreeting.id;
@@ -319,16 +279,12 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
         }
       }
 
-      // 2. Save user message
       if (state.currentSessionId) {
         const savedUserMsg = await saveChatMessage(state.currentSessionId, 'user', question);
         if (savedUserMsg) state.messages[state.messages.length - 2].id = savedUserMsg.id;
       }
 
-      // 3. Get AI reply
       const reply = await getChatReply(question, state.messages);
-      
-      // 4. Update state and save AI message
       const savedAiMsg = state.currentSessionId 
         ? await saveChatMessage(state.currentSessionId, 'assistant', reply)
         : null;
@@ -340,7 +296,6 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
         content: reply
       };
 
-      // 5. AI Title Generation (after first exchange: Greeting + User + AI)
       if (state.messages.length === 3) {
         const aiTitle = await generateChatTitleAI(question, reply);
         if (aiTitle) {
@@ -351,7 +306,7 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
     } catch (error) {
       state.messages[state.messages.length - 1] = {
         role: 'assistant',
-        html: renderChatError(formatAgentError(error)), // Using new error renderer
+        html: renderChatError(formatAgentError(error)),
       };
     } finally {
       state.sending = false;
@@ -368,7 +323,6 @@ function bindChatInteractions(container, state, render, triggerInitialGreeting) 
     }
   });
 
-  // Re-init lucide icons
   if (window.lucide) {
     window.lucide.createIcons();
   }
@@ -391,6 +345,6 @@ async function getChatReply(question, messages) {
 function resolveChatFallback(question) {
   return (
     CHAT_FALLBACKS.find((item) => item.test.test(question))?.response ||
-    'The Normal Chat webhook is not configured yet, so this screen is using the local fallback responder. Configure your n8n webhook in Settings > API Keys to use your external LLM agent here.'
+    'The Normal Chat webhook is not configured yet. Configure your agents in Settings to enable real-time intelligence.'
   );
 }

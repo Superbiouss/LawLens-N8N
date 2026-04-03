@@ -71,13 +71,17 @@ export function parseMarkdown(text = '') {
   html = html.replace(/^## (.*$)/gm, '<h2 class="chat-header">$1</h2>');
   html = html.replace(/^# (.*$)/gm, '<h1 class="chat-header">$1</h1>');
 
-  // 9. Unordered lists: - item or * item
+  // 9. Unordered lists (support one level of nesting with 2 spaces)
+  html = html.replace(/^\s{2,}[-*]\s+(.*)$/gm, '<ul><li><ul><li>$1</li></ul></li></ul>');
   html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<ul><li>$1</li></ul>');
   html = html.replace(/<\/ul>\n?<ul>/g, '');
+  html = html.replace(/<\/li><\/ul><\/li><ul><li><ul><li>/g, '</li><li><ul><li>');
 
-  // 10. Ordered lists: 1. item
+  // 10. Ordered lists (support one level of nesting with 2 spaces)
+  html = html.replace(/^\s{2,}(\d+)\.\s+(.*)$/gm, '<ol><li><ol><li value="$1">$2</li></ol></li></ol>');
   html = html.replace(/^\s*(\d+)\.\s+(.*)$/gm, '<ol><li value="$1">$2</li></ol>');
   html = html.replace(/<\/ol>\n?<ol>/g, '');
+  html = html.replace(/<\/li><\/ol><\/li><ol><li><ol>/g, '</li><li><ol>');
 
   // 11. Paragraphs and Line Breaks
   const hasBlockElements = /^(#|\s*[-*]\s|\s*\d+\.\s|>|```)/m.test(text) || text.includes('\n\n');
@@ -96,7 +100,7 @@ export function parseMarkdown(text = '') {
 
     let finalized = processedLines.join('\n');
     
-    if (!finalized.startsWith('<h') && !finalized.startsWith('<p') && !finalized.startsWith('<ul') && !finalized.startsWith('-') && !finalized.startsWith('<ol')) {
+    if (!finalized.startsWith('<h') && !finalized.startsWith('<p') && !finalized.startsWith('<ul') && !finalized.startsWith('<ol')) {
       finalized = '<p>' + finalized + '</p>';
     }
     return finalized.replace(/<p><\/p>/g, '').replace(/(<br\/>)+$/g, '');

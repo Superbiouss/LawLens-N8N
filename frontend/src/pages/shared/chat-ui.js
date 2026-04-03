@@ -2,26 +2,34 @@ import { escapeHtml } from '../../services/text-utils.js';
 
 export function renderChatMessage(message, options = {}) {
   const isUser = message.role === 'user';
-  const userInitials = options.userInitials || 'JD';
-  const assistantInitials = options.assistantInitials || 'L';
+  const roleClass = isUser ? 'chat-msg-user' : 'chat-msg-ai';
+  const userInitials = options.userInitials || 'U';
   const animationClass = message.animate ? 'animate-chat-entry' : '';
 
   const messageId = message.id || '';
 
+  // AI Avatar is the Brand Logo Dot
+  const aiAvatar = `
+    <div class="chat-avatar ai">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    </div>
+  `;
+
+  const userAvatar = `
+    <div class="chat-avatar user">${userInitials}</div>
+  `;
+
   return `
-    <div class="chat-msg ${animationClass}" data-message-id="${messageId}" data-role="${message.role}">
-      <div class="chat-avatar ${isUser ? 'user chat-avatar-muted' : 'ai'}">${isUser ? userInitials : assistantInitials}</div>
+    <div class="chat-msg ${roleClass} ${animationClass}" data-message-id="${messageId}" data-role="${message.role}">
+      ${isUser ? userAvatar : aiAvatar}
       <div class="chat-bubble${message.pending ? ' chat-bubble-pending' : ''}">
         <div class="chat-bubble-content">
           ${message.html}
         </div>
-        ${!message.pending ? `
+        ${(!message.pending && isUser) ? `
           <div class="chat-actions">
-            ${!isUser ? `
-              <button class="chat-action-btn copy-msg-btn" title="Copy to clipboard">
-                <i data-lucide="copy"></i>
-              </button>
-            ` : ''}
             <button class="chat-action-btn delete-msg-btn" title="Delete message">
               <i data-lucide="trash-2"></i>
             </button>
@@ -50,10 +58,14 @@ export function renderChatError(errorContent) {
   `;
 }
 
-export function renderTypingIndicator(assistantInitials = 'L') {
+export function renderTypingIndicator() {
   return `
-    <div class="chat-msg animate-chat-entry" id="typing-indicator">
-      <div class="chat-avatar ai">${assistantInitials}</div>
+    <div class="chat-msg chat-msg-ai animate-chat-entry" id="typing-indicator">
+      <div class="chat-avatar ai">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      </div>
       <div class="chat-bubble">
         <div class="typing-dots">
           <span></span>
@@ -69,7 +81,7 @@ export function renderPromptChips(items, dataAttribute) {
   return items
     .map(
       (item) => `
-    <button type="button" class="reset-btn badge badge-neutral chat-chip" ${dataAttribute}="${escapeHtml(item)}">
+    <button type="button" class="reset-btn chat-chip" ${dataAttribute}="${escapeHtml(item)}">
       ${escapeHtml(item)}
     </button>
   `,
@@ -92,16 +104,20 @@ export function renderAgentStatusCard(status, options = {}) {
   `;
 }
 
-export function renderChatHistoryPanel(sessions, currentSessionId) {
+export function renderChatHistoryPanel(sessions, currentSessionId, isSidebar = false) {
   return `
-    <div class="chat-history-panel" id="chat-history-panel">
+    <div class="${isSidebar ? 'chat-history-sidebar' : 'chat-history-panel'}" id="chat-history-panel">
       <div class="panel-header">
-        <p class="section-label m-0">Conversation History</p>
-        <button class="btn-icon-sm" id="close-history-btn" title="Close History">×</button>
+        <p class="section-label m-0">
+          <i data-lucide="clock" style="width:16px; height:16px;"></i>
+          History
+        </p>
+        ${!isSidebar ? '<button class="btn-icon-sm" id="close-history-btn" title="Close History"><i data-lucide="x" style="width:16px; height:16px;"></i></button>' : ''}
       </div>
       <div class="panel-body">
-        <button class="btn-sm w-full mb-12 justify-center" id="new-chat-btn">
-          New Chat
+        <button id="new-chat-btn">
+          <i data-lucide="plus" style="width:14px; height:14px;"></i>
+          New Chat Session
         </button>
         <div class="history-list">
           ${sessions.length === 0 ? '<p class="meta-text p-16 text-center">No past chats yet.</p>' : sessions.map(s => renderChatHistoryItem(s, currentSessionId)).join('')}
@@ -115,9 +131,10 @@ export function renderChatHistoryItem(session, currentSessionId) {
   const isActive = session.id === currentSessionId;
   return `
     <div class="history-item ${isActive ? 'active' : ''}" data-session-id="${session.id}">
+      <i data-lucide="message-square" class="history-item-icon" style="width: 14px; height: 14px;"></i>
       <div class="history-title" title="${escapeHtml(session.title)}">${escapeHtml(session.title)}</div>
       <button class="history-delete-btn" title="Delete conversation" data-session-delete="${session.id}">
-        Delete
+        <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
       </button>
     </div>
   `;
