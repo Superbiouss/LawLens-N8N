@@ -5207,12 +5207,6 @@ textarea {
 .history-list {
   padding-top: 8px;
   padding-bottom: 40px;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.history-list::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
 }
 
 .history-item-icon {
