@@ -3,6 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: 'frontend',
+  envDir: '../',
   server: {
     port: 5173,
     open: false,

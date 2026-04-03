@@ -1,34 +1,55 @@
-const TERMS = [
-  {
-    letter: 'L',
-    name: 'Liquidated Damages',
-    body: 'A specific amount of money designated in a contract to be paid by one party to the other in the event of a breach. The amount is agreed upon at the time of contract signing and is intended to represent a fair estimate of actual damages, rather than a penalty.',
-    note: 'Found in Clause 3 of Acme Corp NDA v3.pdf ($500,000).',
-  },
-  {
-    letter: 'L',
-    name: 'Limitation of Liability',
-    body: 'A clause in a contract that limits the amount one party has to pay to the other party if there is a legal dispute or breach. This is often capped at the total professional fees paid or a specific dollar amount.',
-    note: 'This clause is missing from your current NDA draft. It is considered a critical protection.',
-  },
-  {
-    letter: 'L',
-    name: 'License',
-    body: `A permission granted by one party to another to use intellectual property or perform an action that would otherwise be prohibited. In NDAs, clauses often expressly state that "no license is granted" to ensure that sharing information doesn't imply ownership transfer.`,
-  },
-];
+import { apiClient } from '../lib/api-client.js';
 
-export function renderGlossary(container) {
+export async function renderGlossary(container) {
   const state = {
     query: '',
-    activeLetter: 'L',
+    activeLetter: 'A', // Default to A
+    terms: [],
+    loading: true,
+    error: null
+  };
+
+  const loadData = async () => {
+    try {
+      state.terms = await apiClient.intelligence.listGlossary();
+      // Find the first letter that actually has terms
+      const availableLetters = [...new Set(state.terms.map(t => t.term[0].toUpperCase()))].sort();
+      if (availableLetters.length > 0) {
+        state.activeLetter = availableLetters[0];
+      }
+    } catch (err) {
+      state.error = err.message;
+    } finally {
+      state.loading = false;
+      render();
+    }
   };
 
   const render = () => {
-    const visibleTerms = TERMS.filter(
+    if (state.loading) {
+      container.innerHTML = `
+        <div class="layout-single-column p-40 text-center">
+          <svg class="spinner" viewBox="0 0 50 50" style="width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px;"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke="var(--color-brand-purple)"></circle></svg>
+          <p class="body-text">Loading legal glossary...</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.error) {
+       container.innerHTML = `
+        <div class="layout-single-column p-40 text-center">
+          <p class="body-text text-danger">Failed to load glossary: ${state.error}</p>
+          <button class="btn-primary mt-16" onclick="window.location.reload()">Retry</button>
+        </div>
+      `;
+      return;
+    }
+
+    const visibleTerms = state.terms.filter(
       (term) =>
-        term.letter === state.activeLetter &&
-        `${term.name} ${term.body}`
+        term.term.toUpperCase().startsWith(state.activeLetter) &&
+        `${term.term} ${term.definition}`
           .toLowerCase()
           .includes(state.query.toLowerCase()),
     );
@@ -50,11 +71,17 @@ export function renderGlossary(container) {
           ${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
             .split('')
             .map(
-              (letter) => `
-            <button type="button" class="reset-btn meta-text text-center glossary-char ${letter === state.activeLetter ? 'active glossary-char-active' : ''}" data-glossary-letter="${letter}">
-              ${letter}
-            </button>
-          `,
+              (letter) => {
+                const hasTerms = state.terms.some(t => t.term.toUpperCase().startsWith(letter));
+                return `
+                  <button type="button" 
+                    class="reset-btn meta-text text-center glossary-char ${letter === state.activeLetter ? 'active glossary-char-active' : ''} ${!hasTerms ? 'opacity-30' : ''}" 
+                    data-glossary-letter="${letter}"
+                    ${!hasTerms ? 'title="No terms for this letter"' : ''}>
+                    ${letter}
+                  </button>
+                `;
+              }
             )
             .join('')}
         </div>
@@ -69,15 +96,15 @@ export function renderGlossary(container) {
                       .map(
                         (term) => `
                 <div>
-                  <h3 class="glossary-term-title">${term.name}</h3>
+                  <h3 class="glossary-term-title">${term.term}</h3>
                   <div class="card glossary-term-card">
-                    <p class="definition-text">${term.body}</p>
+                    <p class="definition-text">${term.definition}</p>
                     ${
-                      term.note
+                      term.context
                         ? `
                       <div class="card-surface mt-16">
-                        <span class="micro-label mb-4">${term.name === 'Liquidated Damages' ? 'In your documents' : 'Note'}</span>
-                        <p class="meta-text">${term.note}</p>
+                        <span class="micro-label mb-4">India Legal Context</span>
+                        <p class="meta-text">${term.context}</p>
                       </div>
                     `
                         : ''
@@ -99,17 +126,13 @@ export function renderGlossary(container) {
       .querySelector('#glossary-search-input')
       ?.addEventListener('input', (event) => {
         state.query = event.target.value;
-        render();
       });
-
+    
     container
       .querySelector('#glossary-search-btn')
       ?.addEventListener('click', () => {
-        window.showToast(
-          state.query
-            ? `Filtered glossary for "${state.query}"`
-            : 'Showing all terms for this letter.',
-        );
+        state.query = container.querySelector('#glossary-search-input').value;
+        render();
       });
 
     container.querySelectorAll('[data-glossary-letter]').forEach((button) => {
@@ -120,5 +143,5 @@ export function renderGlossary(container) {
     });
   };
 
-  render();
+  await loadData();
 }

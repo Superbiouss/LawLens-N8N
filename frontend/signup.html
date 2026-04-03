@@ -91,7 +91,7 @@
 
     <script type="module" src="/src/main-legacy.js"></script>
     <script type="module">
-        import { supabase } from '/src/lib/supabase.js';
+        import { authService } from '/src/services/auth-service.js';
 
         const form = document.querySelector('.auth-form');
         if (form) {
@@ -103,39 +103,25 @@
                 btn.style.opacity = '0.8';
                 btn.style.pointerEvents = 'none';
 
-                if (!supabase) {
-                    alert("Supabase client is not initialized.");
-                    btn.innerHTML = originalText;
-                    btn.style.opacity = '1';
-                    btn.style.pointerEvents = 'auto';
-                    return;
-                }
-
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const fname = document.getElementById('fname').value;
                 const lname = document.getElementById('lname').value;
                 const org = document.getElementById('org').value;
 
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            full_name: `${fname} ${lname}`.trim(),
-                            organization: org
-                        }
-                    }
-                });
-
-                if (error) {
+                try {
+                    await authService.signup(email, password, {
+                        full_name: `${fname} ${lname}`.trim(),
+                        organization: org
+                    });
+                    
+                    alert('Signup successful! Check your email to confirm your account (if email confirmation is required). You may now log in.');
+                    window.location.href = '/app.html';
+                } catch (error) {
                     alert(error.message);
                     btn.innerHTML = originalText;
                     btn.style.opacity = '1';
                     btn.style.pointerEvents = 'auto';
-                } else {
-                    alert('Signup successful! Check your email to confirm your account (if email confirmation is required). You may now log in.');
-                    window.location.href = '/app.html';
                 }
             });
         }

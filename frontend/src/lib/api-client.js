@@ -68,5 +68,32 @@ export const apiClient = {
             if (error) throw error;
             return data;
         }
+    },
+
+    /**
+     * Legal Intelligence endpoints
+     */
+    intelligence: {
+        async listCompliancePacks() {
+            if (!supabase) return [];
+            const { data, error } = await supabase
+                .from('compliance_checklists')
+                .select('*')
+                .order('law_name', { ascending: true });
+
+            if (error) throw error;
+            return data;
+        },
+
+        async listGlossary() {
+            if (!supabase) return [];
+            const { data, error } = await supabase
+                .from('legal_glossary')
+                .select('*')
+                .order('term', { ascending: true });
+
+            if (error) throw error;
+            return data;
+        }
     }
 };

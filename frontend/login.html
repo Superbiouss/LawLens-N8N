@@ -89,7 +89,7 @@
 
     <script type="module" src="/src/main-legacy.js"></script>
     <script type="module">
-        import { supabase } from '/src/lib/supabase.js';
+        import { authService } from '/src/services/auth-service.js';
 
         const form = document.querySelector('.auth-form');
         if (form) {
@@ -101,29 +101,17 @@
                 btn.style.opacity = '0.8';
                 btn.style.pointerEvents = 'none';
 
-                if (!supabase) {
-                    alert("Supabase client is not initialized.");
-                    btn.innerHTML = originalText;
-                    btn.style.opacity = '1';
-                    btn.style.pointerEvents = 'auto';
-                    return;
-                }
-
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
 
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
-
-                if (error) {
+                try {
+                    await authService.login(email, password);
+                    window.location.href = '/app.html';
+                } catch (error) {
                     alert(error.message);
                     btn.innerHTML = originalText;
                     btn.style.opacity = '1';
                     btn.style.pointerEvents = 'auto';
-                } else {
-                    window.location.href = '/app.html';
                 }
             });
         }
