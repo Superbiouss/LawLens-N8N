@@ -275,3 +275,26 @@ export async function getUserDisplayName() {
     return 'there';
   }
 }
+
+/**
+ * Fetches user initials for the chat avatar.
+ */
+export async function getUserInitials() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return 'U';
+    
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name;
+    if (fullName) {
+      const parts = fullName.split(' ');
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return parts[0][0].toUpperCase();
+    }
+    
+    // Fallback to email first char
+    return (user.email?.[0] || 'U').toUpperCase();
+  } catch (err) {
+    console.error('Error fetching user initials:', err);
+    return 'U';
+  }
+}

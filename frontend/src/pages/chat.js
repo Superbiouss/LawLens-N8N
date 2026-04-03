@@ -20,6 +20,7 @@ import {
   deleteChatSession,
   deleteChatMessage,
   getUserDisplayName,
+  getUserInitials,
   updateChatSessionTitle,
   generateChatTitleAI,
 } from '../services/chat-service.js';
@@ -57,6 +58,7 @@ export async function renderChat(container) {
     sessions: [],
     currentSessionId: null,
     isTyping: false,
+    userInitials: 'U'
   };
 
   const render = () => {
@@ -87,7 +89,7 @@ export async function renderChat(container) {
                 </div>
               ` : `
                 ${state.messages
-                  .map((message) => renderChatMessage(message))
+                  .map((message) => renderChatMessage(message, { userInitials: state.userInitials }))
                   .join('')}
                 ${state.isTyping ? renderTypingIndicator() : ''}
               `}
@@ -153,7 +155,14 @@ export async function renderChat(container) {
   };
 
   // Initial load
-  state.sessions = await fetchChatSessions();
+  const [sessions, initials] = await Promise.all([
+    fetchChatSessions(),
+    getUserInitials()
+  ]);
+  
+  state.sessions = sessions;
+  state.userInitials = initials;
+  
   render();
   triggerInitialGreeting();
 }

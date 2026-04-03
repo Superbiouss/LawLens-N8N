@@ -108,17 +108,14 @@ export function renderChatHistoryPanel(sessions, currentSessionId, isSidebar = f
   return `
     <div class="${isSidebar ? 'chat-history-sidebar' : 'chat-history-panel'}" id="chat-history-panel">
       <div class="panel-header">
-        <p class="section-label m-0">
-          <i data-lucide="clock" style="width:16px; height:16px;"></i>
-          History
-        </p>
-        ${!isSidebar ? '<button class="btn-icon-sm" id="close-history-btn" title="Close History"><i data-lucide="x" style="width:16px; height:16px;"></i></button>' : ''}
-      </div>
-      <div class="panel-body">
         <button id="new-chat-btn">
           <i data-lucide="plus" style="width:14px; height:14px;"></i>
           New Chat Session
         </button>
+        ${!isSidebar ? '<button class="btn-icon-sm" id="close-history-btn" title="Close History"><i data-lucide="x" style="width:16px; height:16px;"></i></button>' : ''}
+      </div>
+
+      <div class="panel-body">
         <div class="history-list">
           ${sessions.length === 0 ? '<p class="meta-text p-16 text-center">No past chats yet.</p>' : sessions.map(s => renderChatHistoryItem(s, currentSessionId)).join('')}
         </div>
