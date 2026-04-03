@@ -196,3 +196,23 @@ function generateChatTitle(message) {
   
   return words.slice(0, 5).join(' ') + '...';
 }
+
+/**
+ * Fetches the current user's display name or email for personalization.
+ */
+export async function getUserDisplayName() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return 'there';
+    
+    // Check for full name in metadata first
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name;
+    if (fullName) return fullName.split(' ')[0]; // Just use first name for friendly vibe
+    
+    // Fallback to email username
+    return user.email.split('@')[0] || 'there';
+  } catch (err) {
+    console.error('Error fetching user name:', err);
+    return 'there';
+  }
+}

@@ -4,12 +4,28 @@ export function renderChatMessage(message, options = {}) {
   const isUser = message.role === 'user';
   const userInitials = options.userInitials || 'JD';
   const assistantInitials = options.assistantInitials || 'L';
+  const animationClass = message.animate ? 'animate-chat-entry' : '';
 
   return `
-    <div class="chat-msg">
+    <div class="chat-msg ${animationClass}">
       <div class="chat-avatar ${isUser ? 'user chat-avatar-muted' : 'ai'}">${isUser ? userInitials : assistantInitials}</div>
       <div class="chat-bubble${message.pending ? ' chat-bubble-pending' : ''}">
         <p class="${isUser ? 'text-primary' : ''}">${message.html}</p>
+      </div>
+    </div>
+  `;
+}
+
+export function renderTypingIndicator(assistantInitials = 'L') {
+  return `
+    <div class="chat-msg animate-chat-entry" id="typing-indicator">
+      <div class="chat-avatar ai">${assistantInitials}</div>
+      <div class="chat-bubble">
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
     </div>
   `;

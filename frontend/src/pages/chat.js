@@ -3,6 +3,7 @@ import {
   renderChatMessage,
   renderPromptChips,
   renderChatHistoryPanel,
+  renderTypingIndicator,
 } from './shared/chat-ui.js';
 import {
   createPendingAssistantMessage,
@@ -16,6 +17,7 @@ import {
   createChatSession,
   saveChatMessage,
   deleteChatSession,
+  getUserDisplayName,
 } from '../services/chat-service.js';
 
 const CHAT_STARTERS = [
@@ -44,16 +46,12 @@ const CHAT_FALLBACKS = [
 
 export async function renderChat(container) {
   const state = {
-    messages: [
-      {
-        role: 'assistant',
-        html: 'Hi. I can help with legal drafting, negotiation prep, and general contract questions. What are you working on?',
-      },
-    ],
+    messages: [], // Start empty for animation
     sending: false,
     historyOpen: false,
     sessions: [],
     currentSessionId: null,
+    isTyping: false,
   };
 
   const render = () => {
@@ -72,20 +70,20 @@ export async function renderChat(container) {
           ${renderChatHistoryPanel(state.sessions, state.currentSessionId)}
           
           <div class="workspace-scroll" id="chat-thread">
-            <div class="chat-msg">
-              <div class="chat-avatar ai">L</div>
-              <div class="chat-bubble">
-                <p>Hi. I can help with legal drafting, negotiation prep, and general contract questions. What are you working on?</p>
-                ${state.messages.length <= 1 ? `
-                <div class="flex gap-8 flex-wrap mt-12">
-                  ${renderPromptChips(CHAT_STARTERS, 'data-chat-starter')}
-                </div>` : ''}
-              </div>
-            </div>
             ${state.messages
-              .slice(1)
-              .map((message) => renderChatMessage(message))
+              .map((message, index) => {
+                const isFirst = index === 0 && message.role === 'assistant' && !state.currentSessionId;
+                return `
+                  ${renderChatMessage(message)}
+                  ${isFirst ? `
+                    <div class="flex gap-8 flex-wrap mt-12 mb-16 ml-44">
+                      ${renderPromptChips(CHAT_STARTERS, 'data-chat-starter')}
+                    </div>
+                  ` : ''}
+                `;
+              })
               .join('')}
+            ${state.isTyping ? renderTypingIndicator() : ''}
           </div>
 
           <div class="ask-bar p-16">
@@ -126,7 +124,7 @@ export async function renderChat(container) {
       historyPanel.classList.add('active');
     }
 
-    bindChatInteractions(container, state, render);
+    bindChatInteractions(container, state, render, triggerInitialGreeting);
 
     setTimeout(() => {
       const thread = container.querySelector('#chat-thread');
@@ -134,12 +132,33 @@ export async function renderChat(container) {
     }, 0);
   };
 
+  const triggerInitialGreeting = async () => {
+    if (state.currentSessionId || state.messages.length > 0) return;
+    
+    state.isTyping = true;
+    render();
+    
+    const name = await getUserDisplayName();
+    
+    // Natural delay
+    await new Promise(r => setTimeout(r, 1000));
+    
+    state.isTyping = false;
+    state.messages = [{
+      role: 'assistant',
+      html: `Hello **${name}**! Welcome to your **Normal Chat**. I'm here to help you brainstorm legal concepts, clarify legal jargon, or just discuss any of your general legal queries. What's on your mind today?`,
+      animate: true
+    }];
+    render();
+  };
+
   // Initial load
   state.sessions = await fetchChatSessions();
   render();
+  triggerInitialGreeting();
 }
 
-function bindChatInteractions(container, state, render) {
+function bindChatInteractions(container, state, render, triggerInitialGreeting) {
   const input = container.querySelector('#chat-input');
 
   // History Toggles
@@ -166,10 +185,7 @@ function bindChatInteractions(container, state, render) {
       render();
 
       const messages = await fetchChatMessages(sessionId);
-      state.messages = [
-        state.messages[0], // Keep welcome message
-        ...messages
-      ];
+      state.messages = messages;
       state.sending = false;
       render();
     });
@@ -187,7 +203,8 @@ function bindChatInteractions(container, state, render) {
         state.sessions = state.sessions.filter(s => s.id !== sessionId);
         if (state.currentSessionId === sessionId) {
           state.currentSessionId = null;
-          state.messages = [state.messages[0]];
+          state.messages = [];
+          triggerInitialGreeting();
         }
         render();
         window.showToast('Chat deleted.');
@@ -197,9 +214,10 @@ function bindChatInteractions(container, state, render) {
 
   container.querySelector('#new-chat-btn')?.addEventListener('click', () => {
     state.currentSessionId = null;
-    state.messages = [state.messages[0]];
+    state.messages = [];
     state.historyOpen = false;
     render();
+    triggerInitialGreeting();
   });
 
   container
