@@ -10,89 +10,107 @@ import {
 } from '../services/n8n-agent.js';
 import { copyText, escapeHtml } from './shared/ui-actions.js';
 import { supabase } from '../lib/supabase.js';
+import { authService } from '../services/auth-service.js';
 
-export function renderSettings(container) {
-  container.innerHTML = `
-    <div class="mb-24">
-      <h1 class="page-title">Settings</h1>
-      <p class="body-text mt-4">Manage your account, preferences, and integrations.</p>
-    </div>
+export async function renderSettings(container) {
+  const state = {
+    user: null,
+    profile: null,
+    loading: true,
+    activeTab: sessionStorage.getItem('settings_tab_prefill') || 'profile'
+  };
 
-    <div class="layout-2col">
-      <div>
-        <div class="seg-tabs mb-24" id="settings-tabs">
-          <div class="seg-tab active" data-tab="profile">Profile</div>
-          <div class="seg-tab" data-tab="integrations">Integrations</div>
-          <div class="seg-tab" data-tab="api">API Keys</div>
-          <div class="seg-tab" data-tab="billing">Billing</div>
-          <div class="seg-tab" data-tab="security">Security</div>
-        </div>
+  const loadData = async () => {
+    if (!supabase) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    state.user = user;
 
-        <div id="settings-content">
-          ${renderProfile()}
-        </div>
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      state.profile = profile;
+    }
+    state.loading = false;
+    render();
+  };
+
+  const render = () => {
+    container.innerHTML = `
+      <div class="mb-24">
+        <h1 class="page-title">Settings</h1>
+        <p class="body-text mt-4">Manage your account, preferences, and integrations.</p>
       </div>
 
-      <div id="settings-sidebar">
-        ${renderSideInfo()}
+      <div class="layout-2col">
+        <div>
+          <div class="seg-tabs mb-24" id="settings-tabs">
+            <div class="seg-tab ${state.activeTab === 'profile' ? 'active' : ''}" data-tab="profile">Profile</div>
+            <div class="seg-tab ${state.activeTab === 'integrations' ? 'active' : ''}" data-tab="integrations">Integrations</div>
+            <div class="seg-tab ${state.activeTab === 'api' ? 'active' : ''}" data-tab="api">API Keys</div>
+            <div class="seg-tab ${state.activeTab === 'billing' ? 'active' : ''}" data-tab="billing">Billing</div>
+            <div class="seg-tab ${state.activeTab === 'security' ? 'active' : ''}" data-tab="security">Security</div>
+          </div>
+
+          <div id="settings-content">
+            ${state.loading ? '<div class="card p-40 text-center"><p class="body-text">Loading settings...</p></div>' : renderTab(state.activeTab, state)}
+          </div>
+        </div>
+
+        <div id="settings-sidebar">
+          ${renderSideInfo()}
+        </div>
       </div>
-    </div>
     `;
 
-  // Tab switching
-  const tabs = container.querySelectorAll('#settings-tabs .seg-tab');
-  const content = container.querySelector('#settings-content');
-  const prefetchedTab = sessionStorage.getItem('settings_tab_prefill');
+    // Tab switching
+    const tabs = container.querySelectorAll('#settings-tabs .seg-tab');
+    const content = container.querySelector('#settings-content');
 
-  if (prefetchedTab) {
-    const selectedTab = Array.from(tabs).find(
-      (tab) => tab.dataset.tab === prefetchedTab,
-    );
-    if (selectedTab) {
-      tabs.forEach((tab) => tab.classList.remove('active'));
-      selectedTab.classList.add('active');
-      content.innerHTML = renderTab(prefetchedTab);
-      sessionStorage.removeItem('settings_tab_prefill');
-    }
-  }
+    // Init Tab Indicator
+    setTimeout(() => {
+      if (window.updateTabIndicator) {
+        window.updateTabIndicator(container.querySelector('#settings-tabs'));
+      }
+    }, 0);
 
-  // Init Tab Indicator
-  setTimeout(() => {
-    if (window.updateTabIndicator) {
-      window.updateTabIndicator(container.querySelector('#settings-tabs'));
-    }
-  }, 0);
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        if (window.updateTabIndicator)
+          window.updateTabIndicator(tab.parentElement);
 
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach((t) => t.classList.remove('active'));
-      tab.classList.add('active');
-      if (window.updateTabIndicator)
-        window.updateTabIndicator(tab.parentElement);
-
-      const page = tab.dataset.tab;
-      content.innerHTML = renderTab(page);
-      bindSettingsContent(container, page);
+        state.activeTab = tab.dataset.tab;
+        content.innerHTML = renderTab(state.activeTab, state);
+        bindSettingsContent(container, state.activeTab, state);
+      });
     });
-  });
 
-  const activePage =
-    container.querySelector('#settings-tabs .seg-tab.active')?.dataset.tab ||
-    'profile';
-  bindSettingsContent(container, activePage);
-  bindSettingsSidebar(container);
+    if (!state.loading) {
+      bindSettingsContent(container, state.activeTab, state);
+      bindSettingsSidebar(container);
+    }
+  };
+
+  await loadData();
 }
 
-function renderTab(page) {
-  if (page === 'profile') return renderProfile();
+function renderTab(page, state) {
+  if (page === 'profile') return renderProfile(state);
   if (page === 'integrations') return renderIntegrations();
   if (page === 'api') return renderAPI();
   if (page === 'billing') return renderBilling();
   if (page === 'security') return renderSecurity();
-  return renderProfile();
+  return renderProfile(state);
 }
 
-function renderProfile() {
+function renderProfile(state) {
+  const [firstName, ...lastNameParts] = (state.profile?.full_name || state.user?.user_metadata?.full_name || '').split(' ');
+  const lastName = lastNameParts.join(' ');
+
   return `
     <div class="flex flex-col gap-24">
       <div class="card">
@@ -101,16 +119,16 @@ function renderProfile() {
           <div class="flex gap-12">
             <div class="flex-1">
               <label class="meta-text mb-4 block">First Name</label>
-              <input type="text" value="John" />
+              <input type="text" id="settings-first-name" value="${escapeHtml(firstName || '')}" />
             </div>
             <div class="flex-1">
               <label class="meta-text mb-4 block">Last Name</label>
-              <input type="text" value="Doe" />
+              <input type="text" id="settings-last-name" value="${escapeHtml(lastName || '')}" />
             </div>
           </div>
           <div>
             <label class="meta-text mb-4 block">Email Address</label>
-            <input type="email" value="john@startup.com" />
+            <input type="email" id="settings-email" value="${escapeHtml(state.user?.email || '')}" disabled />
           </div>
           <button class="btn-primary settings-fit-btn" id="settings-save-profile-btn">Save changes</button>
         </div>
@@ -328,8 +346,8 @@ function renderSecurity() {
       <div class="card">
         <h3 class="section-label mb-16">Password Management</h3>
         <div class="flex flex-col gap-12">
-           <input type="password" placeholder="Current password" />
-           <input type="password" placeholder="New password" />
+           <input type="password" id="settings-current-password" placeholder="Current password" />
+           <input type="password" id="settings-new-password" placeholder="New password" />
            <button class="btn-primary settings-fit-btn" id="settings-update-password-btn">Update password</button>
         </div>
       </div>
@@ -359,12 +377,29 @@ function renderSideInfo() {
     `;
 }
 
-function bindSettingsContent(container, page) {
+function bindSettingsContent(container, page, state) {
   if (page === 'profile') {
     container
       .querySelector('#settings-save-profile-btn')
-      ?.addEventListener('click', () => {
-        window.showToast('Profile updated');
+      ?.addEventListener('click', async () => {
+        const firstName = container.querySelector('#settings-first-name').value;
+        const lastName = container.querySelector('#settings-last-name').value;
+        const fullName = `${firstName} ${lastName}`.trim();
+
+        try {
+          const { error } = await supabase
+            .from('profiles')
+            .update({ full_name: fullName })
+            .eq('id', state.user.id);
+
+          if (error) throw error;
+          
+          window.showToast('Profile updated successfully');
+          // Refresh global UI
+          if (window.updateProfileUI) window.updateProfileUI();
+        } catch (err) {
+          window.showToast(`Error: ${err.message}`);
+        }
       });
 
     container
@@ -439,8 +474,21 @@ function bindSettingsContent(container, page) {
 
     container
       .querySelector('#settings-update-password-btn')
-      ?.addEventListener('click', () => {
-        window.showToast('Password change submitted in preview mode.');
+      ?.addEventListener('click', async () => {
+        const password = container.querySelector('#settings-new-password').value;
+        if (!password) {
+          window.showToast('Please enter a new password');
+          return;
+        }
+
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) {
+          window.showToast(`Error: ${error.message}`);
+        } else {
+          window.showToast('Password updated');
+          container.querySelector('#settings-new-password').value = '';
+          container.querySelector('#settings-current-password').value = '';
+        }
       });
   }
 }
@@ -494,10 +542,7 @@ function bindSettingsSidebar(container) {
   container
     .querySelector('#settings-logout-btn')
     ?.addEventListener('click', async () => {
-      if (supabase) {
-        await supabase.auth.signOut();
-      }
-      window.location.href = '../index.html';
+      authService.logout();
     });
 
   container

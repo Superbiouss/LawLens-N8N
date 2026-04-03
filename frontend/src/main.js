@@ -22,6 +22,8 @@ import { renderAnalytics } from './pages/analytics.js';
 import { renderClauseLibrary } from './pages/clause-library.js';
 import { renderDrafting } from './pages/drafting.js';
 import { initIcons } from './lib/icons.js';
+import { supabase } from './lib/supabase.js';
+import { authService } from './services/auth-service.js';
 
 // Global UI Components
 import './components/ui/lex-badge.js';
@@ -197,6 +199,71 @@ function updateThemeToggleUI(theme) {
   initIcons();
 }
 
+/**
+ * Update User Profile UI components in the topbar dropdown
+ */
+async function updateProfileUI() {
+  if (!supabase) return;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    // If no user session, redirect to login
+    window.location.href = '/login.html';
+    return;
+  }
+
+  // Fetch full profile from the database
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  const userProfile = document.getElementById('user-profile');
+  if (!userProfile) return;
+
+  // Update Avatar initials
+  const avatar = userProfile.querySelector('.avatar');
+  if (avatar) {
+    const fullName = profile?.full_name || user.user_metadata?.full_name || 'User';
+    const initials = fullName
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+    avatar.textContent = initials;
+  }
+
+  // Update Dropdown Info
+  const nameEl = userProfile.querySelector('.name');
+  if (nameEl) nameEl.textContent = profile?.full_name || user.user_metadata?.full_name || 'Anonymous User';
+
+  const emailEl = userProfile.querySelector('.email');
+  if (emailEl) emailEl.textContent = user.email;
+
+  // Update Org/Role if applicable
+  const roleEl = userProfile.querySelector('.role');
+  if (roleEl) {
+    // Attempt to get the workspace membership
+    const { data: membership } = await supabase
+      .from('workspace_members')
+      .select('role, workspaces(name)')
+      .eq('user_id', user.id)
+      .limit(1)
+      .maybeSingle();
+
+    if (membership && membership.workspaces) {
+        const wsName = Array.isArray(membership.workspaces) 
+            ? membership.workspaces[0]?.name 
+            : membership.workspaces.name;
+        roleEl.textContent = `${wsName || 'Workspace'} (${membership.role})`;
+    } else {
+        roleEl.textContent = user.user_metadata?.organization || 'Legal Professional';
+    }
+  }
+}
+
 function getPage() {
   const hash = window.location.hash.slice(2) || 'dashboard';
   return hash;
@@ -219,7 +286,7 @@ function updateNav(page) {
   });
 }
 
-function navigate() {
+async function navigate() {
   const page = getPage();
   const route = routes[page];
   if (!route) {
@@ -239,7 +306,11 @@ function navigate() {
   content.classList.add('page-transition');
 
   content.innerHTML = '';
-  route.render(content);
+  if (page === 'settings') {
+    await route.render(content);
+  } else {
+    route.render(content);
+  }
   initIcons();
 }
 
@@ -249,7 +320,10 @@ window.navigateTo = function (page) {
 };
 
 window.addEventListener('hashchange', navigate);
-window.addEventListener('DOMContentLoaded', navigate);
+window.addEventListener('DOMContentLoaded', async () => {
+    await updateProfileUI();
+    navigate();
+});
 
 // Toast Notification System
 window.showToast = function (message, duration = 3000) {
@@ -293,7 +367,7 @@ document.addEventListener('click', (e) => {
   // 3. Log out
   const logoutBtn = e.target.closest('#logout-btn');
   if (logoutBtn) {
-    window.location.href = '/index.html';
+    authService.logout();
     return;
   }
 

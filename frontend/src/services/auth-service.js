@@ -49,7 +49,7 @@ export const authService = {
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    window.location.href = '/login.html';
+    window.location.href = '/index.html';
   },
 
   /**
