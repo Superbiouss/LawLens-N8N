@@ -1,6 +1,7 @@
 import { apiClient } from '../lib/api-client.js';
 import { supabase } from '../lib/supabase.js';
 import { escapeHtml, formatMultilineHtml, stripHtml, parseMarkdown } from './text-utils.js';
+import { getInstantResponse } from './instant-responses.js';
 
 export function createUserChatMessage(question) {
   return {
@@ -57,12 +58,21 @@ export async function resolveAgentReply({
   conversationScope = 'default',
 }) {
   try {
+    // Check for an instant client-side response
+    const instantResponse = getInstantResponse(question);
+    if (instantResponse) {
+      // Natural delay between 600ms to 1200ms
+      const delay = Math.floor(Math.random() * (1200 - 600 + 1)) + 600;
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return instantResponse;
+    }
+
     const response = await apiClient.orchestrate('ask', {
       question,
       history: buildChatHistory(messages),
       context,
       conversationScope,
-      documentId: context.documentId
+      documentId: context?.documentId
     });
 
     if (response.error) {
