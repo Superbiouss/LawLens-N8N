@@ -1725,7 +1725,6 @@ textarea {
   padding: 10px 16px;
   background: var(--color-background-tertiary);
   border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
-  font-style: italic;
   color: var(--color-text-primary);
   font-size: 13px;
   line-height: 1.6;
@@ -1737,7 +1736,6 @@ textarea {
 }
 
 .chat-bubble em {
-  font-style: italic;
   opacity: 0.95;
 }
 
@@ -5301,7 +5299,6 @@ textarea {
   padding-left: 16px;
   margin: 16px 0;
   color: var(--color-text-secondary);
-  font-style: italic;
   background: rgba(255, 255, 255, 0.02);
   padding: 12px 16px;
   border-radius: 0 8px 8px 0;
